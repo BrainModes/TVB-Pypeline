@@ -14,111 +14,115 @@
 # as published by the Free Software Foundation. Further details on the GPL
 # license can be found at http://www.gnu.org/copyleft/gpl.html.
 # =============================================================================
-import sys
-import os
-import numpy as np
-import nibabel as nib
-# import scipy as sp
 
 
-# Get Input Parameters
-# subPath = sys.argv[1]
-# pathOnCluster = sys.argv[2]
+def genmask(subPath, pathOnCluster):
 
-# Debug
-subPath = '/Users/srothmei/Desktop/charite/toronto/QL_20120814/'
-pathOnCluster = '/home/petra/Simon/Pipeline/'
+    # import sys
+    # import os
+    import numpy as np
+    import nibabel as nib
+    # import scipy as sp
 
-mask_output_folder = subPath + 'mrtrix_68/masks_68/'
 
-# Set the desired number of seedpoints per voxel
-seedsPerVoxel = 200
-# seedsPerVoxel = 1000
+    # Get Input Parameters
+    # subPath = sys.argv[1]
+    # pathOnCluster = sys.argv[2]
 
-# Mask chunk size
-chunkSize = 100000 / seedsPerVoxel
+    # Debug
+    #subPath = '/Users/srothmei/Desktop/charite/toronto/QL_20120814/'
+    #pathOnCluster = '/home/petra/Simon/Pipeline/'
 
-# Load the wmborder image
-wmborder = nib.load(subPath + 'calc_images/wmoutline2diff_1mm.nii.gz')
+    mask_output_folder = subPath + 'mrtrix_68/masks_68/'
 
-# Extract and Save the Affine Matrix for later use
-affine_matrix = np.linalg.inv(wmborder.affine)
-np.save(mask_output_folder + 'affine_matrix.npy', affine_matrix)
+    # Set the desired number of seedpoints per voxel
+    seedsPerVoxel = 200
+    # seedsPerVoxel = 1000
 
-# High-Res GM-WM-border
-wmparc = nib.load(subPath + 'calc_images/wmparc2diff_1mm.nii.gz')
-wmparc_data = wmparc.get_data()
-# Remove unwanted areas
-wmparc_data[wmparc_data > 3000] -= 2000
-wmparc_data[wmparc_data == 1004] = 0
-wmparc_data[wmparc_data == 2000] = 0
-wmparc_data[wmparc_data == 2004] = 0
-wmparc_data[wmparc_data < 1001] = 0
-wmparc_data[wmparc_data > 2035] = 0
-# Save the image
-nib.save(wmparc, mask_output_folder + 'wmparcMask_1mm.nii.gz')
+    # Mask chunk size
+    chunkSize = 100000 / seedsPerVoxel
 
-### Create the parcellated GWI
-wmborder_data = wmborder.get_data()
-wmborder_data[wmborder_data > 0] = wmparc_data[wmborder_data > 0]
-nib.save(wmborder, mask_output_folder + 'gmwmborder_1mm.nii.gz')
-# Save it as "normal" File
-np.save(mask_output_folder + 'wmborder.npy', wmborder_data)
+    # Load the wmborder image
+    wmborder = nib.load(subPath + 'calc_images/wmoutline2diff_1mm.nii.gz')
 
-### Create Seed- and Target-Masks
-numseeds = np.zeros((1, 3))
+    # Extract and Save the Affine Matrix for later use
+    affine_matrix = np.linalg.inv(wmborder.affine)
+    np.save(mask_output_folder + 'affine_matrix.npy', affine_matrix)
 
-for i in range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036):
-    print('Processing RegionID ' + str(i))
+    # High-Res GM-WM-border
+    wmparc = nib.load(subPath + 'calc_images/wmparc2diff_1mm.nii.gz')
+    wmparc_data = wmparc.get_data()
+    # Remove unwanted areas
+    wmparc_data[wmparc_data > 3000] -= 2000
+    wmparc_data[wmparc_data == 1004] = 0
+    wmparc_data[wmparc_data == 2000] = 0
+    wmparc_data[wmparc_data == 2004] = 0
+    wmparc_data[wmparc_data < 1001] = 0
+    wmparc_data[wmparc_data > 2035] = 0
+    # Save the image
+    nib.save(wmparc, mask_output_folder + 'wmparcMask_1mm.nii.gz')
 
-    tmpimg = wmborder_data.copy()
-    tmpimg[tmpimg != i] = 0
-    tmpimg[tmpimg > 0] = 1
-    # maskvoxel = np.ravel(tmpimg, 'F').nonzero()
-    maskvoxel = np.nonzero(tmpimg)
+    ### Create the parcellated GWI
+    wmborder_data = wmborder.get_data()
+    wmborder_data[wmborder_data > 0] = wmparc_data[wmborder_data > 0]
+    nib.save(wmborder, mask_output_folder + 'gmwmborder_1mm.nii.gz')
+    # Save it as "normal" File
+    np.save(mask_output_folder + 'wmborder.npy', wmborder_data)
 
-    # Calculate the number of masks to generate for the current region
-    nummasks = int(np.floor(float(np.shape(maskvoxel)[1]) / chunkSize))
-    for j in range(nummasks):
+    ### Create Seed- and Target-Masks
+    numseeds = np.zeros((1, 3))
+
+    for i in range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036):
+        print('Processing RegionID ' + str(i))
+
+        tmpimg = wmborder_data.copy()
+        tmpimg[tmpimg != i] = 0
+        tmpimg[tmpimg > 0] = 1
+        # maskvoxel = np.ravel(tmpimg, 'F').nonzero()
+        maskvoxel = np.nonzero(tmpimg)
+
+        # Calculate the number of masks to generate for the current region
+        nummasks = int(np.floor(float(np.shape(maskvoxel)[1]) / chunkSize))
+        for j in range(nummasks):
+            wmparc_data = np.zeros_like(tmpimg)
+            indexRange = range(chunkSize * j, chunkSize * (j + 1))
+            wmparc_data[maskvoxel[0][indexRange], maskvoxel[1][indexRange], maskvoxel[2][indexRange]] = 1
+            # Save the generated Mask
+            wmparc = nib.Nifti1Image(wmparc_data, wmparc.affine, wmparc.header)
+            nib.save(wmparc, mask_output_folder + 'seedmask' + str(i) + str(j + 1) + '_1mm.nii.gz')
+
+            # Store the number of voxels for the current masks and also the ID
+            tmpfind = np.array([[int(str(i) + str(j + 1)), np.shape(indexRange)[0], i]])
+            numseeds = np.concatenate((numseeds, tmpfind))
+
+        # Now the remaining mask for the current region....
         wmparc_data = np.zeros_like(tmpimg)
-        indexRange = range(chunkSize * j, chunkSize * (j + 1))
+        indexRange = range(chunkSize * nummasks, np.shape(maskvoxel)[1])
         wmparc_data[maskvoxel[0][indexRange], maskvoxel[1][indexRange], maskvoxel[2][indexRange]] = 1
-        # Save the generated Mask
+        # Save the mask
         wmparc = nib.Nifti1Image(wmparc_data, wmparc.affine, wmparc.header)
-        nib.save(wmparc, mask_output_folder + 'seedmask' + str(i) + str(j + 1) + '_1mm.nii.gz')
-
+        nib.save(wmparc, mask_output_folder + 'seedmask' + str(i) + str(nummasks + 1) + '_1mm.nii.gz')
         # Store the number of voxels for the current masks and also the ID
-        tmpfind = np.array([[int(str(i) + str(j + 1)), np.shape(indexRange)[0], i]])
+        tmpfind = np.array([[int(str(i) + str(nummasks + 1)), np.shape(indexRange)[0], i]])
         numseeds = np.concatenate((numseeds, tmpfind))
 
-    # Now the remaining mask for the current region....
-    wmparc_data = np.zeros_like(tmpimg)
-    indexRange = range(chunkSize * nummasks, np.shape(maskvoxel)[1])
-    wmparc_data[maskvoxel[0][indexRange], maskvoxel[1][indexRange], maskvoxel[2][indexRange]] = 1
-    # Save the mask
-    wmparc = nib.Nifti1Image(wmparc_data, wmparc.affine, wmparc.header)
-    nib.save(wmparc, mask_output_folder + 'seedmask' + str(i) + str(nummasks + 1) + '_1mm.nii.gz')
-    # Store the number of voxels for the current masks and also the ID
-    tmpfind = np.array([[int(str(i) + str(nummasks + 1)), np.shape(indexRange)[0], i]])
-    numseeds = np.concatenate((numseeds, tmpfind))
+        # Create the corresponding target mask
+        wmparc_data = wmborder_data.copy()
+        wmparc_data[wmparc_data == i] = 0
+        wmparc_data[wmparc_data > 0] = 1
+        wmparc = nib.Nifti1Image(wmparc_data, wmparc.affine, wmparc.header)
+        nib.save(wmparc, mask_output_folder + 'targetmask' + str(i) + '_1mm.nii.gz')
 
-    # Create the corresponding target mask
-    wmparc_data = wmborder_data.copy()
-    wmparc_data[wmparc_data == i] = 0
-    wmparc_data[wmparc_data > 0] = 1
-    wmparc = nib.Nifti1Image(wmparc_data, wmparc.affine, wmparc.header)
-    nib.save(wmparc, mask_output_folder + 'targetmask' + str(i) + '_1mm.nii.gz')
+    # Finalize the seedcount array
+    numseeds = numseeds[numseeds[:, 2] != 0]
+    numseeds[:, 1] = numseeds[:, 1] * seedsPerVoxel
+    # Store the array as an ASCII file
+    np.savetxt(mask_output_folder + 'seedcount.txt', numseeds.astype(int), delimiter=' ', fmt='%1i')
 
-# Finalize the seedcount array
-numseeds = numseeds[numseeds[:, 2] != 0]
-numseeds[:, 1] = numseeds[:, 1] * seedsPerVoxel
-# Store the array as an ASCII file
-np.savetxt(mask_output_folder + 'seedcount.txt', numseeds.astype(int), delimiter=' ', fmt='%1i')
+    # Generate Batch File
+    with open(mask_output_folder + 'batch_track.sh', 'w') as f:
+        for roiid in range(np.shape(numseeds)[0]):
+            f.write('{0} {1} {2} {3}\n'.format(pathOnCluster, str(int(numseeds[roiid, 0])), str(int(numseeds[roiid, 1])),
+                                               str(int(numseeds[roiid, 2]))))
 
-# Generate Batch File
-with open(mask_output_folder + 'batch_track.sh', 'w') as f:
-    for roiid in range(np.shape(numseeds)[0]):
-        f.write('{0} {1} {2} {3}\n'.format(pathOnCluster, str(int(numseeds[roiid, 0])), str(int(numseeds[roiid, 1])),
-                                           str(int(numseeds[roiid, 2]))))
-
-f.closed
+    f.closed
