@@ -30,7 +30,7 @@ def genmask(subPath, pathOnCluster):
     # pathOnCluster = sys.argv[2]
 
     # Debug
-    #subPath = '/Users/srothmei/Desktop/charite/toronto/QL_20120814/'
+    #subPath = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/'
     #pathOnCluster = '/home/petra/Simon/Pipeline/'
 
     mask_output_folder = subPath + 'mrtrix_68/masks_68/'

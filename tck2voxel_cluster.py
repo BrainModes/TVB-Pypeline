@@ -11,7 +11,7 @@
 # =============================================================================
 # Authors: Michael Schirner, Simon Rothmeier, Petra Ritter
 # BrainModes Research Group (head: P. Ritter)
-# Charité University Medicine Berlin & Max Planck Institute Leipzig, Germany
+# Charite University Medicine Berlin & Max Planck Institute Leipzig, Germany
 # Correspondence: petra.ritter@charite.de
 #
 # When using this code please cite as follows:
@@ -22,7 +22,19 @@
 # as published by the Free Software Foundation. Further details on the GPL
 # license can be found at http://www.gnu.org/copyleft/gpl.html.
 # =============================================================================
-def tck2voxel_cluster(tck, affine_matrix):
-    for ii in tck:
-        print(ii['data'])
+
+import numpy as np
+
+def tck2voxel_cluster(tck, affineMatrix):
+
+    # Loop over all tracks in the data structure
+    for i in range(np.shape(tck)[0]):
+        # Transform the coordinates by multiplying the affine matrix with the coords
+        # => First add a column of 1 to the right side of the matrix
+        zw = np.hstack((tck[i], np.ones((np.shape(tck[i])[0], 1))))
+        # => Second multiply the actual matrices
+        zw = np.round(np.dot(zw, np.transpose(affineMatrix)))
+        # => Third store the result excluding the righthand-side column
+        tck[i] = zw[:, :3]
+
     return tck
