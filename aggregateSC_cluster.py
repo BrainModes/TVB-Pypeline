@@ -21,6 +21,7 @@
 from scipy import io
 import numpy as np
 import json
+import logging
 from collections import defaultdict
 
 
@@ -33,6 +34,9 @@ def agg_sc(path, sub_id, steplength=0.2):
     wmborder_file = path + 'masks_68/wmborder.npy'
     tracksPath = path + 'tracks_68/'
 
+    # Init the logger
+    logger = logging.getLogger('interface')
+
     # Load the wmborder file
     wmborder = np.load(wmborder_file)
 
@@ -41,7 +45,7 @@ def agg_sc(path, sub_id, steplength=0.2):
 
     counter = 0
     # Generate ROI-ID to voxel hashtable
-    print('Generate ROI-ID to voxel hashtable...')
+    logger.info('Generate ROI-ID to voxel hashtable...')
     inverse_region_table = np.zeros((1, np.max(region_table)))
     region_id_table = np.array((0, 0))  # Init Variable
     for regid in region_table:
@@ -70,9 +74,9 @@ def agg_sc(path, sub_id, steplength=0.2):
 
     # Now loop over the regions....
     for roi in range(len(region_table)):
-        print('Processing ROI: ' + str(roi + 1))
+        logger.info('Processing ROI: ' + str(roi + 1))
 
-        print('Load the SC_row_files...')
+        logger.info('Load the SC_row_files...')
         with open(tracksPath + 'SC_cap_row_' + str(roi + 1) + sub_id + '.json', 'r') as inFile:
             SC_cap_row = json.load(inFile)
             inFile.close()
@@ -89,10 +93,18 @@ def agg_sc(path, sub_id, steplength=0.2):
 
     # Now build the capacity matrices by looking at the previously build storage matrix
     # SC_cap_counts_tmp = SC_cap_agg_tmp.copy()
-    for seedVoxelID in SC_cap_agg_tmp.keys():
+    logger.info('Now build the capacity matrices...')
+    # for seedVoxelID in SC_cap_agg_tmp.keys():
+    theKeys = SC_cap_agg_tmp.keys()
+    for key in range(len(theKeys)):
+        seedVoxelID = theKeys[key]
+        logger.debug(str(key) + ' / ' + str(len(theKeys)))
         # First check for uniqueness of the tracks...
         uniqueTMP, uniqueIndices, uniqueInverse = np.unique(SC_cap_agg_tmp[seedVoxelID], return_index=True,
                                                             return_inverse=True)
+        # Find out how often each unique values is occuring
+        binCount = np.bincount(uniqueInverse)
+
         SC_cap_agg_tmp[seedVoxelID] = list(uniqueTMP)
         # Only take the length of unique tracks into account + apply the steplength!
         SC_dist_agg_tmp[seedVoxelID] = list(SC_dist_agg_tmp[seedVoxelID][j] * steplength for j in uniqueIndices)
@@ -101,16 +113,19 @@ def agg_sc(path, sub_id, steplength=0.2):
         # First find out in which region he current seed-voxel lies
         seedRegionID = np.flatnonzero(region_table == region_id_table[seedVoxelID, 0])[0]
         # Find out which regions are reached by the current seedVoxel
-        targetRegionIDs = inverse_region_table[0, region_id_table[SC_cap_agg_tmp[seedVoxelID], 0]]
+        targetRegionIDs = inverse_region_table[0, region_id_table[SC_cap_agg_tmp[seedVoxelID], 0] - 1]
 
         # Insert a connection into the matrices at each target-region
         # Note that this is by definition symetric without explicitly defining it here since the connections
         # have been created symetrically by the computeSCRows-script!
-        for i in range(len(targetRegionIDs)):
-            SC_cap_agg_counts[seedRegionID, targetRegionIDs[i]] += sum(uniqueInverse == i)
-            SC_cap_agg_bwflav1[seedRegionID, targetRegionIDs[i]] += 1
-            SC_cap_agg_bwflav2[seedRegionID, targetRegionIDs[i]] += 1. / len(targetRegionIDs)
-            SC_dist_agg[seedRegionID][targetRegionIDs[i]].extend(SC_dist_agg_tmp[seedVoxelID][targetRegionIDs[i]])
+        logger.debug('Inserting stuff for the following No. of target-regions: ' + str(len(targetRegionIDs)))
+        taRegLen = len(targetRegionIDs)
+        for i in range(taRegLen):
+            target = int(targetRegionIDs[i] - 1)
+            SC_cap_agg_counts[seedRegionID, target] += binCount[i]
+            SC_cap_agg_bwflav1[seedRegionID, target] += 1
+            SC_cap_agg_bwflav2[seedRegionID, target] += 1. / taRegLen
+            SC_dist_agg[seedRegionID][target].extend([SC_dist_agg_tmp[seedVoxelID][i]])
 
     # Finalize the distance metrics and also the counts
     for i in SC_dist_agg.keys():
@@ -131,7 +146,7 @@ def agg_sc(path, sub_id, steplength=0.2):
     SC_cap_agg_bwflav2_norm_log = np.log(SC_cap_agg_bwflav2_norm + 1)
 
     # Save the output into json and MATLAB format
-    print('Storing....')
+    logger.info('Storing....')
     # For matlab only the "simple" matrices, not the structs....
     # TODO: Look for a way to store this also in MATLAB format!
     theMatlabDict = {'SC_cap_agg_counts': SC_cap_agg_counts,
@@ -169,4 +184,4 @@ def agg_sc(path, sub_id, steplength=0.2):
         json.dump(SC_cap_agg_tmp, outfile, sort_keys=True, indent=2)
         outfile.close()
 
-    print('Done!')
+    logger.info('Done!')

@@ -19,6 +19,7 @@
 import os
 # import fnmatch
 import numpy as np
+import logging
 # import scipy as
 import re
 import json
@@ -45,6 +46,10 @@ def comp_sc_row(path, roi, subid):
     # path = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/mrtrix_68/'
     # roi = 2
     # subID = 'AJ_20140516_1600'
+
+    # Calling Kenny Loggins
+    dangerZone = logging.getLogger('interface')
+    dangerZone.setLevel('WARNING')
 
     # Extract parameters
     wmborder_file = path + 'masks_68/wmborder.npy'
@@ -177,4 +182,6 @@ def comp_sc_row(path, roi, subid):
         json.dump(qualityMetrics, outfile, sort_keys=True, indent=2)
         outfile.close()
 
+    # Releasing Mr Loggins...
+    dangerZone.setLevel('NOTSET')
     print('Done!')
