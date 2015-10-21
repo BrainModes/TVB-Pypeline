@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aggregateSC_cluster.py" afterPath="$PROJECT_DIR$/aggregateSC_cluster.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/computeSC_clusterDK.py" afterPath="$PROJECT_DIR$/computeSC_clusterDK.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generateMasksDK.py" afterPath="$PROJECT_DIR$/generateMasksDK.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connectivity2TVBFS.py" afterPath="$PROJECT_DIR$/connectivity2TVBFS.py" />
     </list>
     <ignored path="TVB-Pypeline.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,14 +22,14 @@
     <favorites_list name="TVB-Pypeline" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.42916322">
       <split-first>
         <leaf>
           <file leaf-file-name="generateMasksDK.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/generateMasksDK.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="124" column="54" selection-start-line="124" selection-start-column="54" selection-end-line="124" selection-end-column="54" />
+                <state vertical-scroll-proportion="-23.851852">
+                  <caret line="127" column="12" selection-start-line="127" selection-start-column="12" selection-end-line="127" selection-end-column="12" />
                   <folding />
                 </state>
               </provider>
@@ -41,8 +38,8 @@
           <file leaf-file-name="compFC.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/compFC.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="68" column="85" selection-start-line="68" selection-start-column="85" selection-end-line="68" selection-end-column="85" />
+                <state vertical-scroll-proportion="-3.2962964">
+                  <caret line="30" column="3" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="3" />
                   <folding>
                     <element signature="e#824#834#0" expanded="true" />
                   </folding>
@@ -53,8 +50,8 @@
           <file leaf-file-name="computeSC_clusterDK.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/computeSC_clusterDK.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="50" column="15" selection-start-line="50" selection-start-column="15" selection-end-line="50" selection-end-column="47" />
+                <state vertical-scroll-proportion="-13.296296">
+                  <caret line="167" column="43" selection-start-line="167" selection-start-column="40" selection-end-line="167" selection-end-column="43" />
                   <folding />
                 </state>
               </provider>
@@ -76,7 +73,7 @@
             <entry file="file://$PROJECT_DIR$/aggregateSC_cluster.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="107" column="31" selection-start-line="107" selection-start-column="31" selection-end-line="107" selection-end-column="31" />
+                  <caret line="102" column="38" selection-start-line="102" selection-start-column="38" selection-end-line="102" selection-end-column="38" />
                   <folding>
                     <element signature="e#865#885#0" expanded="true" />
                   </folding>
@@ -99,8 +96,8 @@
           <file leaf-file-name="connectivity2TVBFS.m" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.m">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.75386596">
-                  <caret line="86" column="31" selection-start-line="86" selection-start-column="31" selection-end-line="86" selection-end-column="31" />
+                <state vertical-scroll-proportion="6.5953608">
+                  <caret line="449" column="17" selection-start-line="449" selection-start-column="17" selection-end-line="449" selection-end-column="17" />
                   <folding />
                 </state>
               </provider>
@@ -110,24 +107,24 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="connectivity2TVBFS.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.8505155">
-                  <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#853#862#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="aggregateSC_clusterDK.m" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/aggregateSC_clusterDK.m">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
                   <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
                   <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="connectivity2TVBFS.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.8840206">
+                  <caret line="142" column="113" selection-start-line="142" selection-start-column="113" selection-end-line="142" selection-end-column="113" />
+                  <folding>
+                    <element signature="e#853#862#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -433,12 +430,21 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="873" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329602" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -592,14 +598,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aggregateSC_clusterDK.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testAgg.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -610,31 +608,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aggregateSC_cluster.py">
+    <entry file="file://$PROJECT_DIR$/aggregateSC_clusterDK.m">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="107" column="31" selection-start-line="107" selection-start-column="31" selection-end-line="107" selection-end-column="31" />
-          <folding>
-            <element signature="e#865#885#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generateMasksDK.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="124" column="54" selection-start-line="124" selection-start-column="54" selection-end-line="124" selection-end-column="54" />
+          <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/compFC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="68" column="85" selection-start-line="68" selection-start-column="85" selection-end-line="68" selection-end-column="85" />
-          <folding>
-            <element signature="e#824#834#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -650,24 +628,52 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/computeSC_clusterDK.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.296296">
+          <caret line="167" column="43" selection-start-line="167" selection-start-column="40" selection-end-line="167" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregateSC_cluster.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="15" selection-start-line="50" selection-start-column="15" selection-end-line="50" selection-end-column="47" />
+          <caret line="102" column="38" selection-start-line="102" selection-start-column="38" selection-end-line="102" selection-end-column="38" />
+          <folding>
+            <element signature="e#865#885#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/compFC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.2962964">
+          <caret line="30" column="3" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="3" />
+          <folding>
+            <element signature="e#824#834#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generateMasksDK.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-23.851852">
+          <caret line="127" column="12" selection-start-line="127" selection-start-column="12" selection-end-line="127" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75386596">
-          <caret line="86" column="31" selection-start-line="86" selection-start-column="31" selection-end-line="86" selection-end-column="31" />
+        <state vertical-scroll-proportion="6.5953608">
+          <caret line="449" column="17" selection-start-line="449" selection-start-column="17" selection-end-line="449" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8505155">
-          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.8840206">
+          <caret line="142" column="113" selection-start-line="142" selection-start-column="113" selection-end-line="142" selection-end-column="113" />
           <folding>
             <element signature="e#853#862#0" expanded="true" />
           </folding>
