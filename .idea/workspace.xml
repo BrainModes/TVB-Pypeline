@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/Untitled.ipynb" afterPath="$PROJECT_DIR$/notebooks/Untitled.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connectivity2TVBFS.py" afterPath="$PROJECT_DIR$/connectivity2TVBFS.py" />
     </list>
     <ignored path="TVB-Pypeline.iws" />
@@ -121,8 +120,8 @@
           <file leaf-file-name="connectivity2TVBFS.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.8260309">
-                  <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+                <state vertical-scroll-proportion="1.8943299">
+                  <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
                   <folding>
                     <element signature="e#853#862#0" expanded="true" />
                   </folding>
@@ -673,8 +672,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8260309">
-          <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+        <state vertical-scroll-proportion="1.8943299">
+          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
           <folding>
             <element signature="e#853#862#0" expanded="true" />
           </folding>
