@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/Untitled.ipynb" afterPath="$PROJECT_DIR$/notebooks/Untitled.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connectivity2TVBFS.py" afterPath="$PROJECT_DIR$/connectivity2TVBFS.py" />
     </list>
     <ignored path="TVB-Pypeline.iws" />
@@ -96,8 +97,8 @@
           <file leaf-file-name="connectivity2TVBFS.m" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.m">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="6.5953608">
-                  <caret line="449" column="17" selection-start-line="449" selection-start-column="17" selection-end-line="449" selection-end-column="17" />
+                <state vertical-scroll-proportion="-0.13144329">
+                  <caret line="158" column="0" selection-start-line="158" selection-start-column="0" selection-end-line="161" selection-end-column="15" />
                   <folding />
                 </state>
               </provider>
@@ -120,8 +121,8 @@
           <file leaf-file-name="connectivity2TVBFS.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.8840206">
-                  <caret line="142" column="113" selection-start-line="142" selection-start-column="113" selection-end-line="142" selection-end-column="113" />
+                <state vertical-scroll-proportion="0.8260309">
+                  <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
                   <folding>
                     <element signature="e#853#862#0" expanded="true" />
                   </folding>
@@ -634,16 +635,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aggregateSC_cluster.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="102" column="38" selection-start-line="102" selection-start-column="38" selection-end-line="102" selection-end-column="38" />
-          <folding>
-            <element signature="e#865#885#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/compFC.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.2962964">
@@ -662,18 +653,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/aggregateSC_cluster.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="102" column="38" selection-start-line="102" selection-start-column="38" selection-end-line="102" selection-end-column="38" />
+          <folding>
+            <element signature="e#865#885#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="6.5953608">
-          <caret line="449" column="17" selection-start-line="449" selection-start-column="17" selection-end-line="449" selection-end-column="17" />
+        <state vertical-scroll-proportion="-0.13144329">
+          <caret line="158" column="0" selection-start-line="158" selection-start-column="0" selection-end-line="161" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/connectivity2TVBFS.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8840206">
-          <caret line="142" column="113" selection-start-line="142" selection-start-column="113" selection-end-line="142" selection-end-column="113" />
+        <state vertical-scroll-proportion="0.8260309">
+          <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
           <folding>
             <element signature="e#853#862#0" expanded="true" />
           </folding>

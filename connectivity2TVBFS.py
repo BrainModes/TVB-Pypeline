@@ -20,9 +20,7 @@
 import os
 from scipy import io
 import numpy as np
-import json
-import logging
-from collections import defaultdict
+import zipfile
 from nibabel.freesurfer import io as fs
 
 
@@ -85,6 +83,7 @@ os.mkdir(subFolder + 'results/')
 # Load the SC matrix
 SC = io.loadmat(subFolder + '/mrtrix_68/tracks_68/' + SC_matrix)
 weights = SC['SC_cap_agg_bwflav2']
+delay = SC['SC_dist_mean_agg']
 
 # Load the required things compiuted previously by FREESURFER
 lh_vert, lh_faces = fs.read_geometry(subFolder + '/' + reconallFolder + '/surf/lh.pial')
@@ -128,7 +127,7 @@ np.savetxt(subFolder + 'results/' + filenames[0], weights, delimiter=' ', fmt='%
 # 2.) Position
 # Calc region centers
 # centers = np.zeros((weights.shape[0], 3))
-with open(subFolder + 'results/' + filenames[0], 'w') as f:
+with open(subFolder + 'results/' + filenames[1], 'w') as f:
     for i in range(weights.shape[0]):
         # First get all vertices corresponding to a certain region
         regionVertices = cortexMesh['vertices'][cortexMesh['labels'] == i + 1]
@@ -141,3 +140,49 @@ with open(subFolder + 'results/' + filenames[0], 'w') as f:
         center = cortexMesh['vertices'][idx, :]
         # Write file
         f.write('{0} {1} {2} {3}\n'.format(cortexMesh['labelNames'], str(center[0]), str(center[1]), str(center[2])))
+    f.close()
+
+# 3.) Tract
+np.savetxt(subFolder + 'results/' + filenames[2], delay, delimiter=' ', fmt='%1i')
+
+# 4.) Orientation
+with open(subFolder + 'results/' + filenames[3], 'w') as f:
+    for i in range(weights.shape[0]):
+        # Get all vertex-normals correspodning to the vertices of the current region
+        regionVertexNormals = cortexMesh['vertexNormals'][cortexMesh['labels'] == i + 1]
+        # Compute mean vector
+        orientation = np.mean(regionVertexNormals, axis=0)
+        # Normalize it
+        orientation /= np.sqrt(orientation[0]**2 + orientation[1]**2 + orientation[2]**2)
+        # Write to file
+        f.write('{0} {1} {2}\n'.format(str(orientation[0]), str(orientation[1]), str(orientation[2])))
+    f.close()
+
+# 5.) Area
+# I'm not quite sure how to get to the exact value for the surface in mm^2
+# so for now i just count the surface vertices corresponding to each region
+# EDIT: According to the TVB Dokumentation, this attribute is not mandatory
+# for the Input!
+with open(subFolder + 'results/' + filenames[4], 'w') as f:
+    for i in range(weights.shape[0]):
+        area = np.count_nonzero(cortexMesh['labels'] == i)
+        f.write('{0}\n'.format(str(area)))
+    f.close()
+
+# 6.) Cortical
+# Since in the default atlas all areas are cortical
+cortical = np.ones((68, 1))
+np.savetxt(subFolder + 'results/' + filenames[5], cortical, delimiter=' ', fmt='%1i')
+
+# 7.) Hemisphere
+# Again hard coded for Desikan-Killany Mask!
+# TODO: Make this flexible!
+hemisphere = np.vstack((np.zeros((34, 1)), np.ones((34, 1))))
+np.savetxt(subFolder + 'results/' + filenames[6], hemisphere, delimiter=' ', fmt='%1i')
+
+# Assemble the Zip-File
+zf = zipfile.ZipFile(subFolder + 'results/' + subID + '_Connectivity.zip', mode='w')
+for fname in filenames:
+    zf.write(subFolder + 'results/' + fname)
+    os.remove(subFolder + 'results/' + fname)
+zf.close()
