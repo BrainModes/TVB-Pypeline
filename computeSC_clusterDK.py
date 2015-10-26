@@ -64,16 +64,17 @@ def comp_sc_row(path, roi, subid):
     wmborder = np.load(wmborder_file)
 
     # Define the ROI-Range
-    region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)
+    # region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)
+    region_table = np.unique(wmborder[wmborder > 0]).astype(int)
     # Generate ROI-ID to voxel hashtable
     print('Generate ROI-ID to voxel hashtable...')
     region_id_table = np.array((0, 0))  # Init Variable
     for regid in region_table:
-        tmpids = np.transpose(np.asarray(np.nonzero(wmborder == regid)))
-        tmpids = np.ravel_multi_index((tmpids[:, 0], tmpids[:, 1], tmpids[:, 2]), np.shape(wmborder), order='F')
+        tmpids = np.ravel_multi_index(np.nonzero(wmborder == regid), wmborder.shape, order='F')
+        tmpids.sort()
         tmpids = np.vstack((np.ones_like(tmpids) * regid, tmpids))
         region_id_table = np.vstack((region_id_table, np.transpose(tmpids)))
-    region_id_table = region_id_table[1:, :]
+    region_id_table = region_id_table[1:, :].astype(int)
 
     # Init storage
     SC_cap = defaultdict(list)

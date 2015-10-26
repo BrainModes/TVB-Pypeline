@@ -41,23 +41,25 @@ def agg_sc(path, sub_id, steplength=0.2):
     wmborder = np.load(wmborder_file)
 
     # Define the ROI-Range
-    region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)
+    # region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)
+    region_table = np.unique(wmborder[wmborder > 0])
 
     counter = 0
     # Generate ROI-ID to voxel hashtable
     logger.info('Generate ROI-ID to voxel hashtable...')
-    inverse_region_table = np.zeros((1, np.max(region_table)))
+    inverse_region_table = np.zeros((1, np.max(region_table) + 1))
     region_id_table = np.array((0, 0))  # Init Variable
     for regid in region_table:
         counter += 1
         # Transfer table between DK-Numbering and Matrix Numbering...
-        inverse_region_table[:, regid - 1] = counter
+        inverse_region_table[:, regid] = counter
 
-        tmpids = np.transpose(np.asarray(np.nonzero(wmborder == regid)))
-        tmpids = np.ravel_multi_index((tmpids[:, 0], tmpids[:, 1], tmpids[:, 2]), np.shape(wmborder), order='F')
+        # tmpids = np.transpose(np.asarray(np.nonzero(wmborder == regid)))
+        tmpids = np.ravel_multi_index(np.nonzero(wmborder == regid), wmborder.shape, order='F')
+        tmpids.sort()
         tmpids = np.vstack((np.ones_like(tmpids) * regid, tmpids))
         region_id_table = np.vstack((region_id_table, np.transpose(tmpids)))
-    region_id_table = region_id_table[1:, :]
+    region_id_table = region_id_table[1:, :].astype(int)
 
     # Init storage
     SC_cap_agg_tmp = defaultdict(list)
