@@ -1,0 +1,6 @@
+digraph preprocSub{
+  label="preprocSub";
+  preprocSub_reconall[label="reconall (freesurfer)"];
+  preprocSub_convertT1[label="convertT1 (freesurfer)"];
+  preprocSub_reconall -> preprocSub_convertT1;
+}
