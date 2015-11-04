@@ -1,18 +1,22 @@
 digraph preprocSub{
   label="preprocSub";
-  preprocSub_inputnode[label="inputnode (utility)"];
+  preprocSub_input[label="input (utility)"];
   preprocSub_pathBuilder[label="pathBuilder (utility)"];
-  preprocSub_dataFinderNode[label="dataFinderNode (io)"];
+  preprocSub_t1Finder[label="t1Finder (io)"];
   preprocSub_reconall[label="reconall (freesurfer)"];
   preprocSub_convertAparcAseg[label="convertAparcAseg (freesurfer)"];
-  preprocSub_dwiFinder[label="dwiFinder (io)"];
   preprocSub_dcm2niiAndBvecs[label="dcm2niiAndBvecs (dcm2nii)"];
-  preprocSub_inputnode -> preprocSub_pathBuilder;
-  preprocSub_inputnode -> preprocSub_pathBuilder;
-  preprocSub_pathBuilder -> preprocSub_dataFinderNode;
+  preprocSub_Extract_b0[label="Extract_b0 (utility)"];
+  preprocSub_BBRegister[label="BBRegister (freesurfer)"];
+  preprocSub_input -> preprocSub_pathBuilder;
+  preprocSub_input -> preprocSub_pathBuilder;
+  preprocSub_pathBuilder -> preprocSub_BBRegister;
+  preprocSub_pathBuilder -> preprocSub_BBRegister;
+  preprocSub_pathBuilder -> preprocSub_t1Finder;
   preprocSub_pathBuilder -> preprocSub_dcm2niiAndBvecs;
-  preprocSub_pathBuilder -> preprocSub_dwiFinder;
-  preprocSub_dataFinderNode -> preprocSub_reconall;
+  preprocSub_pathBuilder -> preprocSub_dcm2niiAndBvecs;
+  preprocSub_t1Finder -> preprocSub_reconall;
   preprocSub_reconall -> preprocSub_convertAparcAseg;
-  preprocSub_dwiFinder -> preprocSub_dcm2niiAndBvecs;
+  preprocSub_dcm2niiAndBvecs -> preprocSub_Extract_b0;
+  preprocSub_Extract_b0 -> preprocSub_BBRegister;
 }
