@@ -1,22 +1,25 @@
-digraph preprocSub{
-  label="preprocSub";
-  preprocSub_input[label="input (utility)"];
-  preprocSub_pathBuilder[label="pathBuilder (utility)"];
-  preprocSub_t1Finder[label="t1Finder (io)"];
-  preprocSub_reconall[label="reconall (freesurfer)"];
-  preprocSub_convertAparcAseg[label="convertAparcAseg (freesurfer)"];
-  preprocSub_dcm2niiAndBvecs[label="dcm2niiAndBvecs (dcm2nii)"];
-  preprocSub_Extract_b0[label="Extract_b0 (utility)"];
-  preprocSub_BBRegister[label="BBRegister (freesurfer)"];
-  preprocSub_input -> preprocSub_pathBuilder;
-  preprocSub_input -> preprocSub_pathBuilder;
-  preprocSub_pathBuilder -> preprocSub_BBRegister;
-  preprocSub_pathBuilder -> preprocSub_BBRegister;
-  preprocSub_pathBuilder -> preprocSub_t1Finder;
-  preprocSub_pathBuilder -> preprocSub_dcm2niiAndBvecs;
-  preprocSub_pathBuilder -> preprocSub_dcm2niiAndBvecs;
-  preprocSub_t1Finder -> preprocSub_reconall;
-  preprocSub_reconall -> preprocSub_convertAparcAseg;
-  preprocSub_dcm2niiAndBvecs -> preprocSub_Extract_b0;
-  preprocSub_Extract_b0 -> preprocSub_BBRegister;
+digraph MRTrix_tracking{
+  label="MRTrix_tracking";
+  MRTrix_tracking_input_node[label="input_node (utility)"];
+  MRTrix_tracking_fsl_2_mrtrix[label="fsl_2_mrtrix (mrtrix)"];
+  MRTrix_tracking_dwi_2_tensor[label="dwi_2_tensor (mrtrix)"];
+  MRTrix_tracking_tensor_2_vector[label="tensor_2_vector (mrtrix)"];
+  MRTrix_tracking_tensor_2_FA[label="tensor_2_FA (mrtrix)"];
+  MRTrix_tracking_mrmult[label="mrmult (fsl)"];
+  MRTrix_tracking_scale_ev[label="scale_ev (fsl)"];
+  MRTrix_tracking_input_node -> MRTrix_tracking_tensor_2_FA;
+  MRTrix_tracking_input_node -> MRTrix_tracking_mrmult;
+  MRTrix_tracking_input_node -> MRTrix_tracking_mrmult;
+  MRTrix_tracking_input_node -> MRTrix_tracking_fsl_2_mrtrix;
+  MRTrix_tracking_input_node -> MRTrix_tracking_fsl_2_mrtrix;
+  MRTrix_tracking_input_node -> MRTrix_tracking_fsl_2_mrtrix;
+  MRTrix_tracking_input_node -> MRTrix_tracking_tensor_2_vector;
+  MRTrix_tracking_input_node -> MRTrix_tracking_dwi_2_tensor;
+  MRTrix_tracking_input_node -> MRTrix_tracking_dwi_2_tensor;
+  MRTrix_tracking_fsl_2_mrtrix -> MRTrix_tracking_dwi_2_tensor;
+  MRTrix_tracking_dwi_2_tensor -> MRTrix_tracking_tensor_2_vector;
+  MRTrix_tracking_dwi_2_tensor -> MRTrix_tracking_tensor_2_FA;
+  MRTrix_tracking_tensor_2_vector -> MRTrix_tracking_scale_ev;
+  MRTrix_tracking_tensor_2_FA -> MRTrix_tracking_mrmult;
+  MRTrix_tracking_mrmult -> MRTrix_tracking_scale_ev;
 }

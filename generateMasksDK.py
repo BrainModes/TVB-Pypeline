@@ -125,4 +125,4 @@ def genmask(subPath):
             f.write('{0} {1} {2} {3}\n'.format(subPath, str(int(numseeds[roiid, 0])), str(int(numseeds[roiid, 1])),
                                                str(int(numseeds[roiid, 2]))))
 
-    f.closed
+    f.close()
