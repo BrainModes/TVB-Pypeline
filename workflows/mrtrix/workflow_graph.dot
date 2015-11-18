@@ -1,0 +1,13 @@
+digraph tracking_workflow{
+  label="tracking_workflow";
+  tracking_workflow_input_node[label="input_node (utility)"];
+  tracking_workflow_tracking_node[label="tracking_node (mrtrix)"];
+  tracking_workflow_output_node[label="output_node (utility)"];
+  tracking_workflow_input_node -> tracking_workflow_tracking_node;
+  tracking_workflow_input_node -> tracking_workflow_tracking_node;
+  tracking_workflow_input_node -> tracking_workflow_tracking_node;
+  tracking_workflow_input_node -> tracking_workflow_tracking_node;
+  tracking_workflow_input_node -> tracking_workflow_tracking_node;
+  tracking_workflow_input_node -> tracking_workflow_tracking_node;
+  tracking_workflow_tracking_node -> tracking_workflow_output_node;
+}
