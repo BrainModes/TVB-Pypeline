@@ -1,0 +1,20 @@
+digraph structs {
+node [shape=record];
+MRTRIX_maininput_node [label="{IN}|{ input_node | utility |  }|{OUT|<outb0image> b0_image|<outbvalfile> bval_file|<outbvecfile> bvec_file|<outdwifile> dwi_file|<outseedcount> seed_count|<outseedtargetmasks> seed_target_masks|<outtrackingdir> tracking_dir|<outwmmask> wmmask|<outwmmask1mm> wmmask_1mm}"];
+MRTRIX_mainMRTrix_preproc [label="{IN|<ininputnodeb0image> input_node.b0_image|<ininputnodebvalfile> input_node.bval_file|<ininputnodebvecfile> input_node.bvec_file|<ininputnodedwifile> input_node.dwi_file|<ininputnodetrackingdir> input_node.tracking_dir|<ininputnodewmmask> input_node.wmmask}|{ MRTrix_preproc |  |  }|{OUT|<outoutputnodesphericalharmonicsimage> output_node.spherical_harmonics_image}"];
+MRTRIX_mainMRTRIX_tracking [label="{IN|<ininputnodeseedcount> input_node.seed_count|<ininputnodeseedmask> input_node.seedmask|<ininputnodesphericalharmonicsimage> input_node.spherical_harmonics_image|<ininputnodetargetmask> input_node.targetmask|<ininputnodetracksdir> input_node.tracks_dir|<ininputnodewmmask1mm> input_node.wmmask_1mm}|{ MRTRIX_tracking |  |  }|{OUT|<outoutputnodetckfile> output_node.tck_file}"];
+MRTRIX_mainoutput_node [label="{IN|<intrkfiles> trk_files}|{ output_node | utility |  }|{OUT}"];
+MRTRIX_mainMRTRIX_tracking:outoutputnodetckfile:e -> MRTRIX_mainoutput_node:intrkfiles:w;
+MRTRIX_mainMRTrix_preproc:outoutputnodesphericalharmonicsimage:e -> MRTRIX_mainMRTRIX_tracking:ininputnodesphericalharmonicsimage:w;
+MRTRIX_maininput_node:outb0image:e -> MRTRIX_mainMRTrix_preproc:ininputnodeb0image:w;
+MRTRIX_maininput_node:outbvalfile:e -> MRTRIX_mainMRTrix_preproc:ininputnodebvalfile:w;
+MRTRIX_maininput_node:outbvecfile:e -> MRTRIX_mainMRTrix_preproc:ininputnodebvecfile:w;
+MRTRIX_maininput_node:outdwifile:e -> MRTRIX_mainMRTrix_preproc:ininputnodedwifile:w;
+MRTRIX_maininput_node:outseedcount:e -> MRTRIX_mainMRTRIX_tracking:ininputnodeseedcount:w;
+MRTRIX_maininput_node:outseedtargetmasks:e -> MRTRIX_mainMRTRIX_tracking:ininputnodeseedmask:w;
+MRTRIX_maininput_node:outseedtargetmasks:e -> MRTRIX_mainMRTRIX_tracking:ininputnodetargetmask:w;
+MRTRIX_maininput_node:outtrackingdir:e -> MRTRIX_mainMRTRIX_tracking:ininputnodetracksdir:w;
+MRTRIX_maininput_node:outtrackingdir:e -> MRTRIX_mainMRTrix_preproc:ininputnodetrackingdir:w;
+MRTRIX_maininput_node:outwmmask1mm:e -> MRTRIX_mainMRTRIX_tracking:ininputnodewmmask1mm:w;
+MRTRIX_maininput_node:outwmmask:e -> MRTRIX_mainMRTrix_preproc:ininputnodewmmask:w;
+}

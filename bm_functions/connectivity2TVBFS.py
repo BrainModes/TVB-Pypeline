@@ -77,7 +77,7 @@ def calcVertNormals(vertices, faces):
 # SC_matrix = 'AJ_20140516_1600_SC.mat'
 # reconallFolder = 'recon_all'
 
-def conn2tvb_fs(subID, subFolder, SC_matrix, reconallFolder='recon_all'):
+def connectivity_2_tvb_fs(subID, subFolder, SC_matrix, reconallFolder='recon_all'):
 
     # Create the results folder
     if not os.path.exists(subFolder + 'results/'):

@@ -25,7 +25,11 @@ import logging
 from collections import defaultdict
 
 
-def agg_sc(path, sub_id, steplength=0.2):
+def aggregate_connectivity(path, sub_id, steplength=None):
+
+    if steplength is None:
+        steplength = 0.2
+
     # Debug
     # path = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/mrtrix_68/'
     #  sub_id = 'AJ_20140516_1600'

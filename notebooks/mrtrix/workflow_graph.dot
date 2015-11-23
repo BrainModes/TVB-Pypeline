@@ -1,68 +1,10 @@
-digraph MRTRIX_main{
-  label="MRTRIX_main";
-  subgraph cluster_MRTRIX_main_MRTrix_preproc {
-      label="MRTrix_preproc";
-    MRTRIX_main_MRTrix_preproc_input_node[label="input_node (utility)"];
-    MRTRIX_main_MRTrix_preproc_erode_wmmask[label="erode_wmmask (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_fsl_2_mrtrix[label="fsl_2_mrtrix (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_dwi_2_tensor[label="dwi_2_tensor (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_tensor_2_FA[label="tensor_2_FA (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_mrmult[label="mrmult (fsl)"];
-    MRTRIX_main_MRTrix_preproc_multiplyFA_Mask[label="multiplyFA_Mask (fsl)"];
-    MRTRIX_main_MRTrix_preproc_threshold_FA[label="threshold_FA (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_estimate_deconv_response[label="estimate_deconv_response (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_compute_CSD[label="compute_CSD (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_output_node[label="output_node (utility)"];
-    MRTRIX_main_MRTrix_preproc_tensor_2_vector[label="tensor_2_vector (mrtrix)"];
-    MRTRIX_main_MRTrix_preproc_scale_ev[label="scale_ev (fsl)"];
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_scale_ev;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_tensor_2_vector;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_compute_CSD;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_compute_CSD;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_compute_CSD;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_compute_CSD;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_multiplyFA_Mask;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_multiplyFA_Mask;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_erode_wmmask;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_erode_wmmask;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_fsl_2_mrtrix;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_fsl_2_mrtrix;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_fsl_2_mrtrix;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_threshold_FA;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_estimate_deconv_response;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_estimate_deconv_response;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_estimate_deconv_response;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_tensor_2_FA;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_mrmult;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_mrmult;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_dwi_2_tensor;
-    MRTRIX_main_MRTrix_preproc_input_node -> MRTRIX_main_MRTrix_preproc_dwi_2_tensor;
-    MRTRIX_main_MRTrix_preproc_erode_wmmask -> MRTRIX_main_MRTrix_preproc_multiplyFA_Mask;
-    MRTRIX_main_MRTrix_preproc_fsl_2_mrtrix -> MRTRIX_main_MRTrix_preproc_estimate_deconv_response;
-    MRTRIX_main_MRTrix_preproc_fsl_2_mrtrix -> MRTRIX_main_MRTrix_preproc_dwi_2_tensor;
-    MRTRIX_main_MRTrix_preproc_fsl_2_mrtrix -> MRTRIX_main_MRTrix_preproc_compute_CSD;
-    MRTRIX_main_MRTrix_preproc_dwi_2_tensor -> MRTRIX_main_MRTrix_preproc_tensor_2_FA;
-    MRTRIX_main_MRTrix_preproc_dwi_2_tensor -> MRTRIX_main_MRTrix_preproc_tensor_2_vector;
-    MRTRIX_main_MRTrix_preproc_tensor_2_FA -> MRTRIX_main_MRTrix_preproc_mrmult;
-    MRTRIX_main_MRTrix_preproc_mrmult -> MRTRIX_main_MRTrix_preproc_scale_ev;
-    MRTRIX_main_MRTrix_preproc_multiplyFA_Mask -> MRTRIX_main_MRTrix_preproc_threshold_FA;
-    MRTRIX_main_MRTrix_preproc_threshold_FA -> MRTRIX_main_MRTrix_preproc_estimate_deconv_response;
-    MRTRIX_main_MRTrix_preproc_estimate_deconv_response -> MRTRIX_main_MRTrix_preproc_compute_CSD;
-    MRTRIX_main_MRTrix_preproc_compute_CSD -> MRTRIX_main_MRTrix_preproc_output_node;
-    MRTRIX_main_MRTrix_preproc_tensor_2_vector -> MRTRIX_main_MRTrix_preproc_scale_ev;
-  }
-  subgraph cluster_MRTRIX_main_MRTRIX_tracking {
-      label="MRTRIX_tracking";
-    MRTRIX_main_MRTRIX_tracking_input_node[label="input_node (utility)"];
-    MRTRIX_main_MRTRIX_tracking_tracking_node[label="tracking_node (mrtrix)"];
-    MRTRIX_main_MRTRIX_tracking_output_node[label="output_node (utility)"];
-    MRTRIX_main_MRTRIX_tracking_input_node -> MRTRIX_main_MRTRIX_tracking_tracking_node;
-    MRTRIX_main_MRTRIX_tracking_input_node -> MRTRIX_main_MRTRIX_tracking_tracking_node;
-    MRTRIX_main_MRTRIX_tracking_input_node -> MRTRIX_main_MRTRIX_tracking_tracking_node;
-    MRTRIX_main_MRTRIX_tracking_input_node -> MRTRIX_main_MRTRIX_tracking_tracking_node;
-    MRTRIX_main_MRTRIX_tracking_input_node -> MRTRIX_main_MRTRIX_tracking_tracking_node;
-    MRTRIX_main_MRTRIX_tracking_input_node -> MRTRIX_main_MRTRIX_tracking_tracking_node;
-    MRTRIX_main_MRTRIX_tracking_tracking_node -> MRTRIX_main_MRTRIX_tracking_output_node;
-  }
-  MRTRIX_main_MRTrix_preproc_output_node -> MRTRIX_main_MRTRIX_tracking_input_node;
+strict digraph G {
+MRTrix_preproc;
+"output_node (utility)";
+MRTRIX_tracking;
+"input_node (utility)";
+MRTrix_preproc -> MRTRIX_tracking;
+MRTRIX_tracking -> "output_node (utility)";
+"input_node (utility)" -> MRTrix_preproc;
+"input_node (utility)" -> MRTRIX_tracking;
 }

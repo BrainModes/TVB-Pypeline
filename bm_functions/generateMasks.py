@@ -16,7 +16,7 @@
 # =============================================================================
 
 
-def genmask(subPath):
+def generate_masks(subPath, mask_output_folder, wmoutline2diff_1mm, wmparc2diff_1mm, seedsPerVoxel=None):
 
     # import sys
     # import os
@@ -24,33 +24,30 @@ def genmask(subPath):
     import nibabel as nib
     # import scipy as sp
 
-
-    # Get Input Parameters
-    # subPath = sys.argv[1]
-    # pathOnCluster = sys.argv[2]
-
     # Debug
-    #subPath = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/'
-    #pathOnCluster = '/home/petra/Simon/Pipeline/'
-
-    mask_output_folder = subPath + 'mrtrix_68/masks_68/'
+    # subPath = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/'
+    # pathOnCluster = '/home/petra/Simon/Pipeline/'
+    # mask_output_folder = subPath + 'mrtrix_68/masks_68/'
 
     # Set the desired number of seedpoints per voxel
-    seedsPerVoxel = 200
-    # seedsPerVoxel = 1000
+    if seedsPerVoxel is None:
+        seedsPerVoxel = 200
+        # seedsPerVoxel = 1000
 
     # Mask chunk size
     chunkSize = 100000 / seedsPerVoxel
 
     # Load the wmborder image
-    wmborder = nib.load(subPath + 'calc_images/wmoutline2diff_1mm.nii.gz')
+    # wmborder = nib.load(calc_images_folder + '/wmoutline2diff_1mm.nii.gz')
+    wmborder = nib.load(wmoutline2diff_1mm)
 
     # Extract and Save the Affine Matrix for later use
     affine_matrix = np.linalg.inv(wmborder.affine)
     np.save(mask_output_folder + 'affine_matrix.npy', affine_matrix)
 
     # High-Res GM-WM-border
-    wmparc = nib.load(subPath + 'calc_images/wmparc2diff_1mm.nii.gz')
+    # wmparc = nib.load(calc_images_folder + '/wmparc2diff_1mm.nii.gz')
+    wmparc = nib.load(wmparc2diff_1mm)
     wmparc_data = wmparc.get_data()
     # Remove unwanted areas
     wmparc_data[wmparc_data > 3000] -= 2000

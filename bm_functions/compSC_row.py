@@ -41,7 +41,7 @@ def tck2voxel_cluster(tck, affineMatrix):
     return tck
 
 
-def comp_sc_row(path, roi, subid):
+def compute_connectivity_row(path, roi, subid):
     # Debug
     # path = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/mrtrix_68/'
     # roi = 2

@@ -1,3 +1,0 @@
-digraph structs {
-node [shape=record];
-}
