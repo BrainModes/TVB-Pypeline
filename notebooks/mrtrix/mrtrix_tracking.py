@@ -47,7 +47,7 @@ inputNode = MapNode(IdentityInterface(fields = ['wmmask_1mm',
                     name = 'input_node',
                     iterfield = ['seedmask', 'targetmask', 'seed_count'])
 
-outputNode = Node(IdentityInterface(fields = ['trk_file']), 
+outputNode = Node(IdentityInterface(fields = ['tck_file']), 
                   name = 'output_node')
 
 
@@ -112,7 +112,7 @@ convertNode = Node(Function(input_names = ['tck_file', 'image_file', 'output_fil
 
 # ### Define the workflow
 
-# In[13]:
+# In[16]:
 
 wf = Workflow('MRTRIX_tracking')
 
@@ -125,12 +125,12 @@ wf.connect([
                                   (('tracks_dir', fileNameBuild, 'seedmask'), 'out_file')]),
         (trackingNode, convertNode, [('tracked', 'tck_file')]),
         (inputNode, convertNode, [('seedmask', 'image_file'),
-                                 (('tracks_dir', fileNameBuildTRK, 'seedmask'), 'output_file')])
-        (convertNode, outputNode, [('output_file', 'trk_file')])
+                                 (('tracks_dir', fileNameBuildTRK, 'seedmask'), 'output_file')]),
+        (convertNode, outputNode, [('output_file', 'tck_file')])
     ])
 
 
-# In[14]:
+# In[17]:
 
 #wf.write_graph("workflow_graph.dot")
 #from IPython.display import Image

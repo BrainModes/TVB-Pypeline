@@ -7,12 +7,11 @@
 
 # ### Handle imports
 
-# In[1]:
+# In[20]:
 
 from nipype.interfaces import mrtrix, fsl
 from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface
-from nipype.interfaces.io import DataFinder
 
 import numpy as np
 import logging
@@ -37,7 +36,7 @@ logger.addHandler(ch)
 
 # ### Define parameters
 
-# In[5]:
+# In[3]:
 
 # Threshold for FA during single fiber voxel mask estimation
 absolute_threshold_value = 0.7
@@ -58,10 +57,9 @@ fileNames = {
 
 # ### Define input and outpute nodes
 
-# In[15]:
+# In[4]:
 
 inputNode = Node(IdentityInterface(fields = ['dwi_file',
-                                            'b0_image',
                                             'bval_file',
                                             'bvec_file',
                                             'wmmask',
@@ -75,7 +73,7 @@ outputNode = Node(IdentityInterface(fields = ['spherical_harmonics_image']),
 
 # ### Utility functions
 
-# In[7]:
+# In[5]:
 
 def fileNameBuilder(path, fname):
     return path + fname
@@ -94,7 +92,7 @@ def estimateMaxHarmOrder(bval_file):
 
 # ### MRTrix specific preprocessing
 
-# In[8]:
+# In[6]:
 
 # First convert the FSL-like input of bval and bvec into mrtrix format
 fsl2mrtrixNode = Node(mrtrix.FSL2MRTrix(), name = 'fsl_2_mrtrix')
@@ -141,33 +139,9 @@ estResponseNode = Node(mrtrix.EstimateResponseForSH(), name = 'estimate_deconv_r
 csdNode = Node(mrtrix.ConstrainedSphericalDeconvolution(), name = 'compute_CSD')
 
 
-# ### Fiber tracking stuff to copy over!
-
-# In[9]:
-
-# First get the folder names for the masks and tracks
-#seedMaskFinder = Node(DataFinder(match_regex = '.*seed.*mask.*\.nii\.gz'), name = 'seedMaskFinder')
-#targetMaskFinder = Node(DataFinder(match_regex = '.*target*.mask.*\.nii\.gz'), name = 'seedMaskFinder')
-#trackFolderFinder = Node(DataFinder(match_regex = '/*track/*', unpack_single = True), name = 'trackFolderFinder')
-
-
-
-# In[ ]:
-
-#seedMaskFinder.inputs.root_paths = tracking_dir
-#seedmasks = seedMaskFinder.run()
-#targetMaskFinder.inputs.root_paths = tracking_dir
-#targetmasks = targetMaskFinder.run()
-#trackFolderFinder.inputs.root_paths = tracking_dir
-#trackFolder = trackFolderFinder.run().outputs.out_paths
-#inputNode.outputs
-
-#print seedmasks.outputs.out_paths
-
-
 # ### Connect the Nodes in the workflow
 
-# In[16]:
+# In[ ]:
 
 wf = Workflow(name = 'MRTrix_preproc')
 
@@ -216,7 +190,7 @@ wf.connect([
 
 # ### Plot the workflow graph
 
-# In[17]:
+# In[ ]:
 
 #wf.write_graph("workflow_graph.dot")
 #from IPython.display import Image

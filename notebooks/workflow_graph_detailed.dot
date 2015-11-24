@@ -1,0 +1,22 @@
+digraph structs {
+node [shape=record];
+TVB_pipelineinput_node [label="{IN}|{ input_node | utility |  }|{OUT|<outsubjectfolder> subject_folder|<outsubjectid> subject_id}"];
+TVB_pipelinepreprocSub [label="{IN|<ininputnodesubjectfolder> input_node.subject_folder|<ininputnodesubjectid> input_node.subject_id}|{ preprocSub |  |  }|{OUT|<outoutputnodebvalfile> output_node.bval_file|<outoutputnodebvecfile> output_node.bvec_file|<outoutputnodedwifile> output_node.dwi_file|<outoutputnodehighresWmMask> output_node.highresWmMask|<outoutputnodelowresWmMask> output_node.lowresWmMask|<outoutputnodemaskfolder> output_node.mask_folder|<outoutputnodesubPath> output_node.subPath|<outoutputnodetrackingFolder> output_node.trackingFolder|<outoutputnodetracksfolder> output_node.tracks_folder|<outoutputnodewmoutline2diff1mm> output_node.wmoutline2diff_1mm|<outoutputnodewmparc2diff1mm> output_node.wmparc2diff_1mm}"];
+TVB_pipelinegenerate_masks [label="{IN|<inmaskoutputfolder> mask_output_folder|<insubPath> subPath|<inwmoutline2diff1mm> wmoutline2diff_1mm|<inwmparc2diff1mm> wmparc2diff_1mm}|{ generate_masks | utility |  }|{OUT|<outseedcount> seed_count|<outseedtargetmasks> seed_target_masks}"];
+TVB_pipelineMRTRIX_main [label="{IN|<ininputnodebvalfile> input_node.bval_file|<ininputnodebvecfile> input_node.bvec_file|<ininputnodedwifile> input_node.dwi_file|<ininputnodeseedcount> input_node.seed_count|<ininputnodeseedtargetmasks> input_node.seed_target_masks|<ininputnodetrackingdir> input_node.tracking_dir|<ininputnodetracksdir> input_node.tracks_dir|<ininputnodewmmask> input_node.wmmask|<ininputnodewmmask1mm> input_node.wmmask_1mm}|{ MRTRIX_main |  |  }|{OUT}"];
+TVB_pipelinegenerate_masks:outseedcount:e -> TVB_pipelineMRTRIX_main:ininputnodeseedcount:w;
+TVB_pipelinegenerate_masks:outseedtargetmasks:e -> TVB_pipelineMRTRIX_main:ininputnodeseedtargetmasks:w;
+TVB_pipelineinput_node:outsubjectfolder:e -> TVB_pipelinepreprocSub:ininputnodesubjectfolder:w;
+TVB_pipelineinput_node:outsubjectid:e -> TVB_pipelinepreprocSub:ininputnodesubjectid:w;
+TVB_pipelinepreprocSub:outoutputnodebvalfile:e -> TVB_pipelineMRTRIX_main:ininputnodebvalfile:w;
+TVB_pipelinepreprocSub:outoutputnodebvecfile:e -> TVB_pipelineMRTRIX_main:ininputnodebvecfile:w;
+TVB_pipelinepreprocSub:outoutputnodedwifile:e -> TVB_pipelineMRTRIX_main:ininputnodedwifile:w;
+TVB_pipelinepreprocSub:outoutputnodehighresWmMask:e -> TVB_pipelineMRTRIX_main:ininputnodewmmask1mm:w;
+TVB_pipelinepreprocSub:outoutputnodelowresWmMask:e -> TVB_pipelineMRTRIX_main:ininputnodewmmask:w;
+TVB_pipelinepreprocSub:outoutputnodemaskfolder:e -> TVB_pipelinegenerate_masks:inmaskoutputfolder:w;
+TVB_pipelinepreprocSub:outoutputnodesubPath:e -> TVB_pipelinegenerate_masks:insubPath:w;
+TVB_pipelinepreprocSub:outoutputnodetrackingFolder:e -> TVB_pipelineMRTRIX_main:ininputnodetrackingdir:w;
+TVB_pipelinepreprocSub:outoutputnodetracksfolder:e -> TVB_pipelineMRTRIX_main:ininputnodetracksdir:w;
+TVB_pipelinepreprocSub:outoutputnodewmoutline2diff1mm:e -> TVB_pipelinegenerate_masks:inwmoutline2diff1mm:w;
+TVB_pipelinepreprocSub:outoutputnodewmparc2diff1mm:e -> TVB_pipelinegenerate_masks:inwmparc2diff1mm:w;
+}

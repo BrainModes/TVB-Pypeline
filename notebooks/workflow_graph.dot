@@ -1,0 +1,10 @@
+strict digraph G {
+"generate_masks (utility)";
+MRTRIX_main;
+preprocSub;
+"input_node (utility)";
+"generate_masks (utility)" -> MRTRIX_main;
+preprocSub -> "generate_masks (utility)";
+preprocSub -> MRTRIX_main;
+"input_node (utility)" -> preprocSub;
+}

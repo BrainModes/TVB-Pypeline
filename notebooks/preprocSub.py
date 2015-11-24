@@ -18,7 +18,7 @@ from nipype.interfaces.io import DataFinder, DataSink
 from nipype import utils as nputils
 
 
-# In[38]:
+# In[2]:
 
 import numpy as np
 import logging, os, shutil, re
@@ -27,7 +27,7 @@ from multiprocessing import cpu_count
 
 # #### Start the logging
 
-# In[27]:
+# In[3]:
 
 logger = logging.getLogger('workflow')
 logger.setLevel(logging.INFO)
@@ -44,7 +44,7 @@ logger.addHandler(ch)
 
 # #### Define the later function variables in hard-code for debuging
 
-# In[28]:
+# In[4]:
 
 #subject_folder = '/Users/srothmei/Desktop/charite/toronto/'
 #subject_id = 'FR_20120903'
@@ -52,7 +52,7 @@ logger.addHandler(ch)
 
 # ### Utility Nodes
 
-# In[29]:
+# In[5]:
 
 def extractB0(dwMriFile):
     # This function is used to extract the b0 image out of the 4D series of diffusion images by splitting the
@@ -83,7 +83,7 @@ def extractB0(dwMriFile):
 
 # ## Set parameters and build variables
 
-# In[30]:
+# In[11]:
 
 reconallFolderName = 'recon_all' # Define what the output folder of recon-all should be named
 # Predefine some filenames
@@ -96,7 +96,11 @@ fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
             'aparc+aseg2diff_1mm': 'aparc_aseg_1mm.nii.gz',
             'aparc+aseg2diff': 'aparc_aseg2diff.nii.gz',
             'lowresWmMask': 'wmmask.nii.gz',
-            'highresWmMask': 'wmmask_1mm.nii.gz'}
+            'highresWmMask': 'wmmask_1mm.nii.gz',
+            'bval_file': 'bvals.dat',
+            'bvec_file': 'bvecs.dat',
+            'dwi_file': 'dwi.nii.gz',
+            'no_diffusion_image': 'lowb.nii.gz'}
 
 def fileNameBuilder(path, fname):
     return path + fname
@@ -108,14 +112,16 @@ def pathBuilder(subject_folder, subject_id, ):
     dwiPreprocFolder = subPath + '/diff_processed'
     trackingFolder = subPath + '/tractography'
     calc_images = subPath + '/calc_images'
+    mask_folder = trackingFolder + '/masks'
+    tracks_folder = trackingFolder + '/tracks'
     
     # Make folders
     os.makedirs(dwiPreprocFolder)
     os.makedirs(trackingFolder)
     os.makedirs(calc_images)
     
-    os.makedirs(trackingFolder + '/masks')
-    os.makedirs(trackingFolder + '/tracks')
+    os.makedirs(mask_folder)
+    os.makedirs(tracks_folder)
     
     # RawData Structure
     rawdataFolder = subPath + '/RAWDATA' # Define the path to the folder holding the rawdata dicom-files
@@ -123,35 +129,36 @@ def pathBuilder(subject_folder, subject_id, ):
     dwiRawFolder = rawdataFolder + '/DTI' # The dwMRI rawdata folder
     fmriRawFolder = rawdataFolder + '/BOLD-EPI/' # The fMRI rawdata folder
     
-    return subPath, rawdataFolder, T1RawFolder, dwiRawFolder, fmriRawFolder, dwiPreprocFolder, trackingFolder, bbRegFile
+    return subPath, rawdataFolder, T1RawFolder, dwiRawFolder, fmriRawFolder, dwiPreprocFolder, trackingFolder, bbRegFile, mask_folder, tracks_folder
 
 pathBuildingNode = Node(Function(input_names = ['subject_folder', 'subject_id'],
                                 output_names = ['subPath', 'rawdataFolder', 'T1RawFolder',
                                                 'dwiRawFolder', 'fmriRawFolder', 
-                                                'dwiPreprocFolder', 'trackingFolder', 'calc_images'],
+                                                'dwiPreprocFolder', 'trackingFolder', 'calc_images',
+                                               'mask_folder', 'tracks_folder'],
                                 function = pathBuilder),
                         name='pathBuilder')
 
 
 # ### Define Inputnode and Outputnode
 
-# In[31]:
+# In[12]:
 
 inputNode = Node(IdentityInterface(fields=['subject_id', 
                                            'subject_folder']), 
                  mandatory_inputs=True, 
-                 name='input')
+                 name='input_node')
 
-# TODO: Define Output node
-mergedOutputs = pathBuildingNode.outputs.trait_names()
+
+mergedOutputs = pathBuildingNode.outputs.copyable_trait_names()
 mergedOutputs.extend(fileNames.keys())
 
-outputNode = Node(IdentityInterface(fields = mergedOutputs), mandatory_inputs = False, name = 'output')
+outputNode = Node(IdentityInterface(fields = mergedOutputs), mandatory_inputs = False, name = 'output_node')
 
 
 # ### Structural Data (T1) preprocessing
 
-# In[32]:
+# In[ ]:
 
 # Setup a datafinder to find the paths to the specific DICOM files
 t1FinderNode = Node(DataFinder(), name = 't1Finder')
@@ -176,7 +183,7 @@ mriConverter.inputs.out_orientation = 'RAS'
 
 # ### Diffusion Data (dwMRI) preprocessing
 
-# In[33]:
+# In[ ]:
 
 # First extract the diffusion vectors and the pulse intensity (bvec and bval)
 # Use dcm2nii for this task
@@ -205,7 +212,7 @@ bbregNode.inputs.subject_id = reconallFolderName
 
 # ### Surface2Vol
 
-# In[34]:
+# In[ ]:
 
 # Transform Left Hemisphere
 lhWhiteFilename = 'lh_white.nii.gz'
@@ -226,7 +233,7 @@ mergeHemisNode.inputs.output_type = 'NIFTI_GZ'
 
 # ### Registration
 
-# In[35]:
+# In[ ]:
 
 # Rotate high-res (1mm) WM-border to match dwi data w/o resampling
 applyReg_anat2diff_1mm = Node(freesurfer.ApplyVolTransform(), name = 'wmoutline2diff_1mm')
@@ -262,7 +269,7 @@ applyReg_aparc2diff.inputs.interp = 'nearest'
 
 # ### Create Whitematter Brainmasks
 
-# In[36]:
+# In[ ]:
 
 def extractWhitematter(input_image, wmoutline_image, output_image):
     thresHolder = fsl.MultiImageMaths(input_file = input_image, out_file = output_image)
@@ -293,7 +300,7 @@ wmmask_highres = wmmask_lowres.clone('extract_WM_highres')
 
 # ### Connect the Nodes
 
-# In[37]:
+# In[ ]:
 
 wf = Workflow(name = 'preprocSub')
 
@@ -381,9 +388,8 @@ wf.connect([(applyReg_aparc2diff_1mm, wmmask_highres, [('transformed_file', 'inp
                                                'output_image')])])
 
 # Now forwards all relevant stuff to output node
-for i in pathBuildingNode.outputs.trait_names():
-    if not re.search('trait', i):
-        wf.connect([(pathBuildingNode, outputNode, [(i, i)])])
+for i in pathBuildingNode.outputs.copyable_trait_names():
+    wf.connect([(pathBuildingNode, outputNode, [(i, i)])])
     
 wf.connect([(wmmask_highres, outputNode, [('output_image', fileNames['highresWmMask'])]),
            (wmmask_lowres, outputNode, [('output_image', fileNames['lowresWmMask'])]),
@@ -392,6 +398,10 @@ wf.connect([(wmmask_highres, outputNode, [('output_image', fileNames['highresWmM
            (mergeHemisNode, outputNode, [('out_file', fileNames['wmSurf'])]),
            (applyReg_anat2diff_1mm, outputNode, [('transformed_file', fileNames['wmoutline2diff_1mm'])]),
            (applyReg_anat2diff, outputNode, [('transformed_file', fileNames['wmoutline2diff'])]),
-           (applyReg_wmparc2diff_1mm, outputNode, [('transformed_file', fileNames['wmparc2diff_1mm'])])
+           (applyReg_wmparc2diff_1mm, outputNode, [('transformed_file', fileNames['wmparc2diff_1mm'])]),
+            (dcm2niiNode, outputNode, [('bvals', 'bval_file'),
+                                      ('bvecs', 'bvec_file')]),
+            (extrctB0Node, outputNode, [('b0', 'no_diffusion_image')]),
+            (dcm2niiNode, outputNode, [('converted_files', 'dwi_file')])
            ])
 
