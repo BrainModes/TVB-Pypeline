@@ -65,6 +65,9 @@ def generate_masks(subPath, mask_output_folder, wmoutline2diff_1mm, wmparc2diff_
     ### Create the parcellated GWI
     wmborder_data = wmborder.get_data()
     wmborder_data[wmborder_data > 0] = wmparc_data[wmborder_data > 0]
+
+    number_of_rois = len(np.unique(wmborder_data)) - 1
+
     nib.save(wmborder, mask_output_folder + 'gmwmborder_1mm.nii.gz')
     # Save it as "normal" File
     np.save(mask_output_folder + 'wmborder.npy', wmborder_data)
@@ -139,4 +142,4 @@ def generate_masks(subPath, mask_output_folder, wmoutline2diff_1mm, wmparc2diff_
 
     f.close()
 
-    return seed_target_masks, seed_count
+    return seed_target_masks, seed_count, number_of_rois, affine_matrix, wmborder_data

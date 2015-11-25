@@ -2,22 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/mrtrix/workflow_graph.dot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/mrtrix/workflow_graph.dot.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/mrtrix/workflow_graph_detailed.dot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/mrtrix/workflow_graph_detailed.dot.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_main.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_preproc.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/workflows/mrtrix/workflow_graph.dot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/workflows/mrtrix/workflow_graph.dot.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph.dot.png" afterPath="$PROJECT_DIR$/notebooks/workflow_graph.dot.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot.png" afterPath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/TVB_pipeline-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/TVB_pipeline-checkpoint.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline.ipynb" afterPath="$PROJECT_DIR$/notebooks/TVB_pipeline.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_preproc.py" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_preproc.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/aggregateSC.py" afterPath="$PROJECT_DIR$/bm_functions/aggregateSC.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/compSC_row.py" afterPath="$PROJECT_DIR$/bm_functions/compSC_row.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/generateMasks.py" afterPath="$PROJECT_DIR$/bm_functions/generateMasks.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_main-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_main-checkpoint.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.py" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_tracking-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_tracking-checkpoint.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.py" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/preprocSub-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/preprocSub-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/preprocSub.ipynb" afterPath="$PROJECT_DIR$/notebooks/preprocSub.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/preprocSub.py" afterPath="$PROJECT_DIR$/notebooks/preprocSub.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" afterPath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph.dot" afterPath="$PROJECT_DIR$/notebooks/workflow_graph.dot" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot" afterPath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="TVB-Pypeline.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,7 +56,7 @@
         <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -73,28 +75,28 @@
       <file leaf-file-name="compSC_row.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bm_functions/compSC_row.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="28" />
+            <state vertical-scroll-proportion="-62.185184">
+              <caret line="192" column="18" selection-start-line="192" selection-start-column="18" selection-end-line="192" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="connectivity2TVBFS.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="connectivity2TVBFS.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bm_functions/connectivity2TVBFS.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="0.77319586">
               <caret line="79" column="25" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="25" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="generateMasks.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="generateMasks.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bm_functions/generateMasks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.34793815">
-              <caret line="18" column="103" selection-start-line="18" selection-start-column="103" selection-end-line="18" selection-end-column="103" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="144" column="86" selection-start-line="144" selection-start-column="86" selection-end-line="144" selection-end-column="86" />
               <folding />
             </state>
           </provider>
@@ -140,6 +142,8 @@
         <option value="$PROJECT_DIR$/bm_functions/connectivity2TVBFS.py" />
         <option value="$PROJECT_DIR$/bm_functions/__init__.py" />
         <option value="$PROJECT_DIR$/bm_functions/generateMasks.py" />
+        <option value="$PROJECT_DIR$/bm_functions/compSC_row.py" />
+        <option value="$PROJECT_DIR$/bm_functions/aggregateSC.py" />
       </list>
     </option>
   </component>
@@ -499,30 +503,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/bm_functions/compSC_row.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/connectivity2TVBFS.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="79" column="25" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bm_functions/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -543,8 +523,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bm_functions/generateMasks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34793815">
-          <caret line="18" column="103" selection-start-line="18" selection-start-column="103" selection-end-line="18" selection-end-column="103" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="144" column="86" selection-start-line="144" selection-start-column="86" selection-end-line="144" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bm_functions/compSC_row.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-62.185184">
+          <caret line="192" column="18" selection-start-line="192" selection-start-column="18" selection-end-line="192" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bm_functions/connectivity2TVBFS.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77319586">
+          <caret line="79" column="25" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="25" />
           <folding />
         </state>
       </provider>

@@ -41,7 +41,7 @@ def tck2voxel_cluster(tck, affineMatrix):
     return tck
 
 
-def compute_connectivity_row(path, roi, subid):
+def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, track_files):
     # Debug
     # path = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/mrtrix_68/'
     # roi = 2
@@ -52,16 +52,16 @@ def compute_connectivity_row(path, roi, subid):
     dangerZone.setLevel('WARNING')
 
     # Extract parameters
-    wmborder_file = path + 'masks_68/wmborder.npy'
-    tracksPath = path + 'tracks_68/'
+    #wmborder_file = path + 'masks_68/wmborder.npy'
+    #tracksPath = path + 'tracks_68/'
 
     # User feedback
     print('Computing SC for ROI ' + str(roi))
 
     # Load the affine matrix
-    affineMatrix = np.load(path + 'masks_68/affine_matrix.npy')
+    #affine_matrix = np.load(path + 'masks_68/affine_matrix.npy')
     # Load the wmborder file
-    wmborder = np.load(wmborder_file)
+    #wmborder = np.load(wmborder_file)
 
     # Define the ROI-Range
     # region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)
@@ -89,21 +89,22 @@ def compute_connectivity_row(path, roi, subid):
 
     # Check for track-files in the dircetory
     tileFiles = list()
-    for trackFile in os.listdir(tracksPath):
+    # for trackFile in os.listdir(tracksPath):
+    for trackFile in track_files:
         # Select only files that have max. of 2 trailing number depicting the ordering...
         # i.e. don't select files like '10012_subID.tck' when processing for region 10...
-        if re.search("^" + str(region_table[roi - 1]) + "\d{1,2}_.*\.tck$", trackFile):
+        if re.search("^" + str(region_table[roi - 1]) + "\d{1,2}_.*\.trk$", trackFile):
             tileFiles.append(trackFile)
 
     # Loop over all track-files
     for tile in tileFiles:
         # First check if the file is sane considering the filesize...
-        if os.stat(tracksPath + tile).st_size > 2000:
+        if os.stat(tile).st_size > 2000:
             # Load the file
-            tracks_header, tracks = trk.read_mrtrix_tracks(tracksPath + tile, as_generator=False)
+            tracks_header, tracks = trk.read_mrtrix_tracks(tile, as_generator=False)
             print(tile + ': Tracks loaded .....')
             # Transform the coordinates from mm to voxel
-            tracks = tck2voxel_cluster(tracks, affineMatrix)
+            tracks = tck2voxel_cluster(tracks, affine_matrix)
 
             # QA
             qualityMetrics['generated_tracks'] += np.shape(tracks)[0]
@@ -171,11 +172,13 @@ def compute_connectivity_row(path, roi, subid):
     # Store everything there is to store
     print('Storing....')
     # np.savez_compressed(outfile, SC_cap=SC_cap, SC_dist=SC_dist, qualityMetrics=qualityMetrics)
-    with open(tracksPath + 'SC_cap_row_' + str(roi) + subid + '.json', 'w') as outfile:
+    SC_cap_row_filename = tracksPath + 'SC_cap_row_' + str(roi) + subid + '.json'
+    with open(SC_cap_row_filename, 'w') as outfile:
         json.dump(SC_cap, outfile, sort_keys=True, indent=2)
         outfile.close()
 
-    with open(tracksPath + 'SC_dist_row_' + str(roi) + subid + '.json', 'w') as outfile:
+    SC_dist_row_filename = tracksPath + 'SC_dist_row_' + str(roi) + subid + '.json'
+    with open(SC_dist_row_filename, 'w') as outfile:
         json.dump(SC_dist, outfile, sort_keys=True, indent=2)
         outfile.close()
 
@@ -186,3 +189,5 @@ def compute_connectivity_row(path, roi, subid):
     # Releasing Mr Loggins...
     dangerZone.setLevel('NOTSET')
     print('Done!')
+
+    return SC_cap_row_filename, SC_dist_row_filename

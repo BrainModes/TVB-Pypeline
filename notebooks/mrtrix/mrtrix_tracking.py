@@ -47,7 +47,7 @@ inputNode = MapNode(IdentityInterface(fields = ['wmmask_1mm',
                     name = 'input_node',
                     iterfield = ['seedmask', 'targetmask', 'seed_count'])
 
-outputNode = Node(IdentityInterface(fields = ['tck_file']), 
+outputNode = Node(IdentityInterface(fields = ['trk_file']), 
                   name = 'output_node')
 
 
@@ -70,7 +70,7 @@ def fileNameBuildTRK(path, seedmask):
 
 # ### Perform the fiber tracking
 
-# In[6]:
+# In[18]:
 
 trackingNode = Node(mrt.StreamlineTrack(), name = 'tracking_node')
 trackingNode.inputs.inputmodel = 'SD_PROB'
@@ -78,6 +78,7 @@ trackingNode.inputs.minimum_tract_length = 30 #Min length set to 30mm here
 trackingNode.inputs.stop = True
 trackingNode.inputs.no_mask_interpolation = True
 trackingNode.inputs.unidirectional = True
+trackingNode.inputs.step_size = 0.2
 
 
 # ### Convert tck to trk
@@ -126,7 +127,7 @@ wf.connect([
         (trackingNode, convertNode, [('tracked', 'tck_file')]),
         (inputNode, convertNode, [('seedmask', 'image_file'),
                                  (('tracks_dir', fileNameBuildTRK, 'seedmask'), 'output_file')]),
-        (convertNode, outputNode, [('output_file', 'tck_file')])
+        (convertNode, outputNode, [('output_file', 'trk_file')])
     ])
 
 

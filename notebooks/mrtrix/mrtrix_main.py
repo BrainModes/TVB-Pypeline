@@ -55,7 +55,7 @@ inputNode = Node(IdentityInterface(fields = ['dwi_file',
                  name = 'input_node')
 
 # TODO: Define output node
-outputNode = Node(IdentityInterface(fields = ['tck_files']),
+outputNode = Node(IdentityInterface(fields = ['trk_files']),
                   name = 'output_node')
 
 
@@ -88,7 +88,7 @@ wf.connect([
                              ('seed_count', 'input_node.seed_count'),
                             (('seed_target_masks', getSeedMasks), 'input_node.seedmask'),
                             (('seed_target_masks', getTargetMasks), 'input_node.targetmask')]),
-        (trk.wf, outputNode, [('output_node.tck_file', 'tck_files')])
+        (trk.wf, outputNode, [('output_node.trk_file', 'trk_files')])
     ])
 
 

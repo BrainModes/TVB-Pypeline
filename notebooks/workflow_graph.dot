@@ -1,10 +1,20 @@
 strict digraph G {
+"aggregate_SC (utility)";
+preprocSub;
 "generate_masks (utility)";
 MRTRIX_main;
-preprocSub;
 "input_node (utility)";
-"generate_masks (utility)" -> MRTRIX_main;
+"comp_SC_row (utility)";
+preprocSub -> "aggregate_SC (utility)";
 preprocSub -> "generate_masks (utility)";
 preprocSub -> MRTRIX_main;
+preprocSub -> "comp_SC_row (utility)";
+"generate_masks (utility)" -> "aggregate_SC (utility)";
+"generate_masks (utility)" -> MRTRIX_main;
+"generate_masks (utility)" -> "comp_SC_row (utility)";
+MRTRIX_main -> "comp_SC_row (utility)";
+"input_node (utility)" -> "aggregate_SC (utility)";
 "input_node (utility)" -> preprocSub;
+"input_node (utility)" -> "comp_SC_row (utility)";
+"comp_SC_row (utility)" -> "aggregate_SC (utility)";
 }
