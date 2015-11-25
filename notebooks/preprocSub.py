@@ -106,6 +106,7 @@ def fileNameBuilder(path, fname):
     return path + fname
 
 def pathBuilder(subject_folder, subject_id, ):
+    import os
     subPath = subject_folder + '/' + subject_id # Build full path to subject folder
     
     #Path definitions
