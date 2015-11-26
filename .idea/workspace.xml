@@ -2,23 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline/d3.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline/graph.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline/graph1.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/crash-20151125-170935-srothmei-pathBuilder.pklz" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/notebooks/crash-20151125-171204-srothmei-pathBuilder.pklz" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph.dot.png" afterPath="$PROJECT_DIR$/notebooks/workflow_graph.dot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot.png" afterPath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/TVB_pipeline-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/TVB_pipeline-checkpoint.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline.ipynb" afterPath="$PROJECT_DIR$/notebooks/TVB_pipeline.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/aggregateSC.py" afterPath="$PROJECT_DIR$/bm_functions/aggregateSC.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/compSC_row.py" afterPath="$PROJECT_DIR$/bm_functions/compSC_row.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/generateMasks.py" afterPath="$PROJECT_DIR$/bm_functions/generateMasks.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_main-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_main-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.py" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_tracking-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/.ipynb_checkpoints/mrtrix_tracking-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.py" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_tracking.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" afterPath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline.py" afterPath="$PROJECT_DIR$/notebooks/TVB_pipeline.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/preprocSub-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/preprocSub-checkpoint.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/preprocSub.ipynb" afterPath="$PROJECT_DIR$/notebooks/preprocSub.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/preprocSub.py" afterPath="$PROJECT_DIR$/notebooks/preprocSub.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph.dot" afterPath="$PROJECT_DIR$/notebooks/workflow_graph.dot" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot" afterPath="$PROJECT_DIR$/notebooks/workflow_graph_detailed.dot" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="TVB-Pypeline.iws" />

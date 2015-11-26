@@ -7,7 +7,7 @@
 
 # ### Handle imports
 
-# In[20]:
+# In[1]:
 
 from nipype.interfaces import mrtrix, fsl
 from nipype import Node, Workflow
@@ -76,7 +76,7 @@ outputNode = Node(IdentityInterface(fields = ['spherical_harmonics_image']),
 # In[5]:
 
 def fileNameBuilder(path, fname):
-    return path + fname
+    return path + '/' + fname
 
 # Get the maximum possbile spherical-harmonics order 
 # out of the data because mrtrix itself is not capable of doing this safely
@@ -141,7 +141,7 @@ csdNode = Node(mrtrix.ConstrainedSphericalDeconvolution(), name = 'compute_CSD')
 
 # ### Connect the Nodes in the workflow
 
-# In[ ]:
+# In[15]:
 
 wf = Workflow(name = 'MRTrix_preproc')
 
@@ -166,8 +166,8 @@ wf.connect([
         (inputNode, erodeNode, [('wmmask', 'in_file'),
                                (('tracking_dir', fileNameBuilder, fileNames['singleFiberFile']), 'out_filename')]),
         (erodeNode, cleanFaNode, [('out_file', 'in_file')]),
-        (inputNode, cleanFaNode, [('wmmask', 'operand_file'),
-                               (('tracking_dir', fileNameBuilder, fileNames['singleFiberFile']), 'out_file')]),
+        (inputNode, cleanFaNode, [(('tracking_dir', fileNameBuilder, fileNames['singleFiberFile']), 'out_file')]),
+        (mrmultNode, cleanFaNode, [('out_file', 'operand_file')]),
         (cleanFaNode, thresholdFANode, [('out_file', 'in_file')]),
         (inputNode, thresholdFANode, [(('tracking_dir', fileNameBuilder, fileNames['singleFiberFile']),
                                        'out_filename')]),
@@ -188,16 +188,16 @@ wf.connect([
 # Now the tracking stuff
 
 
+# In[17]:
+
+erodeNode.inputs
+
+
 # ### Plot the workflow graph
 
-# In[ ]:
+# In[16]:
 
-#wf.write_graph("workflow_graph.dot")
-#from IPython.display import Image
-#Image(filename="workflow_graph.dot.png")
-
-
-# In[ ]:
-
-
+wf.write_graph("mrtrix_preproc_workflow_graph.dot")
+from IPython.display import Image
+Image(filename="mrtrix_preproc_workflow_graph.dot.png")
 
