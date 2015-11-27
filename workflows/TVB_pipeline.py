@@ -3,7 +3,8 @@
 
 # # Pipeline Main Workflow
 
-# This file defines the main (scaffold) workflow fo the pipeline. The tractorgraphy building block is intended to be freely exchangeable
+# This file defines the main (scaffold) workflow fo the pipeline.
+# The tractorgraphy building block is intended to be freely exchangeable
 
 # Debug stuff! Remove this cell once you're done Simon!
 import sys
@@ -140,7 +141,7 @@ from IPython.display import Image
 Image(filename="TVB_workflow_graph.dot.png")
 
 # ## Run the Workflow
-wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
+wf.run(plugin='MultiProc', plugin_args={'n_procs': 2})
 
 
 
