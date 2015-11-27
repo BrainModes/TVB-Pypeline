@@ -14,21 +14,17 @@ from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
 from nipype.interfaces.dcm2nii import Dcm2nii
-from nipype.interfaces.io import DataFinder, DataSink
+from nipype.interfaces.io import DataFinder
 from nipype import utils as nputils
 
 
 # In[2]:
 
-import numpy as np
-import logging, os, shutil, re
+import logging, os, shutil
 from multiprocessing import cpu_count
 
 
 # #### Start the logging
-
-# In[3]:
-
 logger = logging.getLogger('workflow')
 logger.setLevel(logging.INFO)
 # create console handler and set level to debug
@@ -42,18 +38,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-# #### Define the later function variables in hard-code for debuging
-
-# In[4]:
-
-#subject_folder = '/Users/srothmei/Desktop/charite/toronto/'
-#subject_id = 'FR_20120903'
-
-
 # ### Utility Nodes
-
-# In[21]:
-
 def extractB0(dwMriFile):
     # This function is used to extract the b0 image out of the 4D series of diffusion images by splitting the
     # series, copying the first image and merging the images together into a single file afterwards
@@ -80,14 +65,12 @@ def extractB0(dwMriFile):
     
     return b0
 
+
 def selectFromList(inList, index):
     return inList[index]
 
 
 # ## Set parameters and build variables
-
-# In[6]:
-
 reconallFolderName = 'recon_all' # Define what the output folder of recon-all should be named
 # Predefine some filenames
 fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
@@ -105,8 +88,10 @@ fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
             'dwi_file': 'dwi.nii.gz',
             'no_diffusion_image': 'lowb.nii.gz'}
 
+
 def fileNameBuilder(path, fname):
     return path + fname
+
 
 def pathBuilder(subject_folder, subject_id):
     subPath = subject_folder + '/' + subject_id # Build full path to subject folder
@@ -116,7 +101,7 @@ def pathBuilder(subject_folder, subject_id):
         if not os.path.exists(dirName):
             os.makedirs(dirName)
      
-    #Path definitions
+    # Path definitions
     dwiPreprocFolder = subPath + '/diff_processed'
     trackingFolder = subPath + '/tractography'
     calc_images = subPath + '/calc_images'
@@ -149,9 +134,6 @@ pathBuildingNode = Node(Function(input_names = ['subject_folder', 'subject_id'],
 
 
 # ### Define Inputnode and Outputnode
-
-# In[7]:
-
 inputNode = Node(IdentityInterface(fields=['subject_id', 
                                            'subject_folder']), 
                  mandatory_inputs=True, 
@@ -166,37 +148,28 @@ outputNode = Node(IdentityInterface(fields = mergedOutputs), mandatory_inputs = 
 
 # ### Structural Data (T1) preprocessing
 
-# In[8]:
-
 # Setup a datafinder to find the paths to the specific DICOM files
 t1FinderNode = Node(DataFinder(), name = 't1Finder')
 t1FinderNode.inputs.match_regex = '.*\.dcm'
-#df = DataFinder(root_paths = T1RawFolder, match_regex = '.*\.dcm')
-#firstFile = df.run().outputs.out_paths[0]
 
 # Set recon-all parameters
 reconallNode = Node(freesurfer.preprocess.ReconAll(), name = 'reconall')
-#reconallNode.inputs.T1_files = firstFile
-#reconallNode.inputs.subjects_dir = subPath
+# TODO: Uncomment the following two lines after debugging...
+# reconallNode.inputs.T1_files = firstFile
+# reconallNode.inputs.subjects_dir = subPath
 reconallNode.inputs.subject_id = reconallFolderName
 reconallNode.inputs.directive = 'all'
 reconallNode.inputs.openmp = cpu_count()
 
 # Convert the T1 mgz image to nifti format for later usage
 mriConverter = Node(freesurfer.preprocess.MRIConvert(), name = 'convertAparcAseg')
-#convertT1.inputs.out_file = subPath + reconallFolderName + '/mri/aparc+aseg.nii.gz'
 mriConverter.inputs.out_type = 'niigz'
 mriConverter.inputs.out_orientation = 'RAS'
 
 
 # ### Diffusion Data (dwMRI) preprocessing
-
-# In[9]:
-
 # First extract the diffusion vectors and the pulse intensity (bvec and bval)
 # Use dcm2nii for this task
-#dwiFinderNode = t1FinderNode.clone('dwiFinder')
-
 dcm2niiNode = Node(Dcm2nii(), name = 'dcm2niiAndBvecs')
 dcm2niiNode.inputs.gzip_output = True
 dcm2niiNode.inputs.date_in_filename = False
@@ -220,8 +193,6 @@ bbregNode.inputs.subject_id = reconallFolderName
 
 # ### Surface2Vol
 
-# In[10]:
-
 # Transform Left Hemisphere
 lhWhiteFilename = 'lh_white.nii.gz'
 surf2volNode_lh = Node(freesurfer.utils.Surface2VolTransform(), name = 'surf2vol_lh')
@@ -241,8 +212,6 @@ mergeHemisNode.inputs.output_type = 'NIFTI_GZ'
 
 # ### Registration
 
-# In[11]:
-
 # Rotate high-res (1mm) WM-border to match dwi data w/o resampling
 applyReg_anat2diff_1mm = Node(freesurfer.ApplyVolTransform(), name = 'wmoutline2diff_1mm')
 applyReg_anat2diff_1mm.inputs.inverse = True
@@ -254,6 +223,7 @@ applyReg_anat2diff_1mm.inputs.args = '--no-save-reg'
 applyReg_anat2diff = applyReg_anat2diff_1mm.clone('wmoutline2diff')
 applyReg_anat2diff.inputs.no_resample = False
 applyReg_anat2diff.inputs.interp = 'trilin'
+
 # Filter out low voxels produced by trilin. interp.
 thresholdNode = Node(fsl.maths.Threshold(), name = 'remove_interp_residuals')
 thresholdNode.inputs.thresh = 0.1
@@ -277,8 +247,6 @@ applyReg_aparc2diff.inputs.interp = 'nearest'
 
 # ### Create Whitematter Brainmasks
 
-# In[12]:
-
 def extractWhitematter(input_image, wmoutline_image, output_image):
     thresHolder = fsl.MultiImageMaths(input_file = input_image, out_file = output_image)
     thresHolder.inputs.op_string = '-uthr 41 -thr 41'
@@ -294,7 +262,10 @@ def extractWhitematter(input_image, wmoutline_image, output_image):
     # Combine and binarize
     combinizer = fsl.BinaryMaths(operation = 'add', in_file = output_image, 
                                  operand_file = wmoutline_image, out_file = output_image)
+    combinizer.run()
+
     binarizer = fsl.UnaryMaths(operation = 'bin', in_file = output_image, out_file = output_image)
+    binarizer.run()
     
     return output_image
 
@@ -306,10 +277,22 @@ wmmask_lowres = Node(Function(input_names = ['input_image', 'wmoutline_image', '
 wmmask_highres = wmmask_lowres.clone('extract_WM_highres')
 
 
+# ### Debug the crap out of this!
+def myAmazingDebugFunction(x,y):
+    reconAllPath = '/Users/srothmei/Desktop/charite/toronto/FR_20120903/recon_all/mri/'
+    T1 = reconAllPath + 'T1.mgz'
+    aparc_aseg = [reconAllPath + 'aparc+aseg.mgz']
+    wmparc = reconAllPath + 'wmparc.mgz'
+    
+    return T1, aparc_aseg, wmparc
+
+reconallNode = Node(Function(input_names = ['T1_files', 'subjects_dir'],
+                            output_names = ['T1', 'aparc_aseg', 'wmparc'],
+                            function = myAmazingDebugFunction),
+                   name = 'recon_debug_all')
+
+
 # ### Connect the Nodes
-
-# In[17]:
-
 wf = Workflow(name = 'preprocSub')
 
 # Input strings to pathbuilder
@@ -417,14 +400,9 @@ wf.connect([(wmmask_highres, outputNode, [('output_image', fileNames['highresWmM
            ])
 
 
-# In[18]:
-
 #wf.write_graph("workflow_graph.dot")
 #from IPython.display import Image
 #Image(filename="workflow_graph.dot.png")
-
-
-# In[ ]:
 
 
 

@@ -5,14 +5,13 @@
 
 # This file defines the main (scaffold) workflow fo the pipeline. The tractorgraphy building block is intended to be freely exchangeable
 
-# In[1]:
-
 # Debug stuff! Remove this cell once you're done Simon!
 import sys
 sys.path.append("/Users/srothmei/Documents/TVB-Pypeline/")
 
-
-# In[2]:
+from nipype import config
+config.enable_debug_mode()
+# End of Debug-Stuff
 
 from nipype import Node, Workflow, MapNode
 from nipype.interfaces.utility import IdentityInterface, Function
@@ -21,18 +20,12 @@ import logging
 
 
 # ### Inputs parameters
-
-# In[3]:
-
 # Later get these from a function input or similar
 subject_id = 'FR_20120903'
 subject_folder = '/Users/srothmei/Desktop/charite/toronto/'
 
 
 # ### Setup
-
-# In[4]:
-
 inputNode = Node(IdentityInterface(fields = ['subject_folder', 'subject_id']),
                 name = 'input_node')
 
@@ -41,41 +34,27 @@ inputNode.inputs.subject_id = subject_id
 
 
 # ### Logging
-
-# In[5]:
-
 logging.basicConfig(filename = subject_folder + subject_id + '/pipeline.log', level=logging.DEBUG)
 
 
 # ### Utiliy functions
-
-# In[6]:
-
 def roiRange(number_of_rois):
     return range(1,number_of_rois + 1)
 
 
 # ## Preprocessing
-
-# In[7]:
-
 import preprocSub as preprocessing
 
 
 # ## Functional processing
-
-# In[8]:
-
-#funcProcNode = Node(Function(input_names= ['path', 'subName'],
+# TODO: Implement this
+# funcProcNode = Node(Function(input_names= ['path', 'subName'],
 #                            output_names = [],
 #                            function = brainmodes.compute_functional_connectivity),
 #                    name = 'functional_processing')
 
 
 # ## Tractography-Mask generation
-
-# In[9]:
-
 maskGenNode = Node(Function(input_names = ['subPath',
                                            'mask_output_folder',
                                            'wmoutline2diff_1mm',
@@ -91,16 +70,10 @@ maskGenNode.inputs.seedsPerVoxel = 200
 
 
 # ## Tracking
-
-# In[10]:
-
 import mrtrix as mrtrix
 
 
 # ## Connectivity
-
-# In[11]:
-
 connectivityRowNode = MapNode(Function(input_names = ['roi', 
                                                       'subid', 
                                                       'affine_matrix',
@@ -126,17 +99,10 @@ aggregateConnectivityNode.inputs.steplength = mrtrix.mrtrix_tracking.trackingNod
 
 
 # ## TVB formatting
-
-# In[12]:
-
-# TODO
+# TODO: Implement this
 
 
-# 
 # ## Build the Workflow
-
-# In[15]:
-
 wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + subject_id + '/')
 
 wf.connect([
@@ -168,22 +134,14 @@ wf.connect([
                                                          ('SC_dist_row_filename', 'dist_row_files')])
     ])
 
+# ## Draw the Graph
+wf.write_graph("TVB_workflow_graph.dot", graph2use = 'colored')
+from IPython.display import Image
+Image(filename="TVB_workflow_graph.dot.png")
 
 # ## Run the Workflow
+wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
 
-# In[ ]:
-
-wf.run('MultiProc', plugin_args={'n_procs': 2})
-
-
-# In[17]:
-
-#wf.write_graph("workflow_graph.dot", graph2use = 'colored')
-#from IPython.display import Image
-#Image(filename="workflow_graph.dot.png")
-
-
-# In[ ]:
 
 
 

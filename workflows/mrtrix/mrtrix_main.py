@@ -9,7 +9,7 @@
 # In[6]:
 
 from nipype import Node, Workflow
-from nipype.interfaces.utility import IdentityInterface, Function
+from nipype.interfaces.utility import IdentityInterface
 
 import mrtrix_preproc as preproc
 import mrtrix_tracking as trk
@@ -18,8 +18,6 @@ import logging
 
 
 # ### Start the logging
-
-# In[7]:
 
 logger = logging.getLogger('interface')
 logger.setLevel(logging.INFO)
@@ -35,9 +33,6 @@ logger.addHandler(ch)
 
 
 # ### Define Input- and Outputnode
-
-# In[8]:
-
 # Note that the field 'seed_target_masks' has to be a dictionary,
 # mapping each seedmask to the corresponding target mask
 # E.g.: seed_target_masks = {'seedmask1': 'targetmask1', 'seedmask2': 'targetmask2'}
@@ -54,25 +49,22 @@ inputNode = Node(IdentityInterface(fields = ['dwi_file',
                                             'tracks_dir']), 
                  name = 'input_node')
 
-# TODO: Define output node
+
 outputNode = Node(IdentityInterface(fields = ['trk_files']),
                   name = 'output_node')
 
 
 # ### Utility functions
 
-# In[9]:
-
 def getSeedMasks(maskList):
     return maskList.keys()
+
 
 def getTargetMasks(maskList):
     return maskList.values()
 
 
 # ### Define the Workflow
-
-# In[13]:
 
 wf = Workflow(name = 'MRTRIX_main')
 
@@ -91,18 +83,6 @@ wf.connect([
         (trk.wf, outputNode, [('output_node.trk_file', 'trk_files')])
     ])
 
-
-# ### Draw the workflow
-
-# In[14]:
-
-#wf.write_graph(dotfilename="workflow_graph.dot", graph2use='orig')
-#wf.write_graph?
-#from IPython.display import Image
-#Image(filename="workflow_graph.dot.png")
-
-
-# In[ ]:
 
 
 

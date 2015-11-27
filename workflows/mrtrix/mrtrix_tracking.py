@@ -9,7 +9,6 @@
 # In[2]:
 
 import nipype.interfaces.mrtrix as mrt
-import numpy as np
 from nipype import Node, Workflow, MapNode, Function
 from nipype.interfaces.utility import IdentityInterface
 
@@ -17,8 +16,6 @@ import logging, re
 
 
 # ### Start the logging
-
-# In[3]:
 
 logger = logging.getLogger('interface')
 logger.setLevel(logging.INFO)
@@ -34,8 +31,6 @@ logger.addHandler(ch)
 
 
 # ### Define Input- and Output-Node
-
-# In[4]:
 
 inputNode = MapNode(IdentityInterface(fields = ['wmmask_1mm',
                                             'spherical_harmonics_image',
@@ -53,15 +48,15 @@ outputNode = Node(IdentityInterface(fields = ['trk_file']),
 
 # ### Utility functions
 
-# In[15]:
-
 def getSeedmaskIndex(seedmask):
     res = re.search("\d{4,999}", seedmask)
     return res.group()
 
+
 def fileNameBuild(path, seedmask):
     seedMskIdx = getSeedmaskIndex(seedmask)
     return path + '/' + seedMskIdx + '_tracks.tck'
+
 
 def fileNameBuildTRK(path, seedmask):
     seedMskIdx = getSeedmaskIndex(seedmask)
@@ -70,11 +65,9 @@ def fileNameBuildTRK(path, seedmask):
 
 # ### Perform the fiber tracking
 
-# In[18]:
-
 trackingNode = Node(mrt.StreamlineTrack(), name = 'tracking_node')
 trackingNode.inputs.inputmodel = 'SD_PROB'
-trackingNode.inputs.minimum_tract_length = 30 #Min length set to 30mm here
+trackingNode.inputs.minimum_tract_length = 30  # Min length set to 30mm here
 trackingNode.inputs.stop = True
 trackingNode.inputs.no_mask_interpolation = True
 trackingNode.inputs.unidirectional = True
@@ -82,8 +75,6 @@ trackingNode.inputs.step_size = 0.2
 
 
 # ### Convert tck to trk
-
-# In[12]:
 
 # Now we convert the resulting tck file from the hard drive into a Trackvis trk file
 # By default, the tck is then deleted to save storage space. This parameter can be overwritten
@@ -113,8 +104,6 @@ convertNode = Node(Function(input_names = ['tck_file', 'image_file', 'output_fil
 
 # ### Define the workflow
 
-# In[16]:
-
 wf = Workflow('MRTRIX_tracking')
 
 wf.connect([
@@ -130,15 +119,6 @@ wf.connect([
         (convertNode, outputNode, [('output_file', 'trk_file')])
     ])
 
-
-# In[17]:
-
-#wf.write_graph("workflow_graph.dot")
-#from IPython.display import Image
-#Image(filename="workflow_graph.dot.png")
-
-
-# In[ ]:
 
 
 

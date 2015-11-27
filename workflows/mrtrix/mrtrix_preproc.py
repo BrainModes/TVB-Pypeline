@@ -19,8 +19,6 @@ import logging
 
 # ### Start the logging
 
-# In[2]:
-
 logger = logging.getLogger('interface')
 logger.setLevel(logging.INFO)
 # create console handler and set level to debug
@@ -35,9 +33,7 @@ logger.addHandler(ch)
 
 
 # ### Define parameters
-
-# In[3]:
-
+# TODO: Probably want to pull this parameter setting to the top-level script mrtrix_main.py
 # Threshold for FA during single fiber voxel mask estimation
 absolute_threshold_value = 0.7
 # Number of erosion passes during single voxel fiber mask estimation
@@ -57,8 +53,6 @@ fileNames = {
 
 # ### Define input and outpute nodes
 
-# In[4]:
-
 inputNode = Node(IdentityInterface(fields = ['dwi_file',
                                             'bval_file',
                                             'bvec_file',
@@ -73,15 +67,15 @@ outputNode = Node(IdentityInterface(fields = ['spherical_harmonics_image']),
 
 # ### Utility functions
 
-# In[5]:
-
 def fileNameBuilder(path, fname):
     return path + '/' + fname
 
 # Get the maximum possbile spherical-harmonics order 
 # out of the data because mrtrix itself is not capable of doing this safely
+
+
 def estimateMaxHarmOrder(bval_file):
-    with open(bval_file,'r') as f:
+    with open(bval_file, 'r') as f:
         tmp = f.read()
         tmp = np.asarray(tmp.split())
     
@@ -92,35 +86,28 @@ def estimateMaxHarmOrder(bval_file):
 
 # ### MRTrix specific preprocessing
 
-# In[6]:
-
 # First convert the FSL-like input of bval and bvec into mrtrix format
 fsl2mrtrixNode = Node(mrtrix.FSL2MRTrix(), name = 'fsl_2_mrtrix')
 
-#Diffusion tensor images
+# Diffusion tensor images
 dwi2tensorNode = Node(mrtrix.DWI2Tensor(), name = 'dwi_2_tensor')
-#dwi2tensor dwi.mif -grad btable.b dt.mif
 
-#Fractional anisotropy (FA) map
-#tensor2FA dt.mif fa.mif
+
+# Fractional anisotropy (FA) map
 tensor2faNode = Node(mrtrix.Tensor2FractionalAnisotropy(), name = 'tensor_2_FA')
 
-#Remove noisy background by multiplying the FA Image with the binary brainmask
-#mrmult fa.mif wmmask.mif fa_corr.mif
+# Remove noisy background by multiplying the FA Image with the binary brainmask
 mrmultNode = Node(fsl.BinaryMaths(), name = 'mrmult')
 mrmultNode.inputs.operation = 'mul'
 
-#Eigenvector (EV) map
-#tensor2vector dt.mif ev.mif
+# Eigenvector (EV) map
 tensor2vectorNode = Node(mrtrix.Tensor2Vector(), name = 'tensor_2_vector')
 
-#Scale the EV map by the FA Image
-#mrmult ev.mif fa_corr.mif ev_scaled.mif
+# Scale the EV map by the FA Image
 scaleEvNode = Node(fsl.BinaryMaths(), name = 'scale_ev')
 scaleEvNode.inputs.operation = 'mul'
 
-#Mask of single-fibre voxels
-#erode wmmask.mif -npass 1 - | mrmult fa_corr.mif - - | threshold - -abs 0.7 sf.mif
+# Mask of single-fibre voxels
 erodeNode = Node(mrtrix.Erode(), name = 'erode_wmmask')
 erodeNode.inputs.number_of_passes = number_of_passes
 
@@ -130,22 +117,17 @@ cleanFaNode.inputs.operation = 'mul'
 thresholdFANode = Node(mrtrix.Threshold(), name = 'threshold_FA')
 thresholdFANode.inputs.absolute_threshold_value = absolute_threshold_value
 
-#Response function coefficient
-#estimate_response dwi.mif -grad btable.b -lmax ${lmax} sf.mif response.txt
+# Response function coefficient
 estResponseNode = Node(mrtrix.EstimateResponseForSH(), name = 'estimate_deconv_response')
 
-#CSD computation
-#csdeconv dwi.mif -grad btable.b response.txt -lmax ${lmax} -mask wmmask.mif CSD8.mif
+# CSD computation
 csdNode = Node(mrtrix.ConstrainedSphericalDeconvolution(), name = 'compute_CSD')
 
 
 # ### Connect the Nodes in the workflow
 
-# In[15]:
-
 wf = Workflow(name = 'MRTrix_preproc')
 
-# First do connect preprocessing
 wf.connect([
         (inputNode, fsl2mrtrixNode, [('bval_file', 'bval_file'),
                                         ('bvec_file', 'bvec_file'),
@@ -184,20 +166,4 @@ wf.connect([
         (estResponseNode, csdNode, [('response', 'response_file')]),
         (csdNode, outputNode, [('spherical_harmonics_image', 'spherical_harmonics_image')])
         ])
-
-# Now the tracking stuff
-
-
-# In[17]:
-
-erodeNode.inputs
-
-
-# ### Plot the workflow graph
-
-# In[16]:
-
-wf.write_graph("mrtrix_preproc_workflow_graph.dot")
-from IPython.display import Image
-Image(filename="mrtrix_preproc_workflow_graph.dot.png")
 
