@@ -77,7 +77,7 @@ fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
             'wmoutline2diff': 'wmoutline2diff.nii.gz',
             'wmparc2diff_1mm': 'wmparc2diff_1mm.nii.gz',
             'aparc+aseg': 'aparc+aseg.nii.gz',
-            'aparc+aseg2diff_1mm': 'aparc_aseg_1mm.nii.gz',
+            'aparc+aseg2diff_1mm': 'aparc_aseg2diff_1mm.nii.gz',
             'aparc+aseg2diff': 'aparc_aseg2diff.nii.gz',
             'lowresWmMask': 'wmmask.nii.gz',
             'highresWmMask': 'wmmask_1mm.nii.gz',
@@ -100,11 +100,11 @@ def pathBuilder(subject_folder, subject_id):
             os.makedirs(dirName)
      
     # Path definitions
-    dwiPreprocFolder = subPath + '/diff_processed'
-    trackingFolder = subPath + '/tractography'
-    calc_images = subPath + '/calc_images'
-    mask_folder = trackingFolder + '/masks'
-    tracks_folder = trackingFolder + '/tracks'
+    dwiPreprocFolder = subPath + '/diff_processed/'
+    trackingFolder = subPath + '/tractography/'
+    calc_images = subPath + '/calc_images/'
+    mask_folder = trackingFolder + '/masks/'
+    tracks_folder = trackingFolder + '/tracks/'
     
     # Make folders
     makeMyDir(dwiPreprocFolder)
@@ -246,24 +246,23 @@ applyReg_aparc2diff.inputs.interp = 'nearest'
 # ### Create Whitematter Brainmasks
 
 def extractWhitematter(input_image, wmoutline_image, output_image):
-    thresHolder = fsl.MultiImageMaths(input_file = input_image, out_file = output_image)
-    thresHolder.inputs.op_string = '-uthr 41 -thr 41'
-    thresHolder.run()
-    
-    thresHolder.inputs.input_file = output_image
-    thresHolder.inputs.op_string = '-uthr 2 -thr 2'
-    thresHolder.run()
-    
-    thresHolder.inputs.op_string = '-uthr 255 -thr 251'
-    thresHolder.run()
-    
-    # Combine and binarize
-    combinizer = fsl.BinaryMaths(operation = 'add', in_file = output_image, 
-                                 operand_file = wmoutline_image, out_file = output_image)
-    combinizer.run()
+    from nipype.interfaces import fsl
 
-    binarizer = fsl.UnaryMaths(operation = 'bin', in_file = output_image, out_file = output_image)
-    binarizer.run()
+    maths = fsl.MultiImageMaths()
+    maths.inputs.in_file = input_image
+    maths.inputs.out_file = output_image
+    maths.inputs.op_string = ' -add %s -uthr 41 -thr 41'
+    maths.inputs.operand_files = wmoutline_image
+    maths.run()
+    
+    #maths.inputs.in_file = output_image
+    maths.inputs.op_string = '-uthr 2 -thr 2 -add %s'
+    maths.inputs.operand_files = output_image
+    maths.run()
+    
+    maths.inputs.op_string = '-uthr 255 -thr 251 -add %s -add %s -bin'
+    maths.inputs.operand_files = [output_image, wmoutline_image]
+    maths.run()
     
     return output_image
 
@@ -361,7 +360,7 @@ wf.connect([(extrctB0Node, applyReg_aparc2diff_1mm, [('b0', 'source_file')]),
            (reconallNode, applyReg_aparc2diff_1mm, [(('aparc_aseg', selectFromList, 0), 'target_file')]),
            (bbregNode, applyReg_aparc2diff_1mm, [('out_reg_file', 'reg_file')]),
            (pathBuildingNode, applyReg_aparc2diff_1mm,
-            [(('calc_images',fileNameBuilder ,fileNames['aparc+aseg2diff_1mm']), 'transformed_file')])])
+            [(('calc_images', fileNameBuilder, fileNames['aparc+aseg2diff_1mm']), 'transformed_file')])])
 
 wf.connect([(extrctB0Node, applyReg_aparc2diff, [('b0', 'source_file')]),
            (reconallNode, applyReg_aparc2diff, [(('aparc_aseg', selectFromList, 0), 'target_file')]),
@@ -371,12 +370,12 @@ wf.connect([(extrctB0Node, applyReg_aparc2diff, [('b0', 'source_file')]),
 
 # Mask creation
 wf.connect([(applyReg_aparc2diff, wmmask_lowres, [('transformed_file', 'input_image')]),
-           (mergeHemisNode, wmmask_lowres, [('out_file', 'wmoutline_image')]),
+           (binarizeNode, wmmask_lowres, [('out_file', 'wmoutline_image')]),
            (pathBuildingNode, wmmask_lowres, [(('calc_images', fileNameBuilder, fileNames['lowresWmMask']),
                                                'output_image')])])
 
 wf.connect([(applyReg_aparc2diff_1mm, wmmask_highres, [('transformed_file', 'input_image')]),
-           (mergeHemisNode, wmmask_highres, [('out_file', 'wmoutline_image')]),
+           (applyReg_anat2diff_1mm, wmmask_highres, [('transformed_file', 'wmoutline_image')]),
            (pathBuildingNode, wmmask_highres, [(('calc_images', fileNameBuilder, fileNames['highresWmMask']),
                                                'output_image')])])
 
