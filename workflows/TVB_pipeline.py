@@ -136,12 +136,13 @@ wf.connect([
     ])
 
 # ## Draw the Graph
-wf.write_graph("TVB_workflow_graph.dot", graph2use = 'colored')
-from IPython.display import Image
-Image(filename="TVB_workflow_graph.dot.png")
+wf.write_graph("./TVB_workflow_graph.dot", graph2use = 'colored')
+# from IPython.display import Image
+# Image(filename="./TVB_workflow_graph.dot.png")
 
 # ## Run the Workflow
-wf.run(plugin='MultiProc', plugin_args={'n_procs': 2})
+#wf.run(plugin='MultiProc', plugin_args={'n_procs': 2})
+wf.run()
 
 
 

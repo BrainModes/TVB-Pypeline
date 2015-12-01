@@ -7,20 +7,14 @@
 # The tools used in this workflow are <b>FSL</b>, <b>FREESURFER</b> & <b>Dicom2Nii</b>
 
 # #### Handle the imports
-
-# In[1]:
-
 from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
 from nipype.interfaces.dcm2nii import Dcm2nii
 from nipype.interfaces.io import DataFinder
-from nipype import utils as nputils
 
 
-# In[2]:
-
-import logging, os, shutil
+import logging
 from multiprocessing import cpu_count
 
 
@@ -40,6 +34,9 @@ logger.addHandler(ch)
 
 # ### Utility Nodes
 def extractB0(dwMriFile):
+    from nipype import utils as nputils
+    from nipype.interfaces import fsl
+    import os, shutil
     # This function is used to extract the b0 image out of the 4D series of diffusion images by splitting the
     # series, copying the first image and merging the images together into a single file afterwards
     pth, fname, ext = nputils.filemanip.split_filename(dwMriFile)
@@ -79,6 +76,7 @@ fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
             'wmoutline2diff_1mm': 'wmoutline2diff_1mm.nii.gz',
             'wmoutline2diff': 'wmoutline2diff.nii.gz',
             'wmparc2diff_1mm': 'wmparc2diff_1mm.nii.gz',
+            'aparc+aseg': 'aparc+aseg.nii.gz',
             'aparc+aseg2diff_1mm': 'aparc_aseg_1mm.nii.gz',
             'aparc+aseg2diff': 'aparc_aseg2diff.nii.gz',
             'lowresWmMask': 'wmmask.nii.gz',
@@ -90,7 +88,7 @@ fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
 
 
 def fileNameBuilder(path, fname):
-    return path + fname
+    return path + '/' + fname
 
 
 def pathBuilder(subject_folder, subject_id):
@@ -194,11 +192,11 @@ bbregNode.inputs.subject_id = reconallFolderName
 # ### Surface2Vol
 
 # Transform Left Hemisphere
-lhWhiteFilename = 'lh_white.nii.gz'
 surf2volNode_lh = Node(freesurfer.utils.Surface2VolTransform(), name = 'surf2vol_lh')
 surf2volNode_lh.inputs.hemi = 'lh'
 surf2volNode_lh.inputs.mkmask = True
 surf2volNode_lh.inputs.subject_id = reconallFolderName
+surf2volNode_lh.inputs.vertexvol_file = 'test'
 
 # Transform right hemisphere
 surf2volNode_rh = surf2volNode_lh.clone('surf2vol_rh')
@@ -278,7 +276,7 @@ wmmask_highres = wmmask_lowres.clone('extract_WM_highres')
 
 
 # ### Debug the crap out of this!
-def myAmazingDebugFunction(x,y):
+def myAmazingDebugFunction(T1_files, subjects_dir):
     reconAllPath = '/Users/srothmei/Desktop/charite/toronto/FR_20120903/recon_all/mri/'
     T1 = reconAllPath + 'T1.mgz'
     aparc_aseg = [reconAllPath + 'aparc+aseg.mgz']
@@ -306,7 +304,8 @@ wf.connect(t1FinderNode, 'out_paths', reconallNode, 'T1_files')
 wf.connect(pathBuildingNode, 'subPath', reconallNode, 'subjects_dir')
 
 # aparc+aseg into mriConverter
-wf.connect([(reconallNode, mriConverter, [(('aparc_aseg', selectFromList, 0) , 'in_file')])])
+wf.connect([(reconallNode, mriConverter, [(('aparc_aseg', selectFromList, 0), 'in_file')])])
+wf.connect([(pathBuildingNode, mriConverter, [(('calc_images', fileNameBuilder, fileNames['aparc+aseg']), 'out_file')])])
 
 # dcm2nii
 wf.connect([(pathBuildingNode, dcm2niiNode, [('dwiRawFolder', 'source_dir'),
@@ -359,13 +358,13 @@ wf.connect([(extrctB0Node, applyReg_wmparc2diff_1mm, [('b0', 'source_file')]),
             [(('calc_images',fileNameBuilder ,fileNames['wmparc2diff_1mm']), 'transformed_file')])])
 
 wf.connect([(extrctB0Node, applyReg_aparc2diff_1mm, [('b0', 'source_file')]),
-           (reconallNode, applyReg_aparc2diff_1mm, [('aparc_aseg', 'target_file')]),
+           (reconallNode, applyReg_aparc2diff_1mm, [(('aparc_aseg', selectFromList, 0), 'target_file')]),
            (bbregNode, applyReg_aparc2diff_1mm, [('out_reg_file', 'reg_file')]),
            (pathBuildingNode, applyReg_aparc2diff_1mm,
             [(('calc_images',fileNameBuilder ,fileNames['aparc+aseg2diff_1mm']), 'transformed_file')])])
 
 wf.connect([(extrctB0Node, applyReg_aparc2diff, [('b0', 'source_file')]),
-           (reconallNode, applyReg_aparc2diff, [('aparc_aseg', 'target_file')]),
+           (reconallNode, applyReg_aparc2diff, [(('aparc_aseg', selectFromList, 0), 'target_file')]),
            (bbregNode, applyReg_aparc2diff, [('out_reg_file', 'reg_file')]),
            (pathBuildingNode, applyReg_aparc2diff,
             [(('calc_images',fileNameBuilder ,fileNames['aparc+aseg2diff']), 'transformed_file')])])
@@ -381,18 +380,18 @@ wf.connect([(applyReg_aparc2diff_1mm, wmmask_highres, [('transformed_file', 'inp
            (pathBuildingNode, wmmask_highres, [(('calc_images', fileNameBuilder, fileNames['highresWmMask']),
                                                'output_image')])])
 
-# Now forwards all relevant stuff to output node
+# Now forward all relevant stuff to output node
 for i in pathBuildingNode.outputs.copyable_trait_names():
     wf.connect([(pathBuildingNode, outputNode, [(i, i)])])
     
-wf.connect([(wmmask_highres, outputNode, [('output_image', fileNames['highresWmMask'])]),
-           (wmmask_lowres, outputNode, [('output_image', fileNames['lowresWmMask'])]),
-           (applyReg_aparc2diff, outputNode, [('transformed_file', fileNames['aparc+aseg2diff'])]),
-           (applyReg_aparc2diff_1mm, outputNode, [('transformed_file', fileNames['aparc+aseg2diff_1mm'])]),
-           (mergeHemisNode, outputNode, [('out_file', fileNames['wmSurf'])]),
-           (applyReg_anat2diff_1mm, outputNode, [('transformed_file', fileNames['wmoutline2diff_1mm'])]),
-           (applyReg_anat2diff, outputNode, [('transformed_file', fileNames['wmoutline2diff'])]),
-           (applyReg_wmparc2diff_1mm, outputNode, [('transformed_file', fileNames['wmparc2diff_1mm'])]),
+wf.connect([(wmmask_highres, outputNode, [('output_image', 'highresWmMask')]),
+           (wmmask_lowres, outputNode, [('output_image', 'lowresWmMask')]),
+           (applyReg_aparc2diff, outputNode, [('transformed_file', 'aparc+aseg2diff')]),
+           (applyReg_aparc2diff_1mm, outputNode, [('transformed_file', 'aparc+aseg2diff_1mm')]),
+           (mergeHemisNode, outputNode, [('out_file', 'wmSurf')]),
+           (applyReg_anat2diff_1mm, outputNode, [('transformed_file', 'wmoutline2diff_1mm')]),
+           (applyReg_anat2diff, outputNode, [('transformed_file', 'wmoutline2diff')]),
+           (applyReg_wmparc2diff_1mm, outputNode, [('transformed_file', 'wmparc2diff_1mm')]),
             (dcm2niiNode, outputNode, [('bvals', 'bval_file'),
                                       ('bvecs', 'bvec_file')]),
             (extrctB0Node, outputNode, [('b0', 'no_diffusion_image')]),
@@ -400,7 +399,7 @@ wf.connect([(wmmask_highres, outputNode, [('output_image', fileNames['highresWmM
            ])
 
 
-#wf.write_graph("workflow_graph.dot")
+#wf.write_graph("preproc_workflow_graph.dot", graph2use = 'exec')
 #from IPython.display import Image
 #Image(filename="workflow_graph.dot.png")
 
