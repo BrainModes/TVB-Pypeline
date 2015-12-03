@@ -87,7 +87,7 @@ def estimateMaxHarmOrder(bval_file):
     theOrder = 0.5 * (np.sqrt(8 * theRowCount + 1) - 3)
 
     # Return the near-lowest multiple of 2
-    return theOrder - (theOrder % 2)
+    return int(theOrder - (theOrder % 2))
 
 
 def multiplyMRTrix(in1, in2, out_file):

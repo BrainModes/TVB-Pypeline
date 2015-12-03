@@ -12,7 +12,7 @@ import nipype.interfaces.mrtrix as mrt
 from nipype import Node, Workflow, MapNode, Function
 from nipype.interfaces.utility import IdentityInterface
 
-import logging, re
+import logging
 
 
 # ### Start the logging
@@ -32,15 +32,24 @@ logger.addHandler(ch)
 
 # ### Define Input- and Output-Node
 
-inputNode = MapNode(IdentityInterface(fields = ['wmmask_1mm',
+inputNode = Node(IdentityInterface(fields = ['wmmask_1mm',
                                             'spherical_harmonics_image',
                                             'seedmask',
                                             'targetmask',
                                             'seed_count',
                                             'delete_tmp_files',
                                             'tracks_dir']), 
-                    name = 'input_node',
-                    iterfield = ['seedmask', 'targetmask', 'seed_count'])
+                    name = 'input_node')
+
+# inputNode = MapNode(IdentityInterface(fields = ['wmmask_1mm',
+#                                             'spherical_harmonics_image',
+#                                             'seedmask',
+#                                             'targetmask',
+#                                             'seed_count',
+#                                             'delete_tmp_files',
+#                                             'tracks_dir']),
+#                     name = 'input_node',
+#                     iterfield = ['seedmask', 'targetmask', 'seed_count'])
 
 outputNode = Node(IdentityInterface(fields = ['trk_file']), 
                   name = 'output_node')
@@ -48,24 +57,34 @@ outputNode = Node(IdentityInterface(fields = ['trk_file']),
 
 # ### Utility functions
 
-def getSeedmaskIndex(seedmask):
-    res = re.search("\d{4,999}", seedmask)
-    return res.group()
+# def getSeedmaskIndex(seedmask):
+#    res = re.search("\d{4,999}", seedmask)
+#    return res.group()
 
 
 def fileNameBuild(path, seedmask):
-    seedMskIdx = getSeedmaskIndex(seedmask)
-    return path + '/' + seedMskIdx + '_tracks.tck'
+    import re
+    #res = re.search("\d{4,999}", seedmask)
+    #seedMskIdx = res.group()
+    print seedmask
+    res = [re.search("(\d{4,999})_.*$", x).group(1) for x in seedmask]
+    return [path + '/' + seedMskIdx + '_tracks.tck' for seedMskIdx in res]
 
 
-def fileNameBuildTRK(path, seedmask):
-    seedMskIdx = getSeedmaskIndex(seedmask)
-    return path + '/' + seedMskIdx + '_tracks.trk'
+# def fileNameBuildTRK(path, seedmask):
+#     import re
+#     #res = re.search("\d{4,999}", seedmask)
+#     #seedMskIdx = res.group()
+#     res = [re.search("(\d{4,999})_.*$", x).group(1) for x in seedmask]
+#     return [path + '/' + seedMskIdx + '_tracks.trk' for seedMskIdx in res]
 
+def fileNameBuildTRK(fname):
+    return fname[:-3] + 'trk'
 
 # ### Perform the fiber tracking
 
-trackingNode = Node(mrt.StreamlineTrack(), name = 'tracking_node')
+trackingNode = MapNode(mrt.StreamlineTrack(), name = 'tracking_node',
+                       iterfield = ['seed_file', 'include_file', 'desired_number_of_tracks', 'out_file'])
 trackingNode.inputs.inputmodel = 'SD_PROB'
 trackingNode.inputs.minimum_tract_length = 30  # Min length set to 30mm here
 trackingNode.inputs.stop = True
@@ -112,7 +131,7 @@ wf.connect([
                                   ('targetmask', 'include_file'),
                                   ('wmmask_1mm', 'mask_file'),
                                   ('seed_count', 'desired_number_of_tracks'),
-                                  (('tracks_dir', fileNameBuild, 'seedmask'), 'out_file')]),
+                                  (('tracks_dir', fileNameBuild, 'seedmask'), 'out_file')]), # TODO: Seedmask is actually submitted as a string! Fix this!
         (trackingNode, convertNode, [('tracked', 'tck_file')]),
         (inputNode, convertNode, [('seedmask', 'image_file'),
                                  (('tracks_dir', fileNameBuildTRK, 'seedmask'), 'output_file')]),

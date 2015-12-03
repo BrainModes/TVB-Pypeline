@@ -6,8 +6,6 @@
 # This workflow connects the sub-workflows related to dwMRI processing and tractography using MRTrix 0.2,
 # thus serving as a so-called "scaffold workflow".
 
-# In[6]:
-
 from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface
 

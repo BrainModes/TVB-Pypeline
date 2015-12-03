@@ -152,9 +152,8 @@ t1FinderNode.inputs.match_regex = '.*\.dcm'
 
 # Set recon-all parameters
 reconallNode = Node(freesurfer.preprocess.ReconAll(), name = 'reconall')
-# TODO: Uncomment the following two lines after debugging...
-# reconallNode.inputs.T1_files = firstFile
-# reconallNode.inputs.subjects_dir = subPath
+#reconallNode.inputs.T1_files = firstFile
+#reconallNode.inputs.subjects_dir = subPath
 reconallNode.inputs.subject_id = reconallFolderName
 reconallNode.inputs.directive = 'all'
 reconallNode.inputs.openmp = cpu_count()
@@ -274,14 +273,14 @@ wmmask_lowres = Node(Function(input_names = ['input_image', 'wmoutline_image', '
 wmmask_highres = wmmask_lowres.clone('extract_WM_highres')
 
 
-# ### Debug the crap out of this!
 # TODO: REMOVE ME!
+# ### Debug the crap out of this!
 def myAmazingDebugFunction(T1_files, subjects_dir):
     reconAllPath = '/Users/srothmei/Desktop/charite/toronto/FR_20120903/recon_all/mri/'
     T1 = reconAllPath + 'T1.mgz'
     aparc_aseg = [reconAllPath + 'aparc+aseg.mgz']
     wmparc = reconAllPath + 'wmparc.mgz'
-    
+
     return T1, aparc_aseg, wmparc
 
 reconallNode = Node(Function(input_names = ['T1_files', 'subjects_dir'],
