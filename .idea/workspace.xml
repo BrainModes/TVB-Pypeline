@@ -2,15 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bm_functions/testAgg.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workflows/TVB_workflow_graph.dot.png" afterPath="$PROJECT_DIR$/workflows/TVB_workflow_graph.dot.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workflows/TVB_workflow_graph.dot" afterPath="$PROJECT_DIR$/workflows/TVB_workflow_graph.dot" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_main.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_main.py" afterPath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_preproc.py" afterPath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_preproc.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/generateMasks.py" afterPath="$PROJECT_DIR$/bm_functions/generateMasks.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" afterPath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workflows/preprocSub.py" afterPath="$PROJECT_DIR$/workflows/preprocSub.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" afterPath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" />
     </list>
     <ignored path="TVB-Pypeline.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -71,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="generateMasks.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="generateMasks.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bm_functions/generateMasks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="115" column="20" selection-start-line="115" selection-start-column="20" selection-end-line="115" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.421875">
+              <caret line="115" column="56" selection-start-line="115" selection-start-column="56" selection-end-line="115" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -85,7 +81,7 @@
         <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="73" column="23" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="23" />
+              <caret line="115" column="19" selection-start-line="115" selection-start-column="19" selection-end-line="115" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -103,11 +99,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mrtrix_tracking.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="mrtrix_tracking.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.76804125">
-              <caret line="133" column="154" selection-start-line="133" selection-start-column="154" selection-end-line="133" selection-end-column="154" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="135" column="71" selection-start-line="135" selection-start-column="71" selection-end-line="135" selection-end-column="71" />
               <folding>
                 <element signature="e#448#486#0" expanded="true" />
               </folding>
@@ -175,7 +171,6 @@
         <option value="$PROJECT_DIR$/functions/generateMasks.py" />
         <option value="$PROJECT_DIR$/bm_functions/connectivity2TVBFS.py" />
         <option value="$PROJECT_DIR$/bm_functions/__init__.py" />
-        <option value="$PROJECT_DIR$/bm_functions/generateMasks.py" />
         <option value="$PROJECT_DIR$/bm_functions/compSC_row.py" />
         <option value="$PROJECT_DIR$/bm_functions/aggregateSC.py" />
         <option value="$PROJECT_DIR$/workflows/TVB_pipeline.py" />
@@ -183,6 +178,7 @@
         <option value="$PROJECT_DIR$/workflows/mrtrix/mrtrix_main.py" />
         <option value="$PROJECT_DIR$/workflows/preprocSub.py" />
         <option value="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" />
+        <option value="$PROJECT_DIR$/bm_functions/generateMasks.py" />
       </list>
     </option>
   </component>
@@ -190,10 +186,10 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1" />
-    <option name="y" value="24" />
-    <option name="width" value="1440" />
-    <option name="height" value="873" />
+    <option name="x" value="1440" />
+    <option name="y" value="-223" />
+    <option name="width" value="1920" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -512,14 +508,14 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="24" width="1440" height="873" extended-state="6" />
+    <frame x="1440" y="-223" width="1920" height="1057" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329602" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20972222" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15729167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.49004975" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1689441" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" x="-31" y="301" width="1440" height="136" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.32994923" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="0" y="22" width="1440" height="874" />
@@ -621,14 +617,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/generateMasks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="115" column="20" selection-start-line="115" selection-start-column="20" selection-end-line="115" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -636,14 +624,6 @@
           <folding>
             <element signature="e#206#239#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="73" column="23" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -659,11 +639,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76804125">
-          <caret line="133" column="154" selection-start-line="133" selection-start-column="154" selection-end-line="133" selection-end-column="154" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="135" column="71" selection-start-line="135" selection-start-column="71" selection-end-line="135" selection-end-column="71" />
           <folding>
             <element signature="e#448#486#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="115" column="19" selection-start-line="115" selection-start-column="19" selection-end-line="115" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bm_functions/generateMasks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.421875">
+          <caret line="115" column="56" selection-start-line="115" selection-start-column="56" selection-end-line="115" selection-end-column="56" />
+          <folding />
         </state>
       </provider>
     </entry>

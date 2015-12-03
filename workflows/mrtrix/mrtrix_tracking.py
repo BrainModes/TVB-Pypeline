@@ -62,13 +62,17 @@ outputNode = Node(IdentityInterface(fields = ['trk_file']),
 #    return res.group()
 
 
-def fileNameBuild(path, seedmask):
+def fileNameBuild(path, seedmasks):
     import re
     #res = re.search("\d{4,999}", seedmask)
     #seedMskIdx = res.group()
-    print seedmask
-    res = [re.search("(\d{4,999})_.*$", x).group(1) for x in seedmask]
+    res = [re.search("(\d{4,999})_.*$", x).group(1) for x in seedmasks]
     return [path + '/' + seedMskIdx + '_tracks.tck' for seedMskIdx in res]
+
+fileNameNode = Node(Function(input_names = ['path', 'seedmasks'],
+                             output_names = ['seedmaskFilenames'],
+                             function = fileNameBuild),
+                    name = 'tckFilenameBuilder')
 
 
 # def fileNameBuildTRK(path, seedmask):
@@ -115,10 +119,11 @@ def convert2trk(tck_file, image_file, output_file, delete_tmp_files=None):
         
     return output_file
         
-convertNode = Node(Function(input_names = ['tck_file', 'image_file', 'output_file', 'delete_tmp_files'],
+convertNode = MapNode(Function(input_names = ['tck_file', 'image_file', 'output_file', 'delete_tmp_files'],
                             output_names = ['output_file'],
                            function = convert2trk),
-                   name = 'tck2trk')
+                        name = 'tck2trk',
+                        iterfield = ['tck_file', 'image_file', 'output_file'])
 
 
 # ### Define the workflow
@@ -126,15 +131,17 @@ convertNode = Node(Function(input_names = ['tck_file', 'image_file', 'output_fil
 wf = Workflow('MRTRIX_tracking')
 
 wf.connect([
+        (inputNode, fileNameNode, [('tracks_dir', 'path'),
+                                   ('seedmask', 'seedmasks')]),
+        (fileNameNode, trackingNode, [('seedmaskFilenames', 'out_file')]),
         (inputNode, trackingNode, [('spherical_harmonics_image', 'in_file'),
                                   ('seedmask', 'seed_file'),
                                   ('targetmask', 'include_file'),
                                   ('wmmask_1mm', 'mask_file'),
-                                  ('seed_count', 'desired_number_of_tracks'),
-                                  (('tracks_dir', fileNameBuild, 'seedmask'), 'out_file')]), # TODO: Seedmask is actually submitted as a string! Fix this!
-        (trackingNode, convertNode, [('tracked', 'tck_file')]),
-        (inputNode, convertNode, [('seedmask', 'image_file'),
-                                 (('tracks_dir', fileNameBuildTRK, 'seedmask'), 'output_file')]),
+                                  ('seed_count', 'desired_number_of_tracks')]),
+        (trackingNode, convertNode, [('tracked', 'tck_file'),
+                                     (('tracked', fileNameBuildTRK), 'output_file')]),
+        (inputNode, convertNode, [('seedmask', 'image_file')]),
         (convertNode, outputNode, [('output_file', 'trk_file')])
     ])
 

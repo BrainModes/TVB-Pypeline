@@ -129,6 +129,7 @@ def generate_masks(subPath, mask_output_folder, wmoutline2diff_1mm, wmparc2diff_
     numseeds = numseeds[numseeds[:, 2] != 0]
     numseeds[:, 1] = numseeds[:, 1] * seedsPerVoxel
     seed_count = numseeds[:, 1].astype(int)
+    seed_count = seed_count.tolist()
 
     # Store the array as an ASCII file
     # Note: This is redundant to the returned output!
