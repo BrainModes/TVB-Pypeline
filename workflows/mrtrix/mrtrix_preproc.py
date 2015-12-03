@@ -9,11 +9,10 @@
 
 # In[1]:
 
-from nipype.interfaces import mrtrix, fsl
-from nipype import Node, Workflow
+from nipype.interfaces import mrtrix
+from nipype import Node, Workflow, Function
 from nipype.interfaces.utility import IdentityInterface
 
-import numpy as np
 import logging
 
 
@@ -75,13 +74,30 @@ def fileNameBuilder(path, fname):
 
 
 def estimateMaxHarmOrder(bval_file):
+    import numpy as np
+
     with open(bval_file, 'r') as f:
         tmp = f.read()
         tmp = np.asarray(tmp.split())
     
     f.close()
-    
-    return np.count_nonzero(tmp > '0')
+
+    theRowCount = np.count_nonzero(tmp > '0')
+
+    theOrder = 0.5 * (np.sqrt(8 * theRowCount + 1) - 3)
+
+    # Return the near-lowest multiple of 2
+    return theOrder - (theOrder % 2)
+
+
+def multiplyMRTrix(in1, in2, out_file):
+    from nipype.interfaces import mrtrix
+
+    mrmult = mrtrix.MRMultiply()
+    mrmult.inputs.in_files = [in1, in2]
+    mrmult.inputs.out_filename = out_file
+
+    return out_file
 
 
 # ### MRTrix specific preprocessing
@@ -97,22 +113,22 @@ dwi2tensorNode = Node(mrtrix.DWI2Tensor(), name = 'dwi_2_tensor')
 tensor2faNode = Node(mrtrix.Tensor2FractionalAnisotropy(), name = 'tensor_2_FA')
 
 # Remove noisy background by multiplying the FA Image with the binary brainmask
-mrmultNode = Node(fsl.BinaryMaths(), name = 'mrmult')
-mrmultNode.inputs.operation = 'mul'
+mrmultNode = Node(Function(input_names = ['in1', 'in2', 'out_file'],
+                           output_names = ['out_file'],
+                           function = multiplyMRTrix),
+                  name = 'mrmult')
 
 # Eigenvector (EV) map
 tensor2vectorNode = Node(mrtrix.Tensor2Vector(), name = 'tensor_2_vector')
 
 # Scale the EV map by the FA Image
-scaleEvNode = Node(fsl.BinaryMaths(), name = 'scale_ev')
-scaleEvNode.inputs.operation = 'mul'
+scaleEvNode = mrmultNode.clone('scale_ev')
 
 # Mask of single-fibre voxels
 erodeNode = Node(mrtrix.Erode(), name = 'erode_wmmask')
 erodeNode.inputs.number_of_passes = number_of_passes
 
-cleanFaNode = Node(fsl.BinaryMaths(), name = 'multiplyFA_Mask')
-cleanFaNode.inputs.operation = 'mul'
+cleanFaNode = mrmultNode.clone('multiplyFA_Mask')
 
 thresholdFANode = Node(mrtrix.Threshold(), name = 'threshold_FA')
 thresholdFANode.inputs.absolute_threshold_value = absolute_threshold_value
@@ -137,19 +153,19 @@ wf.connect([
         (fsl2mrtrixNode, dwi2tensorNode, [('encoding_file', 'encoding_file')]),
         (dwi2tensorNode, tensor2faNode, [('tensor', 'in_file')]),
         (inputNode, tensor2faNode, [(('tracking_dir', fileNameBuilder, fileNames['faFile']), 'out_filename')]),
-        (tensor2faNode, mrmultNode, [('FA', 'in_file')]),
-        (inputNode, mrmultNode, [('wmmask', 'operand_file')]),
+        (tensor2faNode, mrmultNode, [('FA', 'in1')]),
+        (inputNode, mrmultNode, [('wmmask', 'in2')]),
         (inputNode, mrmultNode, [(('tracking_dir', fileNameBuilder, fileNames['faFile']), 'out_file')]),
         (dwi2tensorNode, tensor2vectorNode, [('tensor', 'in_file')]),
         (inputNode, tensor2vectorNode, [(('tracking_dir', fileNameBuilder, fileNames['evFile']), 'out_filename')]),
-        (tensor2vectorNode, scaleEvNode, [('vector', 'in_file')]),
-        (mrmultNode, scaleEvNode, [('out_file', 'operand_file')]),
+        (tensor2vectorNode, scaleEvNode, [('vector', 'in1')]),
+        (mrmultNode, scaleEvNode, [('out_file', 'in2')]),
         (inputNode, scaleEvNode, [(('tracking_dir', fileNameBuilder, fileNames['evFile']), 'out_file')]),
         (inputNode, erodeNode, [('wmmask', 'in_file'),
-                               (('tracking_dir', fileNameBuilder, fileNames['singleFiberFile']), 'out_filename')]),
-        (erodeNode, cleanFaNode, [('out_file', 'in_file')]),
-        (inputNode, cleanFaNode, [(('tracking_dir', fileNameBuilder, fileNames['singleFiberFile']), 'out_file')]),
-        (mrmultNode, cleanFaNode, [('out_file', 'operand_file')]),
+                               (('tracking_dir', fileNameBuilder, 'tmp_singleFiberFile.mif'), 'out_filename')]),
+        (erodeNode, cleanFaNode, [('out_file', 'in1')]),
+        (inputNode, cleanFaNode, [(('tracking_dir', fileNameBuilder, 'tmp_singleFiberFile.mif'), 'out_file')]),
+        (mrmultNode, cleanFaNode, [('out_file', 'in2')]),
         (cleanFaNode, thresholdFANode, [('out_file', 'in_file')]),
         (inputNode, thresholdFANode, [(('tracking_dir', fileNameBuilder, fileNames['singleFiberFile']),
                                        'out_filename')]),

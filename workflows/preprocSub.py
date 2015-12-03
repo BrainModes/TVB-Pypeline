@@ -275,6 +275,7 @@ wmmask_highres = wmmask_lowres.clone('extract_WM_highres')
 
 
 # ### Debug the crap out of this!
+# TODO: REMOVE ME!
 def myAmazingDebugFunction(T1_files, subjects_dir):
     reconAllPath = '/Users/srothmei/Desktop/charite/toronto/FR_20120903/recon_all/mri/'
     T1 = reconAllPath + 'T1.mgz'
