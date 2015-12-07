@@ -18,6 +18,7 @@ from nipype import Node, Workflow, MapNode
 from nipype.interfaces.utility import IdentityInterface, Function
 import bm_functions as brainmodes
 import logging
+from multiprocessing import cpu_count
 
 
 # ### Inputs parameters
@@ -141,7 +142,7 @@ wf.write_graph("./TVB_workflow_graph.dot", graph2use = 'colored')
 # Image(filename="./TVB_workflow_graph.dot.png")
 
 # ## Run the Workflow
-#wf.run(plugin='MultiProc', plugin_args={'n_procs': 2})
+#wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
 wf.run()
 
 

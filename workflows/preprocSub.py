@@ -185,7 +185,7 @@ bbregNode.inputs.contrast_type = "t2"
 bbregNode.inputs.epi_mask = True
 bbregNode.inputs.out_fsl_file = True
 bbregNode.inputs.args = "--tol1d 1e-3"
-bbregNode.inputs.subject_id = reconallFolderName
+#bbregNode.inputs.subject_id = reconallFolderName
 
 
 # ### Surface2Vol
@@ -194,7 +194,7 @@ bbregNode.inputs.subject_id = reconallFolderName
 surf2volNode_lh = Node(freesurfer.utils.Surface2VolTransform(), name = 'surf2vol_lh')
 surf2volNode_lh.inputs.hemi = 'lh'
 surf2volNode_lh.inputs.mkmask = True
-surf2volNode_lh.inputs.subject_id = reconallFolderName
+#surf2volNode_lh.inputs.subject_id = reconallFolderName
 surf2volNode_lh.inputs.vertexvol_file = 'test'
 
 # Transform right hemisphere
@@ -314,18 +314,21 @@ wf.connect(dcm2niiNode, 'converted_files', extrctB0Node, 'dwMriFile')
 
 # Register b0 into T1 space
 wf.connect([(extrctB0Node, bbregNode, [('b0', 'source_file')]),
-           (pathBuildingNode, bbregNode, [('subPath', 'subjects_dir')])])
+           (pathBuildingNode, bbregNode, [('subPath', 'subjects_dir')]),
+            (reconallNode, bbregNode, [('subject_id', 'subject_id')])])
 
 # Tranform lh whitematter surface to voxel-space
 wf.connect([(pathBuildingNode, surf2volNode_lh, [('subPath', 'subjects_dir'),
                                                 (('calc_images', fileNameBuilder, fileNames['wmSurf_lh']),
                                                  'transformed_file')]),
-           (reconallNode, surf2volNode_lh, [('T1', 'template_file')])])
+           (reconallNode, surf2volNode_lh, [('T1', 'template_file'),
+                                            ('subject_id', 'subject_id')])])
 # Tranform rh whitematter...
 wf.connect([(pathBuildingNode, surf2volNode_rh, [('subPath', 'subjects_dir'),
                                                 (('calc_images', fileNameBuilder, fileNames['wmSurf_rh']),
                                                  'transformed_file')]),
-           (reconallNode, surf2volNode_rh, [('T1', 'template_file')])])
+           (reconallNode, surf2volNode_rh, [('T1', 'template_file'),
+                                            ('subject_id', 'subject_id')])])
 
 # Merge the hemispheres
 wf.connect([(surf2volNode_lh, mergeHemisNode, [('transformed_file', 'in_file')]),
