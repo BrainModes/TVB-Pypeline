@@ -64,9 +64,10 @@ outputNode = Node(IdentityInterface(fields = ['trk_file']),
 
 def fileNameBuild(path, seedmasks):
     import re
+    from os.path import basename
     #res = re.search("\d{4,999}", seedmask)
     #seedMskIdx = res.group()
-    res = [re.search("(\d{4,999})_.*$", x).group(1) for x in seedmasks]
+    res = [re.search("(\d{4,999})_.*$", basename(x)).group(1) for x in seedmasks]
     return [path + '/' + seedMskIdx + '_tracks.tck' for seedMskIdx in res]
 
 fileNameNode = Node(Function(input_names = ['path', 'seedmasks'],
