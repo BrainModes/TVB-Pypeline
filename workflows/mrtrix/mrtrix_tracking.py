@@ -8,7 +8,7 @@
 
 # In[2]:
 
-import nipype.interfaces.mrtrix as mrt
+# import nipype.interfaces.mrtrix as mrt
 from nipype import Node, Workflow, MapNode, Function
 from nipype.interfaces.utility import IdentityInterface
 
@@ -83,19 +83,83 @@ fileNameNode = Node(Function(input_names = ['path', 'seedmasks'],
 #     res = [re.search("(\d{4,999})_.*$", x).group(1) for x in seedmask]
 #     return [path + '/' + seedMskIdx + '_tracks.trk' for seedMskIdx in res]
 
-def fileNameBuildTRK(fname):
-    return fname[:-3] + 'trk'
+#def fileNameBuildTRK(fname):
+#    return fname[:-3] + 'trk'
+
+
+def fiberTracking(out_file_tck, in_file, seed_file, include_file, mask_file, desired_number_of_tracks,
+                  inputmodel = None, min_tract_length = None, stop = None, step_size = None,
+                  unidrectional = None, no_mask_interpolation = None, delete_tmp_files = None):
+    import nipype.interfaces.mrtrix as mrt
+    import os
+
+    if inputmodel is None:
+        inputmodel = 'SD_PROB'
+    if min_tract_length is None:
+        min_tract_length = 30
+    if stop is None:
+        stop = True
+    if step_size is None:
+        step_size = 0.2
+    if unidrectional is None:
+        unidrectional = True
+    if no_mask_interpolation is None:
+        no_mask_interpolation = True
+
+    tracker = mrt.StreamlineTrack()
+    tracker.inputs.inputmodel = inputmodel
+    tracker.inputs.minimum_tract_length = min_tract_length
+    tracker.inputs.stop = stop
+    tracker.inputs.no_mask_interpolation = no_mask_interpolation
+    tracker.inputs.step_size = step_size
+    tracker.inputs.unidirectional = unidrectional
+
+    tracker.inputs.in_file = in_file
+    tracker.inputs.seed_file = seed_file
+    tracker.inputs.out_file = out_file_tck
+    tracker.inputs.include_file = include_file
+    tracker.inputs.mask_file = mask_file
+    tracker.inputs.desired_number_of_tracks = desired_number_of_tracks
+    # Perform the fiber tracking
+    tracker.run()
+
+    # ### Convert tck to trk
+    # Now we convert the resulting tck file from the hard drive into a Trackvis trk file
+    # By default, the tck is then deleted to save storage space. This parameter can be overwritten
+    # The reason for this is simply that we want to obtain files having the sama data schema independent from
+    # the particullar toolbox choosen for tracktography
+    #
+    out_file_trk = out_file_tck[:-3] + 'trk'
+
+    tck2trk = mrt.convert.MRTrix2TrackVis()
+    tck2trk.inputs.in_file = out_file_tck
+    tck2trk.inputs.image_file = seed_file
+    tck2trk.inputs.out_filename = out_file_trk
+    tck2trk.run()
+    # Delete tmp files if needed (default is yes)
+    if delete_tmp_files is None:
+        os.remove(out_file_tck)
+
+    return out_file_trk
+
+trackingNode = MapNode(Function(input_names=['out_file_tck', 'in_file', 'seed_file', 'include_file', 'mask_file',
+                                             'desired_number_of_tracks', 'inputmodel', 'min_tract_length', 'stop',
+                                             'step_size', 'unidrectional', 'no_mask_interpolation', 'delete_tmp_files'],
+                                output_names=['out_file_trk'],
+                                function=fiberTracking),
+                       name = 'tracking_node',
+                       iterfield = ['seed_file', 'include_file', 'desired_number_of_tracks', 'out_file_tck'])
 
 # ### Perform the fiber tracking
 
-trackingNode = MapNode(mrt.StreamlineTrack(), name = 'tracking_node',
-                       iterfield = ['seed_file', 'include_file', 'desired_number_of_tracks', 'out_file'])
-trackingNode.inputs.inputmodel = 'SD_PROB'
-trackingNode.inputs.minimum_tract_length = 30  # Min length set to 30mm here
-trackingNode.inputs.stop = True
-trackingNode.inputs.no_mask_interpolation = True
-trackingNode.inputs.unidirectional = True
-trackingNode.inputs.step_size = 0.2
+# trackingNode = MapNode(mrt.StreamlineTrack(), name = 'tracking_node',
+#                        iterfield = ['seed_file', 'include_file', 'desired_number_of_tracks', 'out_file'])
+# trackingNode.inputs.inputmodel = 'SD_PROB'
+# trackingNode.inputs.minimum_tract_length = 30  # Min length set to 30mm here
+# trackingNode.inputs.stop = True
+# trackingNode.inputs.no_mask_interpolation = True
+# trackingNode.inputs.unidirectional = True
+# trackingNode.inputs.step_size = 0.2
 
 
 # ### Convert tck to trk
@@ -105,27 +169,39 @@ trackingNode.inputs.step_size = 0.2
 # The reason for this is simply that we want to obtain files having the sama data schema independent from 
 # the particullar toolbox choosen for tracktography
 #
-def convert2trk(tck_file, image_file, output_file, delete_tmp_files=None):
-    import nipype.interfaces.mrtrix as mrt
-    import os
-    # Convert to trk
-    tck2trk = mrt.convert.MRTrix2TrackVis()
-    tck2trk.inputs.in_file = tck_file
-    tck2trk.inputs.image_file = image_file
-    tck2trk.inputs.out_filename = output_file
-    tck2trk.run()
-    # Delete tmp files if needed (default is yes)
-    if delete_tmp_files is None:
-        os.remove(tck_file)
+# def convert2trk(tck_file, image_file, output_file, delete_tmp_files=None):
+#     import nipype.interfaces.mrtrix as mrt
+#     import os
+#     # Convert to trk
+#     tck2trk = mrt.convert.MRTrix2TrackVis()
+#     tck2trk.inputs.in_file = tck_file
+#     tck2trk.inputs.image_file = image_file
+#     tck2trk.inputs.out_filename = output_file
+#     tck2trk.run()
+#     # Delete tmp files if needed (default is yes)
+#     if delete_tmp_files is None:
+#         os.remove(tck_file)
+#
+#     return output_file
         
-    return output_file
-        
-convertNode = MapNode(Function(input_names = ['tck_file', 'image_file', 'output_file', 'delete_tmp_files'],
-                            output_names = ['output_file'],
-                           function = convert2trk),
-                        name = 'tck2trk',
-                        iterfield = ['tck_file', 'image_file', 'output_file'])
+# convertNode = MapNode(Function(input_names = ['tck_file', 'image_file', 'output_file', 'delete_tmp_files'],
+#                             output_names = ['output_file'],
+#                            function = convert2trk),
+#                         name = 'tck2trk',
+#                         iterfield = ['tck_file', 'image_file', 'output_file'])
 
+
+# #### Debug Stuff
+#def debugTracking(out_file, in_file, seed_file, include_file, mask_file, desired_number_of_tracks):
+#    tracked = out_file
+#    return tracked
+
+#trackingNode = MapNode(Function(input_names=['out_file', 'in_file', 'seed_file', 'include_file',
+#                                             'mask_file', 'desired_number_of_tracks'],
+#                                output_names=['tracked'],
+#                                function=debugTracking),
+#                       name='debug_tracking_node',
+#                       iterfield = ['seed_file', 'include_file', 'desired_number_of_tracks', 'out_file'])
 
 # ### Define the workflow
 
@@ -134,17 +210,29 @@ wf = Workflow('MRTRIX_tracking')
 wf.connect([
         (inputNode, fileNameNode, [('tracks_dir', 'path'),
                                    ('seedmask', 'seedmasks')]),
-        (fileNameNode, trackingNode, [('seedmaskFilenames', 'out_file')]),
+        (fileNameNode, trackingNode, [('seedmaskFilenames', 'out_file_tck')]),
         (inputNode, trackingNode, [('spherical_harmonics_image', 'in_file'),
                                   ('seedmask', 'seed_file'),
                                   ('targetmask', 'include_file'),
                                   ('wmmask_1mm', 'mask_file'),
                                   ('seed_count', 'desired_number_of_tracks')]),
-        (trackingNode, convertNode, [('tracked', 'tck_file'),
-                                     (('tracked', fileNameBuildTRK), 'output_file')]),
-        (inputNode, convertNode, [('seedmask', 'image_file')]),
-        (convertNode, outputNode, [('output_file', 'trk_file')])
+        (trackingNode, outputNode, [('out_file_trk', 'trk_file')])
     ])
+
+# wf.connect([
+#         (inputNode, fileNameNode, [('tracks_dir', 'path'),
+#                                    ('seedmask', 'seedmasks')]),
+#         (fileNameNode, trackingNode, [('seedmaskFilenames', 'out_file')]),
+#         (inputNode, trackingNode, [('spherical_harmonics_image', 'in_file'),
+#                                   ('seedmask', 'seed_file'),
+#                                   ('targetmask', 'include_file'),
+#                                   ('wmmask_1mm', 'mask_file'),
+#                                   ('seed_count', 'desired_number_of_tracks')]),
+#         (trackingNode, convertNode, [('tracked', 'tck_file'),
+#                                      (('tracked', fileNameBuildTRK), 'output_file')]),
+#         (inputNode, convertNode, [('seedmask', 'image_file')]),
+#         (convertNode, outputNode, [('output_file', 'trk_file')])
+#     ])
 
 
 
