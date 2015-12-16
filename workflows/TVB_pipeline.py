@@ -6,9 +6,10 @@
 # This file defines the main (scaffold) workflow fo the pipeline.
 # The tractorgraphy building block is intended to be freely exchangeable
 
-# Debug stuff! Remove this cell once you're done Simon!
-import sys
-sys.path.append("/Users/srothmei/Documents/TVB-Pypeline/")
+# Add the path of our functions to the syspath
+import sys, os
+funcPath = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
+sys.path.append(funcPath)
 
 from nipype import config
 config.enable_debug_mode()
@@ -18,6 +19,7 @@ from nipype import Node, Workflow, MapNode
 from nipype.interfaces.utility import IdentityInterface, Function
 import bm_functions as brainmodes
 import logging
+from multiprocessing import cpu_count
 
 
 # ### Inputs parameters
@@ -141,7 +143,7 @@ wf.write_graph(subject_folder + subject_id + "/TVB_workflow_graph.dot", graph2us
 # Image(filename="./TVB_workflow_graph.dot.png")
 
 # ## Run the Workflow
-#wf.run(plugin='MultiProc')
+#wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
 wf.run()
 
 
