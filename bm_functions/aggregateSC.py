@@ -16,16 +16,15 @@
 # license can be found at http://www.gnu.org/copyleft/gpl.html.
 # =============================================================================
 
-# import sys
-# import os
-from scipy import io
-import numpy as np
-import json
-import logging
-from collections import defaultdict
-
 
 def aggregate_connectivity(sub_id, wmborder, tracksPath, cap_row_files, dist_row_files, steplength=None):
+    # import sys
+    # import os
+    from scipy import io
+    import numpy as np
+    import json
+    import logging
+    from collections import defaultdict
 
     if steplength is None:
         steplength = 0.2

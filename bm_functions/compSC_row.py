@@ -15,19 +15,10 @@
 # license can be found at http://www.gnu.org/copyleft/gpl.html.
 # =============================================================================
 
-# import sys
-import os
-# import fnmatch
-import numpy as np
-import logging
-# import scipy as
-import re
-import json
-from nipype.interfaces.mrtrix import convert as trk
-from collections import defaultdict
-
 
 def tck2voxel_cluster(tck, affineMatrix):
+    import numpy as np
+
     # Loop over all tracks in the data structure
     for i in range(np.shape(tck)[0]):
         # Transform the coordinates by multiplying the affine matrix with the coords
@@ -42,6 +33,17 @@ def tck2voxel_cluster(tck, affineMatrix):
 
 
 def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, track_files):
+    # import sys
+    import os
+    # import fnmatch
+    import numpy as np
+    import logging
+    # import scipy as
+    import re
+    import json
+    from nipype.interfaces.mrtrix import convert as trk
+    from collections import defaultdict
+
     # Debug
     # path = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/mrtrix_68/'
     # roi = 2
