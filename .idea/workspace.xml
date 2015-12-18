@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/aggregateSC.py" afterPath="$PROJECT_DIR$/bm_functions/aggregateSC.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/compSC_row.py" afterPath="$PROJECT_DIR$/bm_functions/compSC_row.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" afterPath="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/seedTargetMaskMatch-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" afterPath="$PROJECT_DIR$/notebooks/seedTargetMaskMatch.ipynb" />
     </list>
     <ignored path="TVB-Pypeline.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,24 +23,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="aggregateSC.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="aggregateSC.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
-              <folding>
-                <element signature="e#984#1004#0" expanded="true" />
-                <marker date="1450421325000" expanded="true" signature="946:951" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="compFC.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bm_functions/compFC.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.92268044">
+              <caret line="204" column="26" selection-start-line="204" selection-start-column="26" selection-end-line="204" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -55,6 +38,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="compFC.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bm_functions/compFC.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -84,7 +77,7 @@
         <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+              <caret line="131" column="33" selection-start-line="131" selection-start-column="33" selection-end-line="131" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -102,10 +95,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mrtrix_tracking.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="mrtrix_tracking.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.632732">
+            <state vertical-scroll-proportion="0.0">
               <caret line="145" column="10" selection-start-line="145" selection-start-column="10" selection-end-line="145" selection-end-column="10" />
               <folding>
                 <element signature="e#489#541#0" expanded="true" />
@@ -178,8 +171,8 @@
         <option value="$PROJECT_DIR$/workflows/preprocSub.py" />
         <option value="$PROJECT_DIR$/workflows/TVB_pipeline.py" />
         <option value="$PROJECT_DIR$/bm_functions/compSC_row.py" />
-        <option value="$PROJECT_DIR$/bm_functions/aggregateSC.py" />
         <option value="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" />
+        <option value="$PROJECT_DIR$/bm_functions/aggregateSC.py" />
       </list>
     </option>
   </component>
@@ -561,10 +554,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding>
-            <element signature="e#984#1004#0" expanded="true" />
-            <marker date="1450421325000" expanded="true" signature="946:951" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -650,10 +640,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding>
-            <element signature="e#984#1004#0" expanded="true" />
-            <marker date="1450421325000" expanded="true" signature="946:951" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -801,14 +788,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
+    <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+          <caret line="145" column="10" selection-start-line="145" selection-start-column="10" selection-end-line="145" selection-end-column="10" />
           <folding>
-            <element signature="e#984#1004#0" expanded="true" />
-            <marker date="1450421325000" expanded="true" signature="946:951" placeholder="..." />
+            <element signature="e#489#541#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="131" column="33" selection-start-line="131" selection-start-column="33" selection-end-line="131" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -820,21 +814,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
+    <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.92268044">
+          <caret line="204" column="26" selection-start-line="204" selection-start-column="26" selection-end-line="204" selection-end-column="26" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.632732">
-          <caret line="145" column="10" selection-start-line="145" selection-start-column="10" selection-end-line="145" selection-end-column="10" />
-          <folding>
-            <element signature="e#489#541#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

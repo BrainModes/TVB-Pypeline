@@ -171,28 +171,37 @@ def aggregate_connectivity(sub_id, wmborder, tracksPath, cap_row_files, dist_row
                      'SC_cap_agg_bwflav2_norm_log': SC_cap_agg_bwflav2_norm_log,
                      'SC_dist_agg_mean': SC_dist_agg_mean,
                      'SC_dist_agg_median': SC_dist_agg_median}
-    io.savemat(tracksPath + sub_id + '_SC.mat', theMatlabDict)
+    SC_matrix_filename_matlab = tracksPath + sub_id + '_SC.mat'
+    io.savemat(SC_matrix_filename_matlab, theMatlabDict)
 
     # Save the more complex output plus the matlab-one into json
     # First convert all items to lists...
     for i in theMatlabDict.keys():
         theMatlabDict[i] = theMatlabDict[i].tolist()
 
-    with open(tracksPath + sub_id + '_SC.json', 'w') as outfile:
+    SC_matrix_filename_json = tracksPath + sub_id + '_SC.json'
+    with open(SC_matrix_filename_json, 'w') as outfile:
         json.dump(theMatlabDict, outfile, sort_keys=True, indent=2)
         outfile.close()
 
     # Now store the big distance matrix into json format
-    with open(tracksPath + sub_id + '_SC_voxelwiseDistanceMatrix_counts.json', 'w') as outfile:
+    SC_matrix_voxelwise_filename = tracksPath + sub_id + '_SC_voxelwiseDistanceMatrix_counts.json'
+    with open(SC_matrix_voxelwise_filename, 'w') as outfile:
         json.dump(SC_dist_agg, outfile, sort_keys=True, indent=2)
         outfile.close()
 
-    with open(tracksPath + sub_id + '_SC_voxelwiseDistanceMatrix_distinctConnections.json', 'w') as outfile:
+    SC_matrix_voxelwise_distinctConnections_distance_filename = tracksPath + sub_id + '_SC_voxelwiseDistanceMatrix_distinctConnections.json'
+    with open(SC_matrix_voxelwise_distinctConnections_distance_filename, 'w') as outfile:
         json.dump(SC_dist_agg_tmp, outfile, sort_keys=True, indent=2)
         outfile.close()
 
-    with open(tracksPath + sub_id + '_SC_voxelwiseCapacityMatrix_distinctConnections.json', 'w') as outfile:
+    SC_matrix_voxelwise_distinctConnections_capacity_filename = tracksPath + sub_id + '_SC_voxelwiseCapacityMatrix_distinctConnections.json'
+    with open(SC_matrix_voxelwise_distinctConnections_capacity_filename, 'w') as outfile:
         json.dump(SC_cap_agg_tmp, outfile, sort_keys=True, indent=2)
         outfile.close()
 
     logger.info('Done!')
+
+    return SC_matrix_filename_matlab, SC_matrix_filename_json, SC_matrix_voxelwise_filename, \
+           SC_matrix_voxelwise_distinctConnections_capacity_filename,\
+           SC_matrix_voxelwise_distinctConnections_distance_filename
