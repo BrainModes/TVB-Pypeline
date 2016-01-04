@@ -41,8 +41,10 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
     # import scipy as
     import re
     import json
-    from nipype.interfaces.mrtrix import convert as trk
+    #from nipype.interfaces.mrtrix import convert as trk
+    #import nibabel.trackvis as trk
     from collections import defaultdict
+    from os.path import basename
 
     # Debug
     # path = '/Users/srothmei/Desktop/charite/toronto/AJ_20140516_1600/mrtrix_68/'
@@ -68,6 +70,8 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
     # Define the ROI-Range
     # region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)
     region_table = np.unique(wmborder[wmborder > 0]).astype(int)
+    region_table = region_table.tolist()
+
     # Generate ROI-ID to voxel hashtable
     print('Generate ROI-ID to voxel hashtable...')
     region_id_table = np.array((0, 0))  # Init Variable
@@ -95,7 +99,7 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
     for trackFile in track_files:
         # Select only files that have max. of 2 trailing number depicting the ordering...
         # i.e. don't select files like '10012_subID.tck' when processing for region 10...
-        if re.search("^" + str(region_table[roi - 1]) + "\d{1,2}_.*\.trk$", trackFile):
+        if re.search("^" + str(region_table[roi - 1]) + "\d{1,2}_.*\.npy$", basename(trackFile)):
             tileFiles.append(trackFile)
 
     # Loop over all track-files
@@ -103,10 +107,21 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
         # First check if the file is sane considering the filesize...
         if os.stat(tile).st_size > 2000:
             # Load the file
-            tracks_header, tracks = trk.read_mrtrix_tracks(tile, as_generator=False)
+            #tracks_header, tracks = trk.read_mrtrix_tracks(tile, as_generator=False)
+            tracks_header = np.load(tile).item()
+            tracks = tracks_header['tracks']
+            del tracks_header['tracks']
             print(tile + ': Tracks loaded .....')
             # Transform the coordinates from mm to voxel
             tracks = tck2voxel_cluster(tracks, affine_matrix)
+
+            # Step Size
+            if 'step_size' in tracks_header.keys():
+                step_size = tracks_header['step_size']
+            elif 'step_length' in tracks_header.keys():
+                step_size = tracks_header['step_length']
+            else:
+                step_size = 0.2
 
             # QA
             qualityMetrics['generated_tracks'] += np.shape(tracks)[0]
@@ -133,7 +148,7 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
                     # Compute the track-length from the endpoint to the last point in the starting region
                     trackLen = np.shape(tracks[trackind])[0] - inRegLin[-1] + 1
                     # Check if the track has a minimum length (8mm)
-                    if trackLen > 8 / float(tracks_header['step_size']):
+                    if trackLen > 8 / float(step_size):
                         # Check if the path has a valid endpoint
                         if inRegIDs[-1] > 0:
                             # Check if the region of the seedpoint matches the examined region

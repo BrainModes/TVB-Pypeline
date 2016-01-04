@@ -39,6 +39,7 @@ def aggregate_connectivity(sub_id, wmborder, tracksPath, cap_row_files, dist_row
 
     # Init the logger
     logger = logging.getLogger('interface')
+    logger.setLevel('INFO')
 
     # Load the wmborder file
     # wmborder = np.load(wmborder_file)

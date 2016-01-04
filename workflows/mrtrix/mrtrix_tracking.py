@@ -67,6 +67,7 @@ def fiberTracking(out_file_tck, in_file, seed_file, include_file, mask_file, des
                   unidrectional = None, no_mask_interpolation = None, delete_tmp_files = None):
     import nipype.interfaces.mrtrix as mrt
     import os, logging
+    from numpy import save
 
     # Calling Kenny Loggins
     dangerZone = logging.getLogger('interface')
@@ -108,13 +109,24 @@ def fiberTracking(out_file_tck, in_file, seed_file, include_file, mask_file, des
     # The reason for this is simply that we want to obtain files having the sama data schema independent from
     # the particullar toolbox choosen for tracktography
     #
-    out_file_trk = out_file_tck[:-3] + 'trk'
+    # out_file_trk = out_file_tck[:-3] + 'trk'
+    #
+    # tck2trk = mrt.convert.MRTrix2TrackVis()
+    # tck2trk.inputs.in_file = out_file_tck
+    # tck2trk.inputs.image_file = seed_file
+    # tck2trk.inputs.out_filename = out_file_trk
+    # tck2trk.run()
 
-    tck2trk = mrt.convert.MRTrix2TrackVis()
-    tck2trk.inputs.in_file = out_file_tck
-    tck2trk.inputs.image_file = seed_file
-    tck2trk.inputs.out_filename = out_file_trk
-    tck2trk.run()
+
+    # Convert to numpy format
+    # The convention for the pipeline is that the tracks in each file are stored as a list containing Nx3 arrays
+    # of track coords in RAS-mm space (default behaviour of MRTrix)
+    # This list is embedded into a dict of the header holding valuable information about the track-file
+    tracks_header, tracks = mrt.convert.read_mrtrix_tracks(out_file_tck, as_generator=False)
+    tracks_header['tracks'] = tracks
+    out_file_npy = out_file_tck[:-3] + 'npy'
+    save(out_file_npy, tracks_header)
+
     # Delete tmp files if needed (default is yes)
     if delete_tmp_files is None:
         os.remove(out_file_tck)
@@ -122,7 +134,7 @@ def fiberTracking(out_file_tck, in_file, seed_file, include_file, mask_file, des
     # Releasing Mr Loggins...
     dangerZone.setLevel('NOTSET')
 
-    return out_file_trk
+    return out_file_npy
 
 trackingNode = MapNode(Function(input_names=['out_file_tck', 'in_file', 'seed_file', 'include_file', 'mask_file',
                                              'desired_number_of_tracks', 'inputmodel', 'min_tract_length', 'stop',
