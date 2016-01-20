@@ -17,17 +17,17 @@
 
 
 def tck2voxel_cluster(tck, affineMatrix):
-    import numpy as np
+    from numpy import hstack, round, dot, ones, shape, transpose
 
     # Loop over all tracks in the data structure
-    for i in range(np.shape(tck)[0]):
+    for i in range(shape(tck)[0]):
         # Transform the coordinates by multiplying the affine matrix with the coords
         # => First add a column of 1 to the right side of the matrix
-        zw = np.hstack((tck[i], np.ones((np.shape(tck[i])[0], 1))))
+        zw = hstack((tck[i], ones((shape(tck[i])[0], 1))))
         # => Second multiply the actual matrices
-        zw = np.round(np.dot(zw, np.transpose(affineMatrix)))
+        zw = round(dot(zw, transpose(affineMatrix)))
         # => Third store the result excluding the righthand-side column
-        tck[i] = zw[:, :3].astype(int)
+        tck[i] = zw[:, :3].astype('int16')
 
     return tck
 
@@ -96,6 +96,7 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
     # Check for track-files in the dircetory
     tileFiles = list()
     # for trackFile in os.listdir(tracksPath):
+
     for trackFile in track_files:
         # Select only files that have max. of 2 trailing number depicting the ordering...
         # i.e. don't select files like '10012_subID.tck' when processing for region 10...
@@ -104,16 +105,15 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
 
     # Loop over all track-files
     for tile in tileFiles:
+
         # First check if the file is sane considering the filesize...
         if os.stat(tile).st_size > 2000:
             # Load the file
             #tracks_header, tracks = trk.read_mrtrix_tracks(tile, as_generator=False)
             tracks_header = np.load(tile).item()
-            tracks = tracks_header['tracks']
-            del tracks_header['tracks']
             print(tile + ': Tracks loaded .....')
             # Transform the coordinates from mm to voxel
-            tracks = tck2voxel_cluster(tracks, affine_matrix)
+            tracks_header['tracks'] = tck2voxel_cluster(tracks_header['tracks'], affine_matrix)
 
             # Step Size
             if 'step_size' in tracks_header.keys():
@@ -124,10 +124,10 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
                 step_size = 0.2
 
             # QA
-            qualityMetrics['generated_tracks'] += np.shape(tracks)[0]
+            qualityMetrics['generated_tracks'] += np.shape(tracks_header['tracks'])[0]
 
             # Loop over the tracks themselves
-            for trackind in range(np.shape(tracks)[0]):
+            for trackind in range(np.shape(tracks_header['tracks'])[0]):
                 # Find the "actual" seed-voxel: sometimes a track starts in a seed
                 # voxel then heads into the wm and crosses another voxel of the
                 # seeding-region. In this case we consider the last voxel on the
@@ -136,17 +136,17 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
                 # long.
 
                 # Look which regions the track actually touches
-                inRegIDs = wmborder[tracks[trackind][:, 0], tracks[trackind][:, 1], tracks[trackind][:, 2]]
+                inRegIDs = wmborder[tracks_header['tracks'][trackind][:, 0], tracks_header['tracks'][trackind][:, 1], tracks_header['tracks'][trackind][:, 2]]
                 # Create linear indices for all regions that are non-zero valued, EXCLUDING the end-point of the track
                 inRegLin = np.flatnonzero(inRegIDs[:-1])
                 # Create linear indices relative to the whole wmborder-img for all the steps in the track-path
                 pathIndices = np.ravel_multi_index(
-                    (tracks[trackind][:, 0], tracks[trackind][:, 1], tracks[trackind][:, 2]), np.shape(wmborder),
+                    (tracks_header['tracks'][trackind][:, 0], tracks_header['tracks'][trackind][:, 1], tracks_header['tracks'][trackind][:, 2]), np.shape(wmborder),
                     order='F')
 
                 if inRegLin.size > 0:  # Check if the path start on the border....
                     # Compute the track-length from the endpoint to the last point in the starting region
-                    trackLen = np.shape(tracks[trackind])[0] - inRegLin[-1] + 1
+                    trackLen = np.shape(tracks_header['tracks'][trackind])[0] - inRegLin[-1] + 1
                     # Check if the track has a minimum length (8mm)
                     if trackLen > 8 / float(step_size):
                         # Check if the path has a valid endpoint

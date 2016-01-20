@@ -79,14 +79,14 @@ def aggregate_connectivity(sub_id, wmborder, tracksPath, cap_row_files, dist_row
     SC_dist_agg_median = np.zeros_like(SC_cap_agg_bwflav1)
 
     # Now loop over the regions....
+    logger.info('Processing SC_files... ')
     #for roi in range(len(region_table)):
     cap_row_files.sort()
     dist_row_files.sort()
     for cap_file, dist_file in zip(cap_row_files, dist_row_files):
         #logger.info('Processing ROI: ' + str(roi + 1))
-        logger.info('Processing SC_files... ')
 
-        logger.info('Load the SC_row_files...')
+        #logger.info('Load the SC_row_files...')
         # with open(tracksPath + 'SC_cap_row_' + str(roi + 1) + sub_id + '.json', 'r') as inFile:
         with open(cap_file, 'r') as inFile:
             SC_cap_row = json.load(inFile)

@@ -146,6 +146,7 @@ trackingNode = MapNode(Function(input_names=['out_file_tck', 'in_file', 'seed_fi
 
 
 # #### Debug Stuff
+'''
 def debugTracking(out_file_tck, in_file, seed_file, include_file, mask_file, desired_number_of_tracks,
                   inputmodel = None, min_tract_length = None, stop = None, step_size = None,
                   unidrectional = None, no_mask_interpolation = None, delete_tmp_files = None):
@@ -159,7 +160,7 @@ trackingNode = MapNode(Function(input_names=['out_file_tck', 'in_file', 'seed_fi
                                 function=debugTracking),
                        name = 'tracking_node',
                        iterfield = ['seed_file', 'include_file', 'desired_number_of_tracks', 'out_file_tck'])
-
+'''
 # ### Define the workflow
 
 wf = Workflow('MRTRIX_tracking')
