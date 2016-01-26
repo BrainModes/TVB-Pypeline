@@ -157,6 +157,7 @@ reconallNode = Node(freesurfer.preprocess.ReconAll(), name = 'reconall')
 reconallNode.inputs.subject_id = reconallFolderName
 reconallNode.inputs.directive = 'all'
 reconallNode.inputs.openmp = cpu_count()
+reconallNode.inputs.args = '-notal-check'
 
 # Convert the T1 mgz image to nifti format for later usage
 mriConverter = Node(freesurfer.preprocess.MRIConvert(), name = 'convertAparcAseg')

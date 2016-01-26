@@ -93,7 +93,10 @@ aggregateConnectivityNode = Node(Function(input_names = ['sub_id',
                                                          'cap_row_files',
                                                          'dist_row_files',
                                                          'steplength'],
-                                         output_names = [],
+                                         output_names = ['SC_matrix_filename_matlab',
+                                                         'SC_matrix_filename_json', 'SC_matrix_voxelwise_filename',
+                                                         'SC_matrix_voxelwise_distinctConnections_capacity_filename',
+                                                         'SC_matrix_voxelwise_distinctConnections_distance_filename'],
                                          function = brainmodes.aggregate_connectivity),
                                 name = 'aggregate_SC')
 
@@ -144,6 +147,7 @@ wf.write_graph(subject_folder + subject_id + "/TVB_workflow_graph.dot", graph2us
 
 # ## Run the Workflow
 #wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
+wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00'})
 wf.run()
 
 

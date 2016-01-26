@@ -132,7 +132,7 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
                 # => First add a column of 1 to the right side of the matrix
                 zw = np.hstack((tracks_header['tracks'][i], np.ones((np.shape(tracks_header['tracks'][i])[0], 1))))
                 # => Second multiply the actual matrices
-                zw = round(np.dot(zw, np.transpose(affine_matrix)))
+                zw = np.round(np.dot(zw, np.transpose(affine_matrix)))
                 # => Third store the result excluding the righthand-side column
                 tracks_header['tracks'][i] = zw[:, :3].astype('int16')
 
