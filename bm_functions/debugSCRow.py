@@ -1,4 +1,6 @@
 #!/bin/python
+
+#!/bin/python
 #
 # =============================================================================
 # Authors: Michael Schirner, Simon Rothmeier, Petra Ritter
@@ -15,23 +17,25 @@
 # license can be found at http://www.gnu.org/copyleft/gpl.html.
 # =============================================================================
 
-
-# def tck2voxel_cluster(tck, affineMatrix):
-#     from numpy import hstack, round, dot, ones, shape, transpose
 #
-#     # Loop over all tracks in the data structure
-#     for i in range(shape(tck)[0]):
-#         # Transform the coordinates by multiplying the affine matrix with the coords
-#         # => First add a column of 1 to the right side of the matrix
-#         zw = hstack((tck[i], ones((shape(tck[i])[0], 1))))
-#         # => Second multiply the actual matrices
-#         zw = round(dot(zw, transpose(affineMatrix)))
-#         # => Third store the result excluding the righthand-side column
-#         tck[i] = zw[:, :3].astype('int16')
-#
-#     return tck
 
+@profile
+def tck2voxel_cluster(tck, affineMatrix):
+    from numpy import hstack, round, dot, ones, shape, transpose
 
+    # Loop over all tracks in the data structure
+    for i in range(shape(tck)[0]):
+        # Transform the coordinates by multiplying the affine matrix with the coords
+        # => First add a column of 1 to the right side of the matrix
+        zw = hstack((tck[i], ones((shape(tck[i])[0], 1))))
+        # => Second multiply the actual matrices
+        zw = round(dot(zw, transpose(affineMatrix)))
+        # => Third store the result excluding the righthand-side column
+        tck[i] = zw[:, :3].astype('int16')
+
+    return tck
+
+@profile
 def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, track_files):
     # import sys
     import os
@@ -62,9 +66,6 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
     # User feedback
     print('Computing SC for ROI ' + str(roi))
 
-    #load the wmborder
-    wmborder = np.load(wmborder)
-
     # Compute the wmborder shape
     wmBorderDim = np.shape(wmborder)
 
@@ -75,7 +76,7 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
 
     # Define the ROI-Range
     # region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)
-    region_table = np.unique(wmborder[wmborder > 0]).astype('int32')
+    region_table = np.unique(wmborder[wmborder > 0]).astype(int)
     region_table = region_table.tolist()
 
     # Generate ROI-ID to voxel hashtable
@@ -93,13 +94,8 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
     SC_dist = defaultdict(list)
 
     # Count the number of failure tracks
-    expTracks = int(np.count_nonzero(wmborder == region_table[roi - 1]) * 200)
-    qualityMetrics = {'off_seed': 0,
-                      'too_short': 0,
-                      'good_tracks': 0,
-                      'wrong_seed': 0,
-                      'expected_tracks': expTracks,
-                      'wrong_target': 0,
+    qualityMetrics = {'off_seed': 0, 'too_short': 0, 'good_tracks': 0, 'wrong_seed': 0,
+                      'expected_tracks': np.count_nonzero(wmborder == region_table[roi - 1]) * 200, 'wrong_target': 0,
                       'generated_tracks': 0}
 
     ####### Examine the region ##################################################################
@@ -124,17 +120,7 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
             tracks_header = np.load(tile).item()
             print(tile + ': Tracks loaded .....')
             # Transform the coordinates from mm to voxel
-            #tracks_header['tracks'] = tck2voxel_cluster(tracks_header['tracks'], affine_matrix)
-
-            # Loop over all tracks in the data structure
-            for i in range(np.shape(tracks_header['tracks'])[0]):
-                # Transform the coordinates by multiplying the affine matrix with the coords
-                # => First add a column of 1 to the right side of the matrix
-                zw = np.hstack((tracks_header['tracks'][i], np.ones((np.shape(tracks_header['tracks'][i])[0], 1))))
-                # => Second multiply the actual matrices
-                zw = round(np.dot(zw, np.transpose(affine_matrix)))
-                # => Third store the result excluding the righthand-side column
-                tracks_header['tracks'][i] = zw[:, :3].astype('int16')
+            tracks_header['tracks'] = tck2voxel_cluster(tracks_header['tracks'], affine_matrix)
 
             # Step Size
             if 'step_size' in tracks_header.keys():
@@ -156,16 +142,18 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
                 # Then we check whether the remaining path length is at least 10 mm
                 # long.
 
-                # Look which regions the track actually touches
-                inRegIDs = wmborder[tracks_header['tracks'][trackind][:, 0], tracks_header['tracks'][trackind][:, 1], tracks_header['tracks'][trackind][:, 2]]
-                # Create linear indices for all regions that are non-zero valued, EXCLUDING the end-point of the track
-                inRegLin = np.flatnonzero(inRegIDs[:-1])
+
                 # Create linear indices relative to the whole wmborder-img for all the steps in the track-path
                 pathIndices = np.ravel_multi_index(
                     (tracks_header['tracks'][trackind][:, 0], tracks_header['tracks'][trackind][:, 1], tracks_header['tracks'][trackind][:, 2]), wmBorderDim,
                     order='F')
+                # Look which regions the track actually touches
+                tmp = [np.where(region_id_table[:, 1] == x)[0][0] for x in pathIndices if np.where(region_id_table[:, 1] == x)[0]]
+                inRegIDs = region_id_table[tmp, 0]
+                # Create linear indices for all regions that are non-zero valued, EXCLUDING the end-point of the track
+                inRegLin = range(len(inRegIDs) - 1)
 
-                if inRegLin.size > 0:  # Check if the path start on the border....
+                if len(inRegLin) > 0:  # Check if the path start on the border....
                     # Compute the track-length from the endpoint to the last point in the starting region
                     trackLen = np.shape(tracks_header['tracks'][trackind])[0] - inRegLin[-1] + 1
                     # Check if the track has a minimum length (8mm)
@@ -179,9 +167,9 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
                                 qualityMetrics['good_tracks'] += 1
 
                                 # Find the entry in the storage-dict in which we'll store the current findings
-                                seedID = np.flatnonzero(region_id_table[:, 1] == pathIndices[inRegLin[-1]])[0]
+                                seedID = tmp[inRegLin[-1]]
                                 # Find the correspdonging entry on which the track refers to in the storage dict
-                                targetID = np.flatnonzero(region_id_table[:, 1] == pathIndices[-1])[0]
+                                targetID = tmp[-1]
 
                                 # Write into the capacity storage dict...
                                 SC_cap[seedID].append(targetID)  # Add a Connection from Seedvoxel to Targetvoxel
@@ -229,3 +217,28 @@ def compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, tr
     print('Done!')
 
     return SC_cap_row_filename, SC_dist_row_filename
+
+import numpy as np
+debugPath = '/Users/srothmei/Desktop/charite/toronto/Adalberto/debug/'
+
+roi = 68
+subid = 'Adalberto'
+tracksPath = debugPath
+
+wmBorder_file = debugPath + 'wmborder.npy'
+
+wmborder = np.load(wmBorder_file)
+
+affine_matrix_file = debugPath + 'affine_matrix.npy'
+
+affine_matrix = np.load(affine_matrix_file)
+
+from nipype import Node
+from nipype.interfaces.io import DataFinder
+tckFinder = Node(DataFinder(match_regex = '.*\.npy', root_paths = tracksPath), name = 'tckFinder')
+
+res = tckFinder.run()
+track_files = res.outputs.out_paths
+
+#
+compute_connectivity_row(roi, subid, affine_matrix, wmborder, tracksPath, track_files)

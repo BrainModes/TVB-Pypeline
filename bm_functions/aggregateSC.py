@@ -41,8 +41,8 @@ def aggregate_connectivity(sub_id, wmborder, tracksPath, cap_row_files, dist_row
     logger = logging.getLogger('interface')
     logger.setLevel('INFO')
 
-    # Load the wmborder file
-    # wmborder = np.load(wmborder_file)
+    #load the wmborder
+    wmborder = np.load(wmborder)
 
     # Define the ROI-Range
     # region_table = range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036)

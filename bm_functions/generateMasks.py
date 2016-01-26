@@ -70,12 +70,13 @@ def generate_masks(subPath, mask_output_folder, wmoutline2diff_1mm, wmparc2diff_
 
     nib.save(wmborder, mask_output_folder + 'gmwmborder_1mm.nii.gz')
     # Save it as "normal" File
-    np.save(mask_output_folder + 'wmborder.npy', wmborder_data)
+    wmborder_file = mask_output_folder + 'wmborder.npy'
+    np.save(wmborder_file, wmborder_data)
 
     ### Create Seed- and Target-Masks
     numseeds = np.zeros((1, 3))
 
-    for i in range(1001, 1004) + range(1005, 1036) + range(2001, 2004) + range(2005, 2036):
+    for i in np.unique(wmborder_data[wmborder_data > 0]).astype(int):
         print('Processing RegionID ' + str(i))
 
         # Generate the name for the target masks
@@ -143,4 +144,4 @@ def generate_masks(subPath, mask_output_folder, wmoutline2diff_1mm, wmparc2diff_
 
     f.close()
 
-    return seed_target_masks, seed_count, number_of_rois, affine_matrix, wmborder_data
+    return seed_target_masks, seed_count, number_of_rois, affine_matrix, wmborder_file
