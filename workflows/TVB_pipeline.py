@@ -7,7 +7,7 @@
 # The tractorgraphy building block is intended to be freely exchangeable
 
 # Add the path of our functions to the syspath
-import sys, os
+import sys, os, getopt
 funcPath = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
 sys.path.append(funcPath)
 
@@ -23,9 +23,27 @@ from multiprocessing import cpu_count
 
 
 # ### Inputs parameters
+subject_id = None
+subject_folder = None
+usageString = 'usage: ' + sys.argv[0] + ' --sub-id <SUBJECT-ID> --sub-dir <SUBJECT-DIR>'
+try:
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:d:', ['sub-id=', 'sub-dir=', 'help'])
+except getopt.GetoptError:
+    print usageString
+    sys.exit(2)
+for opt, arg in opts:
+    if opt in ('--help', '-h'):
+        print usageString
+        sys.exit()
+    elif opt in ('-s', '--sub-id'):
+        subject_id = arg
+    elif opt in ('-d', '--sub-dir'):
+        subject_folder = arg
+
+
 # Later get these from a function input or similar
-subject_id = 'FR_20120903'
-subject_folder = '/Users/srothmei/Desktop/charite/toronto/'
+#subject_id = 'FR_20120903'
+#subject_folder = '/Users/srothmei/Desktop/charite/toronto/'
 
 
 # ### Setup
