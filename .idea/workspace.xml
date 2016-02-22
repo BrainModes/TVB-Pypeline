@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f8c0238-87cc-4c32-8f6d-19af6217657f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/TVB_pipeline.ipynb" afterPath="$PROJECT_DIR$/notebooks/TVB_pipeline.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/Untitled.ipynb" afterPath="$PROJECT_DIR$/notebooks/Untitled.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/__init__.py" afterPath="$PROJECT_DIR$/bm_functions/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bm_functions/compFC.py" afterPath="$PROJECT_DIR$/bm_functions/compFC.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/fmri/fMRI_preproc.ipynb" afterPath="$PROJECT_DIR$/notebooks/fmri/fMRI_preproc.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding.ipynb" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding_multiVox.py" afterPath="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding_multiVox.py" />
     </list>
     <ignored path="TVB-Pypeline.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="compFC.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="compFC.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bm_functions/compFC.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.015625">
+              <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
               <folding>
                 <element signature="e#824#833#0" expanded="true" />
               </folding>
@@ -66,13 +71,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mrtrix_thresholding_multiVox.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="mrtrix_thresholding_multiVox.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding_multiVox.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.71875">
-              <caret line="182" column="0" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="233" column="31" selection-start-line="233" selection-start-column="31" selection-end-line="233" selection-end-column="31" />
               <folding>
-                <element signature="e#96#114#0" expanded="true" />
+                <element signature="e#86#104#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -82,7 +87,7 @@
         <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="27" column="88" selection-start-line="27" selection-start-column="88" selection-end-line="27" selection-end-column="88" />
+              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -92,22 +97,18 @@
         <entry file="file://$PROJECT_DIR$/bm_functions/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#47#0" expanded="true" />
-              </folding>
+              <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="51" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mrtrix_preproc.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_preproc.py">
+      <file leaf-file-name="default_feat_config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bm_functions/default_feat_config.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="89" column="41" selection-start-line="89" selection-start-column="41" selection-end-line="89" selection-end-column="41" />
-              <folding>
-                <element signature="e#272#308#0" expanded="true" />
-              </folding>
+              <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="102" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -171,7 +172,6 @@
         <option value="$PROJECT_DIR$/functions/__init__.py" />
         <option value="$PROJECT_DIR$/functions/generateMasks.py" />
         <option value="$PROJECT_DIR$/bm_functions/connectivity2TVBFS.py" />
-        <option value="$PROJECT_DIR$/bm_functions/__init__.py" />
         <option value="$PROJECT_DIR$/workflows/mrtrix/mrtrix_preproc.py" />
         <option value="$PROJECT_DIR$/workflows/mrtrix/mrtrix_main.py" />
         <option value="$PROJECT_DIR$/workflows/mrtrix/mrtrix_tracking.py" />
@@ -182,6 +182,9 @@
         <option value="$PROJECT_DIR$/bm_functions/compSC_row.py" />
         <option value="$PROJECT_DIR$/workflows/TVB_pipeline.py" />
         <option value="$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding_multiVox.py" />
+        <option value="$PROJECT_DIR$/workflows/feat/default_feat_config.py" />
+        <option value="$PROJECT_DIR$/bm_functions/__init__.py" />
+        <option value="$PROJECT_DIR$/bm_functions/compFC.py" />
       </list>
     </option>
   </component>
@@ -255,6 +258,38 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="TVB-Pypeline" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TVB-Pypeline" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TVB-Pypeline" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="workflows" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TVB-Pypeline" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TVB-Pypeline" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="workflows" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="feat" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -549,14 +584,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/bm_functions/debugSCRow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="19" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bm_functions/compFC.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -596,7 +623,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="89" column="41" selection-start-line="89" selection-start-column="41" selection-end-line="89" selection-end-column="41" />
           <folding>
-            <element signature="e#272#308#0" expanded="true" />
+            <element signature="e#272#308#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -676,7 +703,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="89" column="41" selection-start-line="89" selection-start-column="41" selection-end-line="89" selection-end-column="41" />
           <folding>
-            <element signature="e#272#308#0" expanded="true" />
+            <element signature="e#272#308#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -756,7 +783,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="89" column="41" selection-start-line="89" selection-start-column="41" selection-end-line="89" selection-end-column="41" />
           <folding>
-            <element signature="e#272#308#0" expanded="true" />
+            <element signature="e#272#308#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -843,7 +870,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="89" column="41" selection-start-line="89" selection-start-column="41" selection-end-line="89" selection-end-column="41" />
           <folding>
-            <element signature="e#272#308#0" expanded="true" />
+            <element signature="e#272#308#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -905,39 +932,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/compFC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding>
-            <element signature="e#824#833#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/workflows/mrtrix/mrtrix_preproc.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="89" column="41" selection-start-line="89" selection-start-column="41" selection-end-line="89" selection-end-column="41" />
           <folding>
-            <element signature="e#272#308#0" expanded="true" />
+            <element signature="e#272#308#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
+    <entry file="file://$PROJECT_DIR$/bm_functions/generateMasks.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="207" column="68" selection-start-line="205" selection-start-column="11" selection-end-line="207" selection-end-column="68" />
+          <caret line="32" column="29" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/compSC_row.py">
+    <entry file="file://$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding_multiVox.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="129" column="65" selection-start-line="129" selection-start-column="65" selection-end-line="129" selection-end-column="65" />
-          <folding />
+          <caret line="233" column="31" selection-start-line="233" selection-start-column="31" selection-end-line="233" selection-end-column="31" />
+          <folding>
+            <element signature="e#86#104#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -961,10 +980,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bm_functions/aggregateSC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="207" column="68" selection-start-line="205" selection-start-column="11" selection-end-line="207" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/workflows/TVB_pipeline.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="88" selection-start-line="27" selection-start-column="88" selection-end-line="27" selection-end-column="88" />
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bm_functions/default_feat_config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="102" />
           <folding />
         </state>
       </provider>
@@ -972,27 +1007,25 @@
     <entry file="file://$PROJECT_DIR$/bm_functions/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#47#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bm_functions/generateMasks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="29" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
+          <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="51" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notebooks/mrtrix/mrtrix_thresholding_multiVox.py">
+    <entry file="file://$PROJECT_DIR$/bm_functions/compSC_row.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.71875">
-          <caret line="182" column="0" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="34" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="129" column="65" selection-start-line="129" selection-start-column="65" selection-end-line="129" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bm_functions/compFC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.015625">
+          <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
           <folding>
-            <element signature="e#96#114#0" expanded="true" />
+            <element signature="e#824#833#0" expanded="true" />
           </folding>
         </state>
       </provider>
