@@ -7,6 +7,11 @@ For a general overview about the pipeline see [Schirner, Rothmeier et al. (2015)
 
 ----------
 
+## Installation:
+The Pipeline uses Nipype which depends mainly on **Python 2.7**. The following list gives an overview about the Python toolboxes which are used in the current state of the Pipeline. See the corresponding Doc-Pages for installation and dependency resolving.
++ [Nipype](http://nipy.org/nipype/users/install.html)
++ [Nibabel](http://nipy.org/nibabel/installation.html#installation)
++ [Dipy](http://nipy.org/dipy/installation.html)
 
 To run it on a specific cluster architecture, simply edit the plugin-type in the master control script
 
