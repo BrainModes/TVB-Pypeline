@@ -42,7 +42,23 @@ As you can see, plugins are used to handle different situations considering the 
 For an overview about the available plugins see the [Doc-Page about Plugins](http://nipy.org/nipype/users/plugins.html). Since this page is sometimes a bit outdated (e.g. the OAR plugin is not yet listed), see also https://github.com/nipy/nipype/tree/master/nipype/pipeline/plugins
 
 ## Preparing your rawdata
-Looking at the TODO-List in the bottom-section of this manual, you can see that the organization of the users raw-data is still a bit inflexible considering the fact that the pipeline requires a certain folder-schema. Currently, you needm to **precisely stick to the following naming conventions**
+Looking at the TODO-List in the bottom-section of this manual, you can see that the organization of the users raw-data is still a bit inflexible considering the fact that the pipeline requires a certain folder-schema. Currently, you need to **precisely stick to the following naming conventions**:
+```bash
+/home/myUserName/pipeline/subjects/
+|-- Sub1/
+|   |-- RAWDATA/
+|   |   |-- MPRAGE/
+|   |   |   |-- Maybe/Some/SubFolders
+|   |   |   |   |-- Arbitrary-Image-Names-001.dcm
+|   |   |   |   |-- Arbitrary-Image-Names-002.dcm
+|   |   |   |   |-- ...
+|   |   |-- DTI/ 
+|   |   |-- BOLD-EPI/ 
+```
+Inside the several folders for the different imaging modalities, the number of subfolder doesnt matter.
+Note that the pipeline currently only support DICOM data as input
+
+##### Using fMRI data is optional, i.e. if you dont include that data into your RAWDATA-folder, you still get the structural and dwMRI data processed!
 
 ## Running the Pipeline
 
@@ -58,3 +74,4 @@ Looking at the TODO-List in the bottom-section of this manual, you can see that 
 + Include some example workflows for different cluster scenarios, realized through e.g. controll-scripts written in BASH
 + Re-Implement Multishell-Tracking using FSLs bedpostx as in https://github.com/BrainModes/TVB-empirical-data-pipeline/tree/multiShell
 + Implement the formatting of the results into a TVB-ZIP-File as in https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/matlab_scripts/connectivity2TVBFS.m
++ Check if Non-DICOM data works as input
