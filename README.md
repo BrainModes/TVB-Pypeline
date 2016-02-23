@@ -1,9 +1,8 @@
 # TVB-Pypeline - - Work in Progress!
 
 This project maps our current automatized MRI processing pipeline (http://github.com/BrainModes/TVB-empirical-data-pipeline) 
-to *Python* using *Nipype*, making the used toolboxes inside easily exchangeable.
-
-For a general overview about the pipeline see [Schirner, Rothmeier et al. (2015)](http://www.sciencedirect.com/science/article/pii/S1053811915002505).
+to Python using Nipype, making the used toolboxes inside easily exchangeable.
+For a general overview about the pipeline see Schirner, Rothmeier et al. (2015) (http://www.sciencedirect.com/science/article/pii/S1053811915002505)
 ----------
 
 
