@@ -62,7 +62,12 @@ Note that the pipeline currently only support DICOM data as input
 
 ## Running the Pipeline
 
+To finally run the pipeline, locate the **TVB_pipeline.py** script using your systems Shell and pass the subjects ID and the absolute path to the folder holding your subjects RAWDATA-folder (see above).
+```bash
+python /home/myUser/pipeline/TVB_pipeline.tyb --sub-id <SUBJECT-ID> --sub-dir <SUBJECT-DIR>
+```
 
+The log-files are stored into a subfolder of your **SUBJECT-DIR** called TVB_pipeline.
 
 ----------
 
