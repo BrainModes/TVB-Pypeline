@@ -30,10 +30,6 @@ Currently, we tested two toolboxes for tractography, one for each of the aforeme
 
 ##### Install the Pipeline
 Download the files from the GitHub Repository and unpack the files on your workstation/cluster. 
-Next you might want to adapt the plugin-settings to your local architecture (see below).
-
-------
-## Running the Pipeline
 To run it on a specific cluster architecture, simply edit the plugin-type in the master control script [TVB_pipeline.py](https://github.com/srothmei/TVB-Pypeline/blob/master/workflows/TVB_pipeline.py).
 Locate the following code block at the end of the file
 ```python
@@ -44,6 +40,12 @@ wf.run()
 ```
 As you can see, plugins are used to handle different situations considering the environment in which the pipeline is intended to be run, e.g. different job schedulers on High-Performance-Clustercomputer or local installations on a multicore workstation.
 For an overview about the available plugins see the [Doc-Page about Plugins](http://nipy.org/nipype/users/plugins.html). Since this page is sometimes a bit outdated (e.g. the OAR plugin is not yet listed), see also https://github.com/nipy/nipype/tree/master/nipype/pipeline/plugins
+
+## Preparing your rawdata
+Looking at the TODO-List in the bottom-section of this manual, you can see that the organization of the users raw-data is still a bit inflexible considering the fact that the pipeline requires a certain folder-schema. Currently, you needm to **precisely stick to the following naming conventions**
+
+## Running the Pipeline
+
 
 
 ----------
