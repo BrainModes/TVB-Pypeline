@@ -68,7 +68,7 @@ import preprocSub as preprocessing
 
 
 # ## Functional processing
-import feat as functProc
+import feat as funcProc
 
 
 # ## Tractography-Mask generation
@@ -132,6 +132,11 @@ wf.connect([
                                         ('output_node.mask_folder', 'mask_output_folder'),
                                         ('output_node.wmoutline2diff_1mm', 'wmoutline2diff_1mm'),
                                         ('output_node.wmparc2diff_1mm', 'wmparc2diff_1mm')]),
+        (preprocessing.wf, funcProc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
+                                         ('output_node.aparc+aseg', 'inputNode.parcellation_mask'),
+                                         ('output_node.fmriRawFolder', 'inputNode.raw_files')]),
+        (inputNode, funcProc.wf, [('subject_folder', 'inputNode.subject_folder'),
+                                  ('subject_id', 'inputNode.subID')]),
         (maskGenNode, mrtrix.mrtrix_main.wf, [('seed_target_masks', 'input_node.seed_target_masks'),
                                              ('seed_count', 'input_node.seed_count')]),
         (preprocessing.wf, mrtrix.mrtrix_main.wf, [('output_node.bval_file', 'input_node.bval_file'),
