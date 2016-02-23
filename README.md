@@ -5,6 +5,8 @@ to Python using Nipype, making the used toolboxes inside easily exchangeable.
 
 For a general overview about the pipeline see [Schirner, Rothmeier et al. (2015)](http://www.sciencedirect.com/science/article/pii/S1053811915002505)
 
+Please note that this pipeline does extensive analysis and is thus computationally heavy. TEsting was carried out on a High-Performance-Clustercomputer using >100 CPU Cores.
+
 ----------
 
 ## Installation:
@@ -27,7 +29,8 @@ Currently, we tested two toolboxes for tractography, one for each of the aforeme
 
 
 ##### Install the Pipeline
-
+Download the files from the GitHub Repository and unpack the files on your workstation/cluster. 
+Next you might want to adapt the plugin-settings to your local architecture (see below).
 
 ------
 ## Running the Pipeline
