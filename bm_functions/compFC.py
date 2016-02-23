@@ -15,15 +15,15 @@
 # license can be found at http://www.gnu.org/copyleft/gpl.html.
 # =============================================================================
 
-import os
-import fnmatch
-import csv
-import numpy as np
-# import scipy as sp
-from scipy import io
-
 
 def compute_functional_connectivity(path, subName, avgwf_txt_file, summary_file_cleared):
+    #import os
+    #import fnmatch
+    import csv
+    import numpy as np
+    # import scipy as sp
+    from scipy import io
+
 
     # Read the subID_ROIts.dat file
     #for datFile in os.listdir(path):
@@ -70,7 +70,8 @@ def compute_functional_connectivity(path, subName, avgwf_txt_file, summary_file_
     #    FC_cc_dk68[np.isnan(FC_cc_dk68)] = 0
 
     # Compute the FC
-    FC_cc = np.corrcoef(np.transpose(fMRI))
+    with np.errstate(invalid='ignore'):
+        FC_cc = np.corrcoef(np.transpose(fMRI))
     # Correct for possible NaN values
     FC_cc[np.isnan(FC_cc)] = 0
 
