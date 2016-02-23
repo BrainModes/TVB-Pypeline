@@ -11,8 +11,9 @@ import sys, os, getopt
 funcPath = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
 sys.path.append(funcPath)
 
-from nipype import config
-config.enable_debug_mode()
+# Start of Debug-Stuff
+# from nipype import config
+# config.enable_debug_mode()
 # End of Debug-Stuff
 
 from nipype import Node, Workflow, MapNode
@@ -41,11 +42,6 @@ for opt, arg in opts:
         subject_folder = arg
 
 
-# Later get these from a function input or similar
-#subject_id = 'FR_20120903'
-#subject_folder = '/Users/srothmei/Desktop/charite/toronto/'
-
-
 # ### Setup
 inputNode = Node(IdentityInterface(fields = ['subject_folder', 'subject_id']),
                 name = 'input_node')
@@ -68,6 +64,7 @@ import preprocSub as preprocessing
 
 
 # ## Functional processing
+# Note: If there are no fMRI data fed into the pipeline, this branch will fail but since there are no dependencies, this doesnt matter
 import feat as funcProc
 
 
@@ -165,8 +162,8 @@ wf.write_graph(subject_folder + subject_id + "/TVB_workflow_graph.dot", graph2us
 # Image(filename="./TVB_workflow_graph.dot.png")
 
 # ## Run the Workflow
-#wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
-wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00'})
+wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
+#wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00'})
 wf.run()
 
 
