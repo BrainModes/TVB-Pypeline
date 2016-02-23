@@ -26,9 +26,22 @@ Currently, we tested two toolboxes for tractography, one for each of the aforeme
  + [FSL](http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FDT): Multi-Shell Tracking (Not yet implemented in the Python-Pipeline!)
 
 
-------
+##### Install the Pipeline
 
-To run it on a specific cluster architecture, simply edit the plugin-type in the master control script
+
+------
+## Running the Pipeline
+To run it on a specific cluster architecture, simply edit the plugin-type in the master control script [TVB_pipeline.py](https://github.com/srothmei/TVB-Pypeline/blob/master/workflows/TVB_pipeline.py).
+Locate the following code block at the end of the file
+```python
+# ## Run the Workflow
+#wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
+wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00'})
+wf.run()
+```
+As you can see, plugins are used to handle different situations considering the environment in which the pipeline is intended to be run, e.g. different job schedulers on High-Performance-Clustercomputer or local installations on a multicore workstation.
+For an overview about the available plugins see the [Doc-Page about Plugins](http://nipy.org/nipype/users/plugins.html). Since this page is sometimes a bit outdated (e.g. the OAR plugin is not yet listed), see also https://github.com/nipy/nipype/tree/master/nipype/pipeline/plugins
+
 
 ----------
 
@@ -39,3 +52,4 @@ To run it on a specific cluster architecture, simply edit the plugin-type in the
 + Make the file-sorting of the user-data more sophisticated. This means that the pipeline should be able to somehow recognize which kinds of data-sets (e.g. fMRI, T1, dwMRI) is included in the user data and then route the particular folder-paths onto the corresponding processing-nodes inside the pipeline. This might be achieved through using nipype's [SelectFiles interface](http://nipy.org/nipype/users/select_files.html)
 + Include some example workflows for different cluster scenarios, realized through e.g. controll-scripts written in BASH
 + Re-Implement Multishell-Tracking using FSLs bedpostx as in https://github.com/BrainModes/TVB-empirical-data-pipeline/tree/multiShell
++ Implement the formatting of the results into a TVB-ZIP-File as in https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/matlab_scripts/connectivity2TVBFS.m
