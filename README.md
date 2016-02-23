@@ -21,6 +21,13 @@ For **preprocessing**, the following toolboxes are used:
 
 When it comes to **fiber tractography**, there is a vast number of available tools for that. Their usage also highly depens on how your dwMRI-Data was recorded. One of the main parting points is the number of different diffusion-gradient strengths applied during the measurement (i.e. the number of different **b-values**). If the dataset has only a single value greater than zero, one talks about **single-shell data**. As soon as more than one value (>0) is involved, the data is called **multi-shell data**
 
+Currently, we tested two toolboxes for tractography, one for each of the aforementioned scenarios:
+ + [MRTrix 0.2.12](http://jdtournier.github.io/mrtrix-0.2/index.html): Single-Shell Tracking
+ + [FSL](http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FDT): Multi-Shell Tracking (Not yet implemented in the Python-Pipeline!)
+
+
+------
+
 To run it on a specific cluster architecture, simply edit the plugin-type in the master control script
 
 ----------
