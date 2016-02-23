@@ -84,7 +84,8 @@ fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
             'bval_file': 'bvals.dat',
             'bvec_file': 'bvecs.dat',
             'dwi_file': 'dwi.nii.gz',
-            'no_diffusion_image': 'lowb.nii.gz'}
+            'no_diffusion_image': 'lowb.nii.gz',
+             'brainmask': 'brainmask.nii.gz'}
 
 
 def fileNameBuilder(path, fname):
@@ -163,6 +164,11 @@ reconallNode.inputs.args = '-notal-check'
 mriConverter = Node(freesurfer.preprocess.MRIConvert(), name = 'convertAparcAseg')
 mriConverter.inputs.out_type = 'niigz'
 mriConverter.inputs.out_orientation = 'RAS'
+
+# Convert the Brainmask file
+brainmaskConv = Node(freesurfer.preprocess.MRIConvert(), name = 'convertBrainmask')
+brainmaskConv.inputs.out_type = 'niigz'
+brainmaskConv.inputs.out_orientation = 'RAS'
 
 
 # ### Diffusion Data (dwMRI) preprocessing
@@ -307,6 +313,10 @@ wf.connect(pathBuildingNode, 'subPath', reconallNode, 'subjects_dir')
 # aparc+aseg into mriConverter
 wf.connect([(reconallNode, mriConverter, [(('aparc_aseg', selectFromList, 0), 'in_file')])])
 wf.connect([(pathBuildingNode, mriConverter, [(('calc_images', fileNameBuilder, fileNames['aparc+aseg']), 'out_file')])])
+
+# Brainmask converter
+wf.connect([(reconallNode, brainmaskConv, [('brainmask', 'in_file')]),
+            (pathBuildingNode, brainmaskConv, [(('calc_images', fileNameBuilder, fileNames['brainmask']), 'out_file')])])
 
 # dcm2nii
 wf.connect([(pathBuildingNode, dcm2niiNode, [('dwiRawFolder', 'source_dir'),

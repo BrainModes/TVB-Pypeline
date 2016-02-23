@@ -68,11 +68,7 @@ import preprocSub as preprocessing
 
 
 # ## Functional processing
-# TODO: Implement this
-# funcProcNode = Node(Function(input_names= ['path', 'subName'],
-#                            output_names = [],
-#                            function = brainmodes.compute_functional_connectivity),
-#                    name = 'functional_processing')
+import feat as functProc
 
 
 # ## Tractography-Mask generation
