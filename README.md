@@ -13,6 +13,14 @@ The Pipeline uses Nipype which depends mainly on **Python 2.7**. The following l
 + [Nibabel](http://nipy.org/nibabel/installation.html#installation)
 + [Dipy](http://nipy.org/dipy/installation.html)
 
+Since Nipype/Python also perform as a wrapper for Toolboxes invoked through the Shell-Interface, you also have to make sure the toolboxes you want to use are installed on your system and their binaries/libs are included in the Shell's searchpath.
+
+For **preprocessing**, the following toolboxes are used:
++ [FSL](http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/)
++ [FREESURFER](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall)
+
+When it comes to **fiber tractography**, there is a vast number of available tools for that. Their usage also highly depens on how your dwMRI-Data was recorded. One of the main parting points is the number of different diffusion-gradient strengths applied during the measurement (i.e. the number of different **b-values**). If the dataset has only a single value greater than zero, one talks about **single-shell data**. As soon as more than one value (>0) is involved, the data is called **multi-shell data**
+
 To run it on a specific cluster architecture, simply edit the plugin-type in the master control script
 
 ----------
