@@ -95,7 +95,7 @@ By default, resulting data will be stored into ** \<SUBEJCT-DIR>/bold/**. Result
 | Variable-Name | Type of Data | 
 | ------------- |:-------------:|
 |ROI_ID_table|Various numbers from FREESURFERs **mri_segstat**. The headers have been removed. They can be found in the following file: **\<SUBEJCT-DIR>/bold/segstat_summary.txt**|
-|\<SUBJECT-ID>:_ROIts|A Matrix with dimensions fmri-timepoints X parcellation-regions. This matrix hold the region-wise averaged bold time course|
+|\<SUBJECT-ID>_ROIts|A Matrix with dimensions fmri-timepoints X parcellation-regions. This matrix hold the region-wise averaged bold time course|
 |FC_cc|The functional connectivity matrix. This matrix is computed by applying the corrcoeff function onto the parcellated bold timecourse, resulting in a matrix of dimensionality **number-of-brainregions X number-of-brainregions** |
 
 Throughout our paper, we used the 68-Cortical-Regions of the Desikan-Killaney atlas. To reproduce the FC based on this atlas from the parcellated timeseries obtained by using the default parcellation in this pipeline (**aparc+aseg**), one can use the following code snippet:
