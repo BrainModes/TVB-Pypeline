@@ -82,3 +82,4 @@ The log-files are stored into a subfolder of your **SUBJECT-DIR** called TVB_pip
 + Re-Implement Multishell-Tracking using FSLs bedpostx as in https://github.com/BrainModes/TVB-empirical-data-pipeline/tree/multiShell
 + Implement the formatting of the results into a TVB-ZIP-File as in https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/matlab_scripts/connectivity2TVBFS.m
 + Check if Non-DICOM data works as input
++ Add a Doc-Section about the resulting data
