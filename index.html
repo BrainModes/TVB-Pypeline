@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Tvb-pypeline by srothmei</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Tvb-pypeline</h1>
+        <h2></h2>
+        <a href="https://github.com/srothmei/TVB-Pypeline" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="tvb-pypeline-----work-in-progress" class="anchor" href="#tvb-pypeline-----work-in-progress" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TVB-Pypeline - - Work in Progress!</h1>
+
+<p>This project maps our current automatized MRI processing pipeline (<a href="http://github.com/BrainModes/TVB-empirical-data-pipeline">http://github.com/BrainModes/TVB-empirical-data-pipeline</a>) 
+to Python using Nipype, making the used toolboxes inside easily exchangeable.</p>
+
+<p>For a general overview about the pipeline see <a href="http://www.sciencedirect.com/science/article/pii/S1053811915002505">Schirner, Rothmeier et al. (2015)</a></p>
+
+<p><img src="https://github.com/srothmei/TVB-Pypeline/blob/master/doc/overview.png" alt="Pipeline Overview" title="Graphical Pipeline-Overview"></p>
+
+<p>Please note that this pipeline does extensive analysis and is thus computationally heavy. TEsting was carried out on a High-Performance-Clustercomputer using &gt;100 CPU Cores.</p>
+
+<hr>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation:</h2>
+
+<p>The Pipeline uses Nipype which depends mainly on <strong>Python 2.7</strong>. The following list gives an overview about the Python toolboxes which are used in the current state of the Pipeline. See the corresponding Doc-Pages for installation and dependency resolving.</p>
+
+<ul>
+<li><a href="http://nipy.org/nipype/users/install.html">Nipype</a></li>
+<li><a href="http://nipy.org/nibabel/installation.html#installation">Nibabel</a></li>
+<li><a href="http://nipy.org/dipy/installation.html">Dipy</a></li>
+</ul>
+
+<p>Since Nipype/Python also perform as a wrapper for Toolboxes invoked through the Shell-Interface, you also have to make sure the toolboxes you want to use are installed on your system and their binaries/libs are included in the Shell's searchpath.</p>
+
+<p>For <strong>preprocessing</strong>, the following toolboxes are used:</p>
+
+<ul>
+<li><a href="http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/">FSL</a></li>
+<li><a href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall">FREESURFER</a></li>
+</ul>
+
+<p>When it comes to <strong>fiber tractography</strong>, there is a vast number of available tools for that. Their usage also highly depens on how your dwMRI-Data was recorded. One of the main parting points is the number of different diffusion-gradient strengths applied during the measurement (i.e. the number of different <strong>b-values</strong>). If the dataset has only a single value greater than zero, one talks about <strong>single-shell data</strong>. As soon as more than one value (&gt;0) is involved, the data is called <strong>multi-shell data</strong></p>
+
+<p>Currently, we tested two toolboxes for tractography, one for each of the aforementioned scenarios:</p>
+
+<ul>
+<li>
+<a href="http://jdtournier.github.io/mrtrix-0.2/index.html">MRTrix 0.2.12</a>: Single-Shell Tracking</li>
+<li>
+<a href="http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FDT">FSL</a>: Multi-Shell Tracking (Not yet implemented in the Python-Pipeline!)</li>
+</ul>
+
+<h5>
+<a id="install-the-pipeline" class="anchor" href="#install-the-pipeline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install the Pipeline</h5>
+
+<p>Download the files from the GitHub Repository and unpack the files on your workstation/cluster. 
+To run it on a specific cluster architecture, simply edit the plugin-type in the master control script <a href="https://github.com/srothmei/TVB-Pypeline/blob/master/workflows/TVB_pipeline.py">TVB_pipeline.py</a>.
+Locate the following code block at the end of the file</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-c"># ## Run the Workflow</span>
+<span class="pl-c">#wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})</span>
+wf.run(<span class="pl-v">plugin</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>OAR<span class="pl-pds">'</span></span>, <span class="pl-v">plugin_args</span><span class="pl-k">=</span>{<span class="pl-s"><span class="pl-pds">'</span>oarsub_args<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>-l walltime=04:00:00<span class="pl-pds">'</span></span>})
+wf.run()</pre></div>
+
+<p>As you can see, plugins are used to handle different situations considering the environment in which the pipeline is intended to be run, e.g. different job schedulers on High-Performance-Clustercomputer or local installations on a multicore workstation.
+For an overview about the available plugins see the <a href="http://nipy.org/nipype/users/plugins.html">Doc-Page about Plugins</a>. Since this page is sometimes a bit outdated (e.g. the OAR plugin is not yet listed), see also <a href="https://github.com/nipy/nipype/tree/master/nipype/pipeline/plugins">https://github.com/nipy/nipype/tree/master/nipype/pipeline/plugins</a></p>
+
+<h2>
+<a id="preparing-your-rawdata" class="anchor" href="#preparing-your-rawdata" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Preparing your rawdata</h2>
+
+<p>Looking at the TODO-List in the bottom-section of this manual, you can see that the organization of the users raw-data is still a bit inflexible considering the fact that the pipeline requires a certain folder-schema. Currently, you need to <strong>precisely stick to the following naming conventions</strong>:</p>
+
+<div class="highlight highlight-source-shell"><pre>/home/myUserName/pipeline/subjects/
+<span class="pl-k">|</span>-- Sub1/
+<span class="pl-k">|</span>   <span class="pl-k">|</span>-- RAWDATA/
+<span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>-- MPRAGE/
+<span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>-- Maybe/Some/SubFolders
+<span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>-- Arbitrary-Image-Names-001.dcm
+<span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>-- Arbitrary-Image-Names-002.dcm
+<span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>-- ...
+<span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>-- DTI/ 
+<span class="pl-k">|</span>   <span class="pl-k">|</span>   <span class="pl-k">|</span>-- BOLD-EPI/ </pre></div>
+
+<p>Inside the several folders for the different imaging modalities, the number of subfolder doesnt matter.
+Note that the pipeline currently only support DICOM data as input</p>
+
+<h5>
+<a id="using-fmri-data-is-optional-ie-if-you-dont-include-that-data-into-your-rawdata-folder-you-still-get-the-structural-and-dwmri-data-processed" class="anchor" href="#using-fmri-data-is-optional-ie-if-you-dont-include-that-data-into-your-rawdata-folder-you-still-get-the-structural-and-dwmri-data-processed" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using fMRI data is optional, i.e. if you dont include that data into your RAWDATA-folder, you still get the structural and dwMRI data processed!</h5>
+
+<h2>
+<a id="running-the-pipeline" class="anchor" href="#running-the-pipeline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running the Pipeline</h2>
+
+<p>To finally run the pipeline, locate the <strong>TVB_pipeline.py</strong> script using your systems Shell and pass the subjects ID and the absolute path to the folder holding your subjects RAWDATA-folder (see above).</p>
+
+<div class="highlight highlight-source-shell"><pre>python /home/myUser/pipeline/TVB_pipeline.tyb --sub-id <span class="pl-k">&lt;</span>SUBJECT-ID<span class="pl-k">&gt;</span> --sub-dir <span class="pl-k">&lt;</span>SUBJECT-DIR<span class="pl-k">&gt;</span></pre></div>
+
+<p>The log-files are stored into a subfolder of your <strong>SUBJECT-DIR</strong> called TVB_pipeline.</p>
+
+<h2>
+<a id="the-results-of-the-pipeline" class="anchor" href="#the-results-of-the-pipeline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The Results of the Pipeline</h2>
+
+<p>Among several intermediate results, like a full <strong>FREESURFER recon_all</strong> dataset, there are also several datasets which are in-house developed. THe generation is described in the aformentioned research article. The following tables can bee seen as a reference linking the explanations in the paper to the file- and variable-names which are generated by the pipeline-code.</p>
+
+<h5>
+<a id="diffusion-mri" class="anchor" href="#diffusion-mri" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Diffusion-MRI:</h5>
+
+<p>The results are by default stored into <strong>&lt;SUBJECT-DIR&gt;/tractography/tracks/&lt;SUBJECT-ID&gt;_SC.mat</strong> (MATLAB/Octave file) and also in JSON format <strong>&lt;SUBJECT-DIR&gt;/tractography/tracks/&lt;SUBJECT-ID&gt;_SC.json</strong>
+Those files include several matrices representing different metrics:</p>
+
+<table>
+<thead>
+<tr>
+<th>Variable-Name</th>
+<th align="center">Type of Data</th>
+<th align="center">Refered to in the paper as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC_cap_agg_counts</td>
+<td align="center">Region-wise Capacity Matrix using the number of tracts found between different regions</td>
+<td align="center">Raw Counts</td>
+</tr>
+<tr>
+<td>SC_cap_agg_bwflav1</td>
+<td align="center">Region-wise Capacity Matrix using the number of distinct connections found on single-voxel level</td>
+<td align="center">Distinct Connections</td>
+</tr>
+<tr>
+<td>SC_cap_agg_bwflav1_norm</td>
+<td align="center">Same data as above but normalized to the range between 0 and 1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>SC_cap_agg_bwflav2</td>
+<td align="center">Region-wise Capacity Matrix using the number of distinct connections found on single-voxel level. Each strength entry is weighted by the total number of connections leaving the corresponding brain area</td>
+<td align="center">Weighted Distinct Connections</td>
+</tr>
+<tr>
+<td>SC_cap_agg_bwflav2_norm</td>
+<td align="center">Same data as above but normalized to the range between 0 and 1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>SC_dist_&lt;mean/mode/median&gt;_agg</td>
+<td align="center">The mean/mode/median distance between all distinct tracks connecting the individual brain regions</td>
+<td align="center">SC Distances</td>
+</tr>
+<tr>
+<td>SC_dist_var_agg</td>
+<td align="center">The variance of the distance between all distinct tracks connecting the individual brain regions</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+
+<h5>
+<a id="functional-mri" class="anchor" href="#functional-mri" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Functional-MRI:</h5>
+
+<p>By default, resulting data will be stored into ** &lt;SUBEJCT-DIR&gt;/bold/*<em>. Results feature a run of FSLs feat pipeline and also regionswise timeseries stored into the file *</em> &lt;SUBJECT-ID&gt;_fMRI.mat **. As for the SC-file descbried above, this MATLAB/Octave file stores various things:</p>
+
+<table>
+<thead>
+<tr>
+<th>Variable-Name</th>
+<th align="center">Type of Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROI_ID_table</td>
+<td align="center">Various numbers from FREESURFERs <strong>mri_segstat</strong>. The headers have been removed. They can be found in the following file: <strong>&lt;SUBEJCT-DIR&gt;/bold/segstat_summary.txt</strong>
+</td>
+</tr>
+<tr>
+<td>&lt;SUBJECT-ID&gt;_ROIts</td>
+<td align="center">A Matrix with dimensions fmri-timepoints X parcellation-regions. This matrix hold the region-wise averaged bold time course</td>
+</tr>
+<tr>
+<td>FC_cc</td>
+<td align="center">The functional connectivity matrix. This matrix is computed by applying the corrcoeff function onto the parcellated bold timecourse, resulting in a matrix of dimensionality <strong>number-of-brainregions X number-of-brainregions</strong>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Throughout our paper, we used the 68-Cortical-Regions of the Desikan-Killaney atlas. To reproduce the FC based on this atlas from the parcellated timeseries obtained by using the default parcellation in this pipeline (<strong>aparc+aseg</strong>), one can use the following code snippet:</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> numpy <span class="pl-k">import</span> shape
+<span class="pl-c"># Clear the ROI-table and leave only the Desikan entries</span>
+start1 <span class="pl-k">=</span> shape(<span class="pl-c1">ROI_ID_table</span>)[<span class="pl-c1">0</span>] <span class="pl-k">-</span> <span class="pl-c1">69</span>
+stop1 <span class="pl-k">=</span> start1 <span class="pl-k">+</span> <span class="pl-c1">34</span>
+start2 <span class="pl-k">=</span> stop1 <span class="pl-k">+</span> <span class="pl-c1">1</span>
+stop2 <span class="pl-k">=</span> shape(<span class="pl-c1">ROI_ID_table</span>)[<span class="pl-c1">0</span>]
+fMRI_DK68 <span class="pl-k">=</span> fMRI[:, <span class="pl-c1">range</span>(start1, stop1)<span class="pl-k">+</span><span class="pl-c1">range</span>(start2, stop2)]</pre></div>
+
+<hr>
+
+<h2>
+<a id="todo-list" class="anchor" href="#todo-list" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODO-List:</h2>
+
+<ul>
+<li><del>Write a new Documentation!</del></li>
+<li><del>Implement fMRI processing based on the code here: <a href="https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/fmriFC.sh">https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/fmriFC.sh</a></del></li>
+<li>Implement Tractography Thresholding into the MRTrix module. Possibly trying to include the method described in <a href="http://www.sciencedirect.com/science/article/pii/S1053811908007301">Morris et al. (2008)</a>. Alternatively one could also dig up the old hard-threshold code since the short-range tracking-flares are rendered meaningles anyway by our aggregation method!</li>
+<li>Make the file-sorting of the user-data more sophisticated. This means that the pipeline should be able to somehow recognize which kinds of data-sets (e.g. fMRI, T1, dwMRI) is included in the user data and then route the particular folder-paths onto the corresponding processing-nodes inside the pipeline. This might be achieved through using nipype's <a href="http://nipy.org/nipype/users/select_files.html">SelectFiles interface</a>
+</li>
+<li>Include some example workflows for different cluster scenarios, realized through e.g. controll-scripts written in BASH</li>
+<li>Re-Implement Multishell-Tracking using FSLs bedpostx as in <a href="https://github.com/BrainModes/TVB-empirical-data-pipeline/tree/multiShell">https://github.com/BrainModes/TVB-empirical-data-pipeline/tree/multiShell</a>
+</li>
+<li>Implement the formatting of the results into a TVB-ZIP-File as in <a href="https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/matlab_scripts/connectivity2TVBFS.m">https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/matlab_scripts/connectivity2TVBFS.m</a>
+</li>
+<li>Check if Non-DICOM data works as input</li>
+<li>Add a Doc-Section about the resulting data</li>
+<li>Support multiple runs of fMRI (e.g. bold1; bold2; bold3; ...)</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/srothmei/TVB-Pypeline/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/srothmei/TVB-Pypeline/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/srothmei/TVB-Pypeline"></a> is maintained by <a href="https://github.com/srothmei">srothmei</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
