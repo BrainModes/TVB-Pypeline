@@ -5,6 +5,8 @@ to Python using Nipype, making the used toolboxes inside easily exchangeable.
 
 For a general overview about the pipeline see [Schirner, Rothmeier et al. (2015)](http://www.sciencedirect.com/science/article/pii/S1053811915002505)
 
+![Pipeline Overview](https://github.com/srothmei/TVB-Pypeline/blob/master/doc/overview.png "Graphical Pipeline-Overview")
+
 Please note that this pipeline does extensive analysis and is thus computationally heavy. TEsting was carried out on a High-Performance-Clustercomputer using >100 CPU Cores.
 
 ----------
