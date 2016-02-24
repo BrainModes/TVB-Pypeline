@@ -78,7 +78,7 @@ def compute_functional_connectivity(path, subName, avgwf_txt_file, summary_file_
     # Store the stuff (FC-matrix, timeseries, ROI_ID_table)
     matfile_name = path + '/' + subName + '_fMRI.mat'
 
-    theDict = {subName + '_ROIts': fMRI, subName + '_ROIts_DK68': fMRI,
+    theDict = {subName + '_ROIts': fMRI,
                'FC_cc': FC_cc, 'ROI_ID_table': ROI_ID_table}
     io.savemat(matfile_name, theDict)
 
