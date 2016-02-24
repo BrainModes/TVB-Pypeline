@@ -2,16 +2,6 @@
 # coding: utf-8
 
 # ### Handle the imports
-
-# In[1]:
-
-import sys
-sys.path.append("/Users/srothmei/Documents/TVB-Pypeline/")
-
-
-# In[2]:
-
-import numpy as np
 from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
@@ -19,13 +9,10 @@ from nipype.interfaces.io import DataFinder
 
 from bm_functions import compute_functional_connectivity
 
-import logging, os
+import logging
 
 
 # ### Start the logging
-
-# In[3]:
-
 logger = logging.getLogger('interface')
 logger.setLevel(logging.INFO)
 # create console handler and set level to debug
@@ -40,8 +27,6 @@ logger.addHandler(ch)
 
 
 # ### Define Input- and Output-Node
-
-# In[4]:
 
 # Inputs:
 # -----------
@@ -62,8 +47,6 @@ outputNode = Node(IdentityInterface(fields = ['mat_file']),
 
 # ### Define Filenames
 
-# In[5]:
-
 fileNames = {
     'bold_file': 'bold.nii.gz',
     'parcellation_2_func': 'parc_2_func.nii.gz',
@@ -76,8 +59,6 @@ fileNames = {
 
 
 # ### Utility Functions
-
-# In[6]:
 
 def folder_maker(path_name, sample_raw_file, folder_name=None):
     # sample_raw_file is used to detect if fMRI files have been supplied or not
@@ -94,19 +75,18 @@ def folder_maker(path_name, sample_raw_file, folder_name=None):
 folderMaker = Node(Function(input_names = ['path_name', 'sample_raw_file', 'folder_name'],
                                 output_names = ['folder_path'],
                                 function = folder_maker),
-                        name='folder_maker')
+                                name = 'folder_maker')
+
 
 def fileNameBuilder(path, fname):
     return path + fname       
+
 
 def selectFromList(inList, index):
     return inList[index]
 
 
 # ### Convert Images from various formats to NifTi
-
-# In[7]:
-
 rawFinderNode = Node(DataFinder(match_regex = '.*\.dcm'), name = 'DICOM_Finder')
 
 convertNode = Node(freesurfer.preprocess.MRIConvert(), name = 'DICOM2Nii')
@@ -115,13 +95,8 @@ convertNode.inputs.out_orientation = 'RAS'
 
 
 # ### Run FSLs feat
-
-# In[8]:
-
 def run_feat(bold_file, bold_folder, brainmask_file):
     from nipype.interfaces.fsl import ImageStats, FEAT, Info
-    from shutil import copyfile
-    import re, fileinput
     from bm_functions import gen_default_feat_config
     from numpy import shape
     from textwrap import dedent
@@ -152,64 +127,47 @@ def run_feat(bold_file, bold_folder, brainmask_file):
     # Run and pass back the foldername
     return runFeat.run().outputs.feat_dir
 
+
 featNode = Node(Function(input_names=['bold_file', 'bold_folder', 'brainmask_file'],
                         output_names=['feat_dir'],
                         function=run_feat),
                 name = 'FSL_feat')
 
-def debugFeat(bold_file, bold_folder, brainmask_file):
-    return '/Users/srothmei/Desktop/charite/temp/bold/featDir.feat/'
-
-featNode = Node(Function(input_names=['bold_file', 'bold_folder', 'brainmask_file'],
-                        output_names=['feat_dir'],
-                        function=debugFeat), name='FEAT_Debug')
-
 
 # ## Generate parcellated ROI-Timeseries
 
-# In[9]:
-
-#Make a new subfolder
-#subFolder = featDir + '/freesurfer'
-#if os.path.exists(subFolder):
-#        os.makedirs(subFolder)
-        
-#Register example-func to freesurfer brainmask
+# Register example-func to freesurfer brainmask
 exfunc2anat = Node(fsl.FLIRT(bins=256, searchr_x=[90,90], searchr_y=[90,90], searchr_z=[90,90],
                        cost='corratio', interp='trilinear', dof=6),
                   name = 'Func_2_Anat')
 
-#invert transformation
+# invert transformation
 invt = Node(fsl.ConvertXFM(invert_xfm=True),
             name = 'invert_transf')
 
-#transform roimask to functional space using FLIRT (using Nearest Neighbor Interpolation for roimask)
+# transform roimask to functional space using FLIRT (using Nearest Neighbor Interpolation for roimask)
 roimask2func = Node(fsl.FLIRT(padding_size=0, interp='nearestneighbour', apply_xfm=True),
                     name = 'roimask_2_func')
 
-#Export average region time-series
+# Export average region time-series
 ss = Node(freesurfer.SegStats(), name = 'SegStats')
-#ss.inputs.avgwf_txt_file = True
 
 
 # ### Preprocess the data before computing the FC
 
-# In[10]:
-
 def segstat_shaping(aparc_stats):
     import os, re
-    #from shutil import copyfile
     
-    #Remove all comment lines from the files (important for later MATLAB/OCTAVE import!)
+    # Remove all comment lines from the files (important for later MATLAB/OCTAVE import!)
     clearedFileName = os.path.dirname(aparc_stats) + '/aparc_stats_tmp.txt'
-    #copyfile(aparc_stats, clearedFileName)
+
     with open(clearedFileName,'w') as out_file:
         with open(aparc_stats,'r') as in_file:
             for line in in_file:
                 if line.startswith('#'):
                     line = ''
                 else:
-                    line = re.sub('Seg','',line.strip()) + '\n'
+                    line = re.sub('Seg', '', line.strip()) + '\n'
                 out_file.write(line)
     out_file.close()
     in_file.close()
@@ -223,9 +181,6 @@ segstatPost = Node(Function(input_names = ['aparc_stats'],
 
 
 # ### Compute the FC
-
-# In[11]:
-
 compFCNode = Node(Function(input_names = ['path', 'subName', 'avgwf_txt_file', 'summary_file_cleared'],
                           output_names = ['matfile_name'],
                           function = compute_functional_connectivity), 
@@ -233,9 +188,6 @@ compFCNode = Node(Function(input_names = ['path', 'subName', 'avgwf_txt_file', '
 
 
 # ## Define the Workflow
-
-# In[12]:
-
 wf = Workflow('fMRI_Processing')
 
 wf.connect([(inputNode, rawFinderNode, [('raw_files', 'root_paths')])])
@@ -277,38 +229,6 @@ wf.connect([(segstatPost, compFCNode, [('clearedFileName' , 'summary_file_cleare
 
 wf.connect([(compFCNode, outputNode, [('matfile_name', 'mat_file')])])
 
-
-# ## Draw the Workflow
-
-# In[13]:
-
-#wf.write_graph("workflow_graph.dot", graph2use = 'colored')
-#from IPython.display import Image
-#Image(filename="workflow_graph.dot.png")
-
-
-# ### Testing
-
-# In[14]:
-
-thePath = '/Users/srothmei/Desktop/charite/temp/'
-
-inputNode.inputs.brainmask = thePath + 'brainmask.nii.gz'
-inputNode.inputs.parcellation_mask = thePath + 'aparc+aseg.nii.gz'
-inputNode.inputs.subID = 'Foo_Bar'
-inputNode.inputs.subject_folder = thePath
-inputNode.inputs.raw_files = thePath + 'BOLD-EPI/'
-
-wf.base_dir = thePath
-wf.run()
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
 
 
 
