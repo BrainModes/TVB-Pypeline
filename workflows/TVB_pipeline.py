@@ -122,39 +122,52 @@ aggregateConnectivityNode.inputs.steplength = mrtrix.mrtrix_tracking.trackingNod
 # ## Build the Workflow
 wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + subject_id + '/')
 
-wf.connect([
-        (inputNode, preprocessing.wf, [('subject_folder', 'input_node.subject_folder'),
-                                      ('subject_id', 'input_node.subject_id')]),
-        (preprocessing.wf, maskGenNode, [('output_node.subPath', 'subPath'),
-                                        ('output_node.mask_folder', 'mask_output_folder'),
-                                        ('output_node.wmoutline2diff_1mm', 'wmoutline2diff_1mm'),
-                                        ('output_node.wmparc2diff_1mm', 'wmparc2diff_1mm')]),
-        (preprocessing.wf, funcProc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
-                                         ('output_node.aparc+aseg', 'inputNode.parcellation_mask'),
-                                         ('output_node.fmriRawFolder', 'inputNode.raw_files')]),
-        (inputNode, funcProc.wf, [('subject_folder', 'inputNode.subject_folder'),
-                                  ('subject_id', 'inputNode.subID')]),
-        (maskGenNode, mrtrix.mrtrix_main.wf, [('seed_target_masks', 'input_node.seed_target_masks'),
-                                             ('seed_count', 'input_node.seed_count')]),
-        (preprocessing.wf, mrtrix.mrtrix_main.wf, [('output_node.bval_file', 'input_node.bval_file'),
-                                                  ('output_node.bvec_file', 'input_node.bvec_file'),
-                                                  ('output_node.dwi_file', 'input_node.dwi_file'),
-                                                  ('output_node.trackingFolder', 'input_node.tracking_dir'),
-                                                  ('output_node.tracks_folder', 'input_node.tracks_dir'),
-                                                  ('output_node.highresWmMask', 'input_node.wmmask_1mm'),
-                                                  ('output_node.lowresWmMask', 'input_node.wmmask')]),
-        (maskGenNode, connectivityRowNode, [(('number_of_rois', roiRange), 'roi'),
-                                           ('affine_matrix', 'affine_matrix'),
-                                           ('wmborder_data', 'wmborder')]),
-        (inputNode, connectivityRowNode, [('subject_id', 'subid')]),
-        (preprocessing.wf, connectivityRowNode, [('output_node.tracks_folder', 'tracksPath')]),
-        (mrtrix.mrtrix_main.wf, connectivityRowNode, [('output_node.trk_files', 'track_files')]),
-        (inputNode, aggregateConnectivityNode, [('subject_id', 'sub_id')]),
-        (maskGenNode, aggregateConnectivityNode, [('wmborder_data', 'wmborder')]),
-        (preprocessing.wf, aggregateConnectivityNode, [('output_node.tracks_folder', 'tracksPath')]),
-        (connectivityRowNode, aggregateConnectivityNode, [('SC_cap_row_filename', 'cap_row_files'),
-                                                         ('SC_dist_row_filename', 'dist_row_files')])
-    ])
+# This is the part where we plug all the different toolboxes together (for sytax see Nipype Docs)
+
+# Connect the Input to the Preprocessing step
+wf.connect([(inputNode, preprocessing.wf, [('subject_folder', 'input_node.subject_folder'),
+                                            ('subject_id', 'input_node.subject_id')])])
+
+# Mask Generation
+wf.connect([(preprocessing.wf, maskGenNode, [('output_node.subPath', 'subPath'),
+                                            ('output_node.mask_folder', 'mask_output_folder'),
+                                            ('output_node.wmoutline2diff_1mm', 'wmoutline2diff_1mm'),
+                                            ('output_node.wmparc2diff_1mm', 'wmparc2diff_1mm')])])
+
+# fMRI Processing
+wf.connect([(preprocessing.wf, funcProc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
+                                            ('output_node.aparc+aseg', 'inputNode.parcellation_mask'),
+                                            ('output_node.fmriRawFolder', 'inputNode.raw_files')]),
+            (inputNode, funcProc.wf, [('subject_folder', 'inputNode.subject_folder'),
+                                    ('subject_id', 'inputNode.subID')])])
+
+# MRTrix TRacking
+wf.connect([(maskGenNode, mrtrix.mrtrix_main.wf, [('seed_target_masks', 'input_node.seed_target_masks'),
+                                                    ('seed_count', 'input_node.seed_count')]),
+             (preprocessing.wf, mrtrix.mrtrix_main.wf, [('output_node.bval_file', 'input_node.bval_file'),
+                                                        ('output_node.bvec_file', 'input_node.bvec_file'),
+                                                        ('output_node.dwi_file', 'input_node.dwi_file'),
+                                                        ('output_node.trackingFolder', 'input_node.tracking_dir'),
+                                                        ('output_node.tracks_folder', 'input_node.tracks_dir'),
+                                                        ('output_node.highresWmMask', 'input_node.wmmask_1mm'),
+                                                        ('output_node.lowresWmMask', 'input_node.wmmask')])])
+
+
+# BrainModes Connecticitivy Row
+wf.connect([(maskGenNode, connectivityRowNode, [(('number_of_rois', roiRange), 'roi'),
+                                                ('affine_matrix', 'affine_matrix'),
+                                                ('wmborder_data', 'wmborder')]),
+            (inputNode, connectivityRowNode, [('subject_id', 'subid')]),
+            (preprocessing.wf, connectivityRowNode, [('output_node.tracks_folder', 'tracksPath')]),
+            (mrtrix.mrtrix_main.wf, connectivityRowNode, [('output_node.trk_files', 'track_files')])])
+
+# BrainModes Connecticity Aggregation
+wf.connect([(inputNode, aggregateConnectivityNode, [('subject_id', 'sub_id')]),
+            (maskGenNode, aggregateConnectivityNode, [('wmborder_data', 'wmborder')]),
+            (preprocessing.wf, aggregateConnectivityNode, [('output_node.tracks_folder', 'tracksPath')]),
+            (connectivityRowNode, aggregateConnectivityNode, [('SC_cap_row_filename', 'cap_row_files'),
+                                                                ('SC_dist_row_filename', 'dist_row_files')])])
+
 
 # ## Draw the Graph
 wf.write_graph(subject_folder + subject_id + "/TVB_workflow_graph.dot", graph2use = 'colored')
