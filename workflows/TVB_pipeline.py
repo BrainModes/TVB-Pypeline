@@ -102,7 +102,7 @@ if '.nii' in diffusion_rawdata and (bvec_file is None or bval_file is None):
 
 # ### Setup
 inputNode = Node(IdentityInterface(fields = ['subject_folder', 'subject_id', 'structural_rawdata',
-                                             'diffusion_rawdata', 'functional_rawdata']),
+                                             'diffusion_rawdata', 'functional_rawdata', 'bvec_file', 'bval_file']),
                 name = 'input_node')
 
 inputNode.inputs.subject_folder = subject_folder
@@ -127,7 +127,7 @@ import preprocSub as preprocessing
 
 
 # ## Functional processing
-import feat as funcProc
+import feat as feat
 
 
 # ## Tractography-Mask generation
@@ -189,10 +189,10 @@ wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + subject_id + '/
 # Connect the Input to the Preprocessing step
 wf.connect([(inputNode, preprocessing.wf, [('subject_folder', 'input_node.subject_folder'),
                                            ('subject_id', 'input_node.subject_id'),
-                                           ('structural_rawdata', 'structural_rawdata'),
-                                           ('diffusion_rawdata', 'diffusion_rawdata'),
-                                           ('bval_file', 'bval'),
-                                           ('bvec_file', 'bvec')])])
+                                           ('structural_rawdata', 'input_node.structural_rawdata'),
+                                           ('diffusion_rawdata', 'input_node.diffusion_rawdata'),
+                                           ('bval_file', 'input_node.b_val'),
+                                           ('bvec_file', 'input_node.b_vec')])])
 
 # Mask Generation
 wf.connect([(preprocessing.wf, maskGenNode, [('output_node.subPath', 'subPath'),
@@ -202,11 +202,11 @@ wf.connect([(preprocessing.wf, maskGenNode, [('output_node.subPath', 'subPath'),
 
 # fMRI Processing
 if functional_rawdata is not None:  # Connect only if fMRI input data was set
-    wf.connect([(preprocessing.wf, funcProc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
+    wf.connect([(preprocessing.wf, feat.fmri_preproc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
                                                 ('output_node.aparc+aseg', 'inputNode.parcellation_mask')]),
-                (inputNode, funcProc.wf, [('subject_folder', 'inputNode.subject_folder'),
+                (inputNode, feat.fmri_preproc.wf, [('subject_folder', 'inputNode.subject_folder'),
                                           ('functional_rawdata', 'inputNode.raw_files')
-                                        ('subject_id', 'inputNode.subID')])])
+                                            ('subject_id', 'inputNode.subID')])])
 
 # MRTrix TRacking
 wf.connect([(maskGenNode, mrtrix.mrtrix_main.wf, [('seed_target_masks', 'input_node.seed_target_masks'),

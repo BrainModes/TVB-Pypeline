@@ -419,12 +419,12 @@ wf.connect([(wmmask_highres, outputNode, [('output_image', 'highresWmMask')]),
 
 # If the bvecs/bvals have been set by the user, dont overwrite them by the values of dcm2nii
 # Note that both files have to be set thus we only test for one
-if inputNode.inputs.bvec is None:
-    wf.connect(inputNode, outputNode, [('bval', 'bval_file'),
-                                       ('bvec', 'bvec_file')])
+if inputNode.inputs.b_vec is None:
+    wf.connect([(inputNode, outputNode, [('b_val', 'bval_file'),
+                                       ('b_vec', 'bvec_file')])])
 else:
-    wf.connect(dcm2niiNode, outputNode, [('bvals', 'bval_file'),
-                                        ('bvecs', 'bvec_file')])
+    wf.connect([(dcm2niiNode, outputNode, [('bvals', 'bval_file'),
+                                        ('bvecs', 'bvec_file')])])
 
 
 #wf.write_graph("preproc_workflow_graph.dot", graph2use = 'exec')
