@@ -120,5 +120,7 @@ fMRI_DK68 = fMRI[:, range(start1, stop1)+range(start2, stop2)]
 + Re-Implement Multishell-Tracking using FSLs bedpostx as in https://github.com/BrainModes/TVB-empirical-data-pipeline/tree/multiShell
 + Implement the formatting of the results into a TVB-ZIP-File as in https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/matlab_scripts/connectivity2TVBFS.m
 + Check if Non-DICOM data works as input
-+ Add a Doc-Section about the resulting data
++ ~~Add a Doc-Section about the resulting data~~
 + Support multiple runs of fMRI (e.g. bold1; bold2; bold3; ...)
++ Integrate the possibility to include own parcellation masks in MNI space
++ Integrate Subcortical Tracking
