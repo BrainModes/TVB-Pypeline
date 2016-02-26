@@ -11,7 +11,7 @@ from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
 from nipype.interfaces.dcm2nii import Dcm2nii
-from nipype.interfaces.io import DataFinder
+# from nipype.interfaces.io import DataFinder
 
 
 import logging
@@ -133,8 +133,9 @@ pathBuildingNode = Node(Function(input_names = ['subject_folder', 'subject_id'],
 
 
 # ### Define Inputnode and Outputnode
-inputNode = Node(IdentityInterface(fields=['subject_id', 'subject_folder', 'structural_rawdata', 'diffusion_rawdata']),
-                 mandatory_inputs=True, 
+inputNode = Node(IdentityInterface(fields=['subject_id', 'subject_folder', 'structural_rawdata', 'diffusion_rawdata',
+                                           'b_val', 'b_vec']),
+                 mandatory_inputs = True,
                  name='input_node')
 
 
@@ -412,11 +413,18 @@ wf.connect([(wmmask_highres, outputNode, [('output_image', 'highresWmMask')]),
            (applyReg_anat2diff_1mm, outputNode, [('transformed_file', 'wmoutline2diff_1mm')]),
            (applyReg_anat2diff, outputNode, [('transformed_file', 'wmoutline2diff')]),
            (applyReg_wmparc2diff_1mm, outputNode, [('transformed_file', 'wmparc2diff_1mm')]),
-            (dcm2niiNode, outputNode, [('bvals', 'bval_file'),
-                                      ('bvecs', 'bvec_file')]),
             (extrctB0Node, outputNode, [('b0', 'no_diffusion_image')]),
             (dcm2niiNode, outputNode, [('converted_files', 'dwi_file')])
            ])
+
+# If the bvecs/bvals have been set by the user, dont overwrite them by the values of dcm2nii
+# Note that both files have to be set thus we only test for one
+if inputNode.inputs.bvec is None:
+    wf.connect(inputNode, outputNode, [('bval', 'bval_file'),
+                                       ('bvec', 'bvec_file')])
+else:
+    wf.connect(dcm2niiNode, outputNode, [('bvals', 'bval_file'),
+                                        ('bvecs', 'bvec_file')])
 
 
 #wf.write_graph("preproc_workflow_graph.dot", graph2use = 'exec')

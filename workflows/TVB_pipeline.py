@@ -29,6 +29,8 @@ subject_folder = None
 structural_rawdata = None
 diffusion_rawdata = None
 functional_rawdata = None
+bvec_file = None
+bval_file = None
 
 usageString = '''+++ TVB Automated Processing Pipeline +++
 
@@ -43,16 +45,22 @@ usageString = '''+++ TVB Automated Processing Pipeline +++
 
     Optional inputs are:
         -f --functional-rawdata <IMG-PATH>  :   Absolute path to your functional MRI data (BOLD)
+        --bval <FILE-PATH>                  :   Path to the bval file
+        --bvec <FILE-PATH>                  :   Path to the bvec file
 
     >> Important Note on Image-Data:
     You can input your data in various file formats, e.g. DICOM or NifTi.
     If you have a series of Images for the same modality, e.g. 192 DICOM images for your T1 data,
     just take the path to the first image in the series and make sure that there are no images
     from different series inside the very same folder.
+    >> Important Note in Diffusion-NifTi Data:
+    If you input a .nii/.nii.gz file for the diffusion data, you also need to supply the diffusion directions &
+    strengths (i.e. the bval & bvec file) separately
                 '''
 try:
     opts, args = getopt.getopt(sys.argv[1:], 'hs:d:r:a:f:', ['sub-id=', 'sub-dir=', 'structural-rawdata=',
-                                                             'diffusion-rawdata=', 'functional-rawdata=', 'help'])
+                                                             'diffusion-rawdata=', 'functional-rawdata=',
+                                                             'bval=', 'bvec=', 'help'])
 except getopt.GetoptError:
     sys.exit( "Invalid argument used! See --help for usage of this script!") # Exit script with error
 for opt, arg in opts:
@@ -68,6 +76,11 @@ for opt, arg in opts:
         diffusion_rawdata = arg
     elif opt in ('-f', '--functional-rawdata'):
         functional_rawdata = arg
+    elif opt is '--bval':
+        bval_file = arg
+    elif opt is '--bev':
+        bvec_file = arg
+
 # Check if all the obligatory inputs are set
 if subject_id is None:
     sys.exit('ERROR: Subject ID must not be empty!')
@@ -80,6 +93,12 @@ elif diffusion_rawdata is None or not os.path.isfile(diffusion_rawdata):
 elif functional_rawdata is not None and not os.path.isfile(structural_rawdata):
     sys.exit('ERROR: Functional rawdata-file doesnt exist!')
 
+# Determine the input type of the dwMRI data and output and error if NifTi is used without supplying the bvec/bval
+if '.nii' in diffusion_rawdata and (bvec_file is None or bval_file is None):
+    sys.exit('ERROR: If you supply your diffusion data in NifTi (.nii) file format you '
+             'also have to supply bval/bvec files! Aborting....')
+
+
 
 # ### Setup
 inputNode = Node(IdentityInterface(fields = ['subject_folder', 'subject_id', 'structural_rawdata',
@@ -91,6 +110,8 @@ inputNode.inputs.subject_id = subject_id
 inputNode.inputs.structural_rawdata = structural_rawdata
 inputNode.inputs.diffusion_rawdata = diffusion_rawdata
 inputNode.inputs.functional_rawdata = functional_rawdata
+inputNode.inputs.bvec_file = bvec_file
+inputNode.inputs.bval_file = bval_file
 
 # ### Logging
 logging.basicConfig(filename = subject_folder + subject_id + '/pipeline.log', level=logging.DEBUG)
@@ -98,7 +119,7 @@ logging.basicConfig(filename = subject_folder + subject_id + '/pipeline.log', le
 
 # ### Utiliy functions
 def roiRange(number_of_rois):
-    return range(1,number_of_rois + 1)
+    return range(1, number_of_rois + 1)
 
 
 # ## Preprocessing
@@ -169,7 +190,9 @@ wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + subject_id + '/
 wf.connect([(inputNode, preprocessing.wf, [('subject_folder', 'input_node.subject_folder'),
                                            ('subject_id', 'input_node.subject_id'),
                                            ('structural_rawdata', 'structural_rawdata'),
-                                           ('diffusion_rawdata', 'diffusion_rawdata')])])
+                                           ('diffusion_rawdata', 'diffusion_rawdata'),
+                                           ('bval_file', 'bval'),
+                                           ('bvec_file', 'bvec')])])
 
 # Mask Generation
 wf.connect([(preprocessing.wf, maskGenNode, [('output_node.subPath', 'subPath'),
