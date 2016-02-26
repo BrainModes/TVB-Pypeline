@@ -17,8 +17,8 @@
 
 
 def compute_functional_connectivity(path, subName, avgwf_txt_file, summary_file_cleared):
-    #import os
-    #import fnmatch
+    # import os
+    # import fnmatch
     import csv
     import numpy as np
     # import scipy as sp

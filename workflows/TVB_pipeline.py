@@ -26,29 +26,71 @@ from multiprocessing import cpu_count
 # ### Inputs parameters
 subject_id = None
 subject_folder = None
-usageString = 'usage: ' + sys.argv[0] + ' --sub-id <SUBJECT-ID> --sub-dir <SUBJECT-DIR>'
+structural_rawdata = None
+diffusion_rawdata = None
+functional_rawdata = None
+
+usageString = '''+++ TVB Automated Processing Pipeline +++
+
+    This script invokes the TVB automated processing Pipeline.
+    Usage:  -s <SUBJECT-ID> -r <SUBJECT-DIR> -a <T1-DATA-DIR> -d <DIFFUSION-DATA-DIR>
+
+    Obligatory inputs are:
+        -s --sub-id <SUBJECT-ID>            :   The Identifier of the Subject
+        -r --sub-dir <SUBJECT-DIR>          :   The absolute path to the folder where you want the results to be stored
+        -a --structural-rawdata <IMG-PATH>  :   Absolute path to your structural T1 anatomical data
+        -d --diffusion-rawdata <IMG-PATH>   :   Absolute path to your diffusion weighted MRI data
+
+    Optional inputs are:
+        -f --functional-rawdata <IMG-PATH>  :   Absolute path to your functional MRI data (BOLD)
+
+    >> Important Note on Image-Data:
+    You can input your data in various file formats, e.g. DICOM or NifTi.
+    If you have a series of Images for the same modality, e.g. 192 DICOM images for your T1 data,
+    just take the path to the first image in the series and make sure that there are no images
+    from different series inside the very same folder.
+                '''
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:d:', ['sub-id=', 'sub-dir=', 'help'])
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:d:r:a:f:', ['sub-id=', 'sub-dir=', 'structural-rawdata=',
+                                                             'diffusion-rawdata=', 'functional-rawdata=', 'help'])
 except getopt.GetoptError:
-    print usageString
-    sys.exit(2)
+    sys.exit( "Invalid argument used! See --help for usage of this script!") # Exit script with error
 for opt, arg in opts:
     if opt in ('--help', '-h'):
-        print usageString
-        sys.exit()
+        sys.exit(usageString)
     elif opt in ('-s', '--sub-id'):
         subject_id = arg
-    elif opt in ('-d', '--sub-dir'):
+    elif opt in ('-r', '--sub-dir'):
         subject_folder = arg
+    elif opt in ('-a', '--structural-rawdata'):
+        structural_rawdata = arg
+    elif opt in ('-d', '--diffusion-rawdata'):
+        diffusion_rawdata = arg
+    elif opt in ('-f', '--functional-rawdata'):
+        functional_rawdata = arg
+# Check if all the obligatory inputs are set
+if subject_id is None:
+    sys.exit('ERROR: Subject ID must not be empty!')
+elif subject_folder is None or not os.access(subject_folder, os.W_OK):
+    sys.exit('ERROR: No Results-Path set or not writeable!')
+elif structural_rawdata is None or not os.path.isfile(structural_rawdata):
+    sys.exit('ERROR: No T1 filepath set or file doesnt exist!')
+elif diffusion_rawdata is None or not os.path.isfile(diffusion_rawdata):
+    sys.exit('ERROR: No diffusion MRI filepath set or file doesnt exist!')
+elif functional_rawdata is not None and not os.path.isfile(structural_rawdata):
+    sys.exit('ERROR: Functional rawdata-file doesnt exist!')
 
 
 # ### Setup
-inputNode = Node(IdentityInterface(fields = ['subject_folder', 'subject_id']),
+inputNode = Node(IdentityInterface(fields = ['subject_folder', 'subject_id', 'structural_rawdata',
+                                             'diffusion_rawdata', 'functional_rawdata']),
                 name = 'input_node')
 
 inputNode.inputs.subject_folder = subject_folder
 inputNode.inputs.subject_id = subject_id
-
+inputNode.inputs.structural_rawdata = structural_rawdata
+inputNode.inputs.diffusion_rawdata = diffusion_rawdata
+inputNode.inputs.functional_rawdata = functional_rawdata
 
 # ### Logging
 logging.basicConfig(filename = subject_folder + subject_id + '/pipeline.log', level=logging.DEBUG)
@@ -64,7 +106,6 @@ import preprocSub as preprocessing
 
 
 # ## Functional processing
-# Note: If there are no fMRI data fed into the pipeline, this branch will fail but since there are no dependencies, this doesnt matter
 import feat as funcProc
 
 
@@ -126,7 +167,9 @@ wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + subject_id + '/
 
 # Connect the Input to the Preprocessing step
 wf.connect([(inputNode, preprocessing.wf, [('subject_folder', 'input_node.subject_folder'),
-                                            ('subject_id', 'input_node.subject_id')])])
+                                           ('subject_id', 'input_node.subject_id'),
+                                           ('structural_rawdata', 'structural_rawdata'),
+                                           ('diffusion_rawdata', 'diffusion_rawdata')])])
 
 # Mask Generation
 wf.connect([(preprocessing.wf, maskGenNode, [('output_node.subPath', 'subPath'),
@@ -135,11 +178,12 @@ wf.connect([(preprocessing.wf, maskGenNode, [('output_node.subPath', 'subPath'),
                                             ('output_node.wmparc2diff_1mm', 'wmparc2diff_1mm')])])
 
 # fMRI Processing
-wf.connect([(preprocessing.wf, funcProc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
-                                            ('output_node.aparc+aseg', 'inputNode.parcellation_mask'),
-                                            ('output_node.fmriRawFolder', 'inputNode.raw_files')]),
-            (inputNode, funcProc.wf, [('subject_folder', 'inputNode.subject_folder'),
-                                    ('subject_id', 'inputNode.subID')])])
+if functional_rawdata is not None:  # Connect only if fMRI input data was set
+    wf.connect([(preprocessing.wf, funcProc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
+                                                ('output_node.aparc+aseg', 'inputNode.parcellation_mask')]),
+                (inputNode, funcProc.wf, [('subject_folder', 'inputNode.subject_folder'),
+                                          ('functional_rawdata', 'inputNode.raw_files')
+                                        ('subject_id', 'inputNode.subID')])])
 
 # MRTrix TRacking
 wf.connect([(maskGenNode, mrtrix.mrtrix_main.wf, [('seed_target_masks', 'input_node.seed_target_masks'),

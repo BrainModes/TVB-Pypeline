@@ -60,8 +60,7 @@ fileNames = {
 
 # ### Utility Functions
 
-def folder_maker(path_name, sample_raw_file, folder_name=None):
-    # sample_raw_file is used to detect if fMRI files have been supplied or not
+def folder_maker(path_name, folder_name=None):
     
     if folder_name is None:
         folder_name = 'bold'
@@ -87,7 +86,7 @@ def selectFromList(inList, index):
 
 
 # ### Convert Images from various formats to NifTi
-rawFinderNode = Node(DataFinder(match_regex = '.*\.dcm'), name = 'DICOM_Finder')
+# rawFinderNode = Node(DataFinder(match_regex = '.*\.dcm'), name = 'DICOM_Finder')
 
 convertNode = Node(freesurfer.preprocess.MRIConvert(), name = 'DICOM2Nii')
 convertNode.inputs.out_type = 'niigz'
@@ -190,12 +189,13 @@ compFCNode = Node(Function(input_names = ['path', 'subName', 'avgwf_txt_file', '
 # ## Define the Workflow
 wf = Workflow('fMRI_Processing')
 
-wf.connect([(inputNode, rawFinderNode, [('raw_files', 'root_paths')])])
+# wf.connect([(inputNode, rawFinderNode, [('raw_files', 'root_paths')])])
 
-wf.connect([(inputNode, folderMaker, [('subject_folder', 'path_name')]),
-           (rawFinderNode, folderMaker, [(('out_paths', selectFromList, 0), 'sample_raw_file')])])
+wf.connect([(inputNode, folderMaker, [('subject_folder', 'path_name')])])
 
-wf.connect([(rawFinderNode, convertNode, [(('out_paths', selectFromList, 0), 'in_file')]),
+
+# wf.connect([(rawFinderNode, convertNode, [(('out_paths', selectFromList, 0), 'in_file')]),
+wf.connect([(inputNode, convertNode, [('raw_files', 'in_file')]),
            (folderMaker, convertNode, [(('folder_path', fileNameBuilder, fileNames['bold_file']), 'out_file')])])
 
 wf.connect([(convertNode, featNode, [('out_file', 'bold_file')]),

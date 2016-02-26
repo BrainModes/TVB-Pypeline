@@ -133,8 +133,7 @@ pathBuildingNode = Node(Function(input_names = ['subject_folder', 'subject_id'],
 
 
 # ### Define Inputnode and Outputnode
-inputNode = Node(IdentityInterface(fields=['subject_id', 
-                                           'subject_folder']), 
+inputNode = Node(IdentityInterface(fields=['subject_id', 'subject_folder', 'structural_rawdata', 'diffusion_rawdata']),
                  mandatory_inputs=True, 
                  name='input_node')
 
@@ -148,8 +147,8 @@ outputNode = Node(IdentityInterface(fields = mergedOutputs), mandatory_inputs = 
 # ### Structural Data (T1) preprocessing
 
 # Setup a datafinder to find the paths to the specific DICOM files
-t1FinderNode = Node(DataFinder(), name = 't1Finder')
-t1FinderNode.inputs.match_regex = '.*\.dcm'
+#t1FinderNode = Node(DataFinder(), name = 't1Finder')
+#t1FinderNode.inputs.match_regex = '.*\.dcm'
 
 # Set recon-all parameters
 reconallNode = Node(freesurfer.preprocess.ReconAll(), name = 'reconall')
@@ -303,10 +302,15 @@ wf = Workflow(name = 'preprocSub')
 # Input strings to pathbuilder
 wf.connect([(inputNode, pathBuildingNode, [('subject_id', 'subject_id'),
                                           ('subject_folder', 'subject_folder')])])
+
+
 # T1-Rawdata-path into dataFinder to find T1 DICOMs
-wf.connect(pathBuildingNode, 'T1RawFolder', t1FinderNode, 'root_paths')
+#wf.connect(pathBuildingNode, 'T1RawFolder', t1FinderNode, 'root_paths')
+
 # T1 DICOM-paths into recon_all
-wf.connect(t1FinderNode, 'out_paths', reconallNode, 'T1_files')
+#wf.connect(t1FinderNode, 'out_paths', reconallNode, 'T1_files')
+wf.connect(inputNode, 'structural_rawdata', reconallNode, 'T1_files')
+
 # Subject path into recon-all
 wf.connect(pathBuildingNode, 'subPath', reconallNode, 'subjects_dir')
 
@@ -319,8 +323,10 @@ wf.connect([(reconallNode, brainmaskConv, [('brainmask', 'in_file')]),
             (pathBuildingNode, brainmaskConv, [(('calc_images', fileNameBuilder, fileNames['brainmask']), 'out_file')])])
 
 # dcm2nii
-wf.connect([(pathBuildingNode, dcm2niiNode, [('dwiRawFolder', 'source_dir'),
-                                            ('dwiPreprocFolder', 'output_dir')])])
+# wf.connect([(pathBuildingNode, dcm2niiNode, [('dwiRawFolder', 'source_dir'),
+wf.connect([(inputNode, dcm2niiNode, [('diffusion_rawdata', 'source_names')]),
+             (pathBuildingNode, dcm2niiNode, [('dwiPreprocFolder', 'output_dir')])])
+
 # B0 extraction
 wf.connect(dcm2niiNode, 'converted_files', extrctB0Node, 'dwMriFile')
 
