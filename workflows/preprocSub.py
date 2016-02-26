@@ -93,7 +93,7 @@ def fileNameBuilder(path, fname):
 
 
 def pathBuilder(subject_folder, subject_id):
-    subPath = subject_folder + '/' + subject_id # Build full path to subject folder
+    subPath = subject_folder + '/' # Build full path to subject folder
     
     def makeMyDir(dirName):
         import os
