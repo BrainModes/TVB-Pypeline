@@ -115,11 +115,10 @@ fMRI_DK68 = fMRI[:, range(start1, stop1)+range(start2, stop2)]
 + ~~Write a new Documentation!~~
 + ~~Implement fMRI processing based on the code here: https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/fmriFC.sh~~
 + Implement Tractography Thresholding into the MRTrix module. Possibly trying to include the method described in [Morris et al. (2008)](http://www.sciencedirect.com/science/article/pii/S1053811908007301). Alternatively one could also dig up the old hard-threshold code since the short-range tracking-flares are rendered meaningles anyway by our aggregation method!
-+ Make the file-sorting of the user-data more sophisticated. This means that the pipeline should be able to somehow recognize which kinds of data-sets (e.g. fMRI, T1, dwMRI) is included in the user data and then route the particular folder-paths onto the corresponding processing-nodes inside the pipeline. This might be achieved through using nipype's [SelectFiles interface](http://nipy.org/nipype/users/select_files.html)
 + Include some example workflows for different cluster scenarios, realized through e.g. controll-scripts written in BASH
 + Re-Implement Multishell-Tracking using FSLs bedpostx as in https://github.com/BrainModes/TVB-empirical-data-pipeline/tree/multiShell
 + Implement the formatting of the results into a TVB-ZIP-File as in https://github.com/BrainModes/TVB-empirical-data-pipeline/blob/NSG/matlab_scripts/connectivity2TVBFS.m
-+ Check if Non-DICOM data works as input
++ ~~Check if Non-DICOM data works as input~~
 + ~~Add a Doc-Section about the resulting data~~
 + Support multiple runs of fMRI (e.g. bold1; bold2; bold3; ...)
 + Integrate the possibility to include own parcellation masks in MNI space
