@@ -38,7 +38,7 @@ inputNode = Node(IdentityInterface(fields = ['subID',
                                              'subject_folder',
                                             'parcellation_mask',
                                             'brainmask']), 
-                 name = 'input_node')
+                 name = 'inputNode')
 
 
 outputNode = Node(IdentityInterface(fields = ['mat_file']),

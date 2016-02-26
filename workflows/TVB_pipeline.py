@@ -114,7 +114,7 @@ inputNode.inputs.bvec_file = bvec_file
 inputNode.inputs.bval_file = bval_file
 
 # ### Logging
-logging.basicConfig(filename = subject_folder + subject_id + '/pipeline.log', level=logging.DEBUG)
+logging.basicConfig(filename = subject_folder + '/pipeline.log', level=logging.DEBUG)
 
 
 # ### Utiliy functions
@@ -182,7 +182,7 @@ aggregateConnectivityNode.inputs.steplength = mrtrix.mrtrix_tracking.trackingNod
 
 
 # ## Build the Workflow
-wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + subject_id + '/')
+wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + '/')
 
 # This is the part where we plug all the different toolboxes together (for sytax see Nipype Docs)
 
@@ -205,8 +205,8 @@ if functional_rawdata is not None:  # Connect only if fMRI input data was set
     wf.connect([(preprocessing.wf, feat.fmri_preproc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
                                                 ('output_node.aparc+aseg', 'inputNode.parcellation_mask')]),
                 (inputNode, feat.fmri_preproc.wf, [('subject_folder', 'inputNode.subject_folder'),
-                                          ('functional_rawdata', 'inputNode.raw_files')
-                                            ('subject_id', 'inputNode.subID')])])
+                                                   ('functional_rawdata', 'inputNode.raw_files'),
+                                                   ('subject_id', 'inputNode.subID')])])
 
 # MRTrix TRacking
 wf.connect([(maskGenNode, mrtrix.mrtrix_main.wf, [('seed_target_masks', 'input_node.seed_target_masks'),
