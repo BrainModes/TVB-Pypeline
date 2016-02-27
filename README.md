@@ -22,6 +22,7 @@ Since Nipype/Python also perform as a wrapper for Toolboxes invoked through the 
 For **preprocessing**, the following toolboxes are used:
 + [FSL](http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/)
 + [FREESURFER](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall)
++ [DICOM2NII](http://www.mccauslandcenter.sc.edu/mricro/mricron/dcm2nii.html)
 
 When it comes to **fiber tractography**, there is a vast number of available tools for that. Their usage also highly depens on how your dwMRI-Data was recorded. One of the main parting points is the number of different diffusion-gradient strengths applied during the measurement (i.e. the number of different **b-values**). If the dataset has only a single value greater than zero, one talks about **single-shell data**. As soon as more than one value (>0) is involved, the data is called **multi-shell data**
 
