@@ -254,7 +254,7 @@ wf.connect([(inputNode, aggregateConnectivityNode, [('subject_id', 'sub_id')]),
 
 
 # ## Draw the Graph
-wf.write_graph(subject_folder + subject_id + "/TVB_workflow_graph.dot", graph2use = 'colored')
+# wf.write_graph(subject_folder + "/TVB_workflow_graph.dot", graph2use = 'colored')
 # from IPython.display import Image
 # Image(filename="./TVB_workflow_graph.dot.png")
 

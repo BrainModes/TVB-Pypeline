@@ -194,7 +194,7 @@ wf.connect([(inputNode, folderMaker, [('subject_folder', 'path_name')])])
 
 
 # wf.connect([(rawFinderNode, convertNode, [(('out_paths', selectFromList, 0), 'in_file')]),
-wf.connect([(inputNode, convertNode, [('raw_files', 'in_file')]),
+wf.connect([(inputNode, convertNode, [(('raw_files', selectFromList, 0), 'in_file')]),
            (folderMaker, convertNode, [(('folder_path', fileNameBuilder, fileNames['bold_file']), 'out_file')])])
 
 wf.connect([(convertNode, featNode, [('out_file', 'bold_file')]),
