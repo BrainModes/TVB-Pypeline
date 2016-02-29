@@ -84,22 +84,6 @@ def fileNameBuilder(path, fname):
 def selectFromList(inList, index):
     return inList[index]
 
-def rawdataChecker(input_file):
-    # If the input is a single DCM-file instead of a multi-dim-NifTI, we have to fetch all the other files in the series
-    if input_file.endswith('.dcm'):
-        from nipype.interfaces.io import DataFinder
-        from os import path
-        from nipype import Node
-
-        # Setup a datafinder to find the paths to the specific DICOM files
-        t1FinderNode = Node(DataFinder(), name = 't1Finder')
-        t1FinderNode.inputs.match_regex = '.*\.dcm'
-        t1FinderNode.inputs.root_paths = path.split(input_file)[0]
-
-        return t1FinderNode.run().outputs.out_paths
-    else:
-        return input_file  # If other datatype just return the same path
-
 # ### Convert Images from various formats to NifTi
 # rawFinderNode = Node(DataFinder(match_regex = '.*\.dcm'), name = 'DICOM_Finder')
 

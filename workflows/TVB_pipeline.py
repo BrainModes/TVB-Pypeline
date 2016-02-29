@@ -103,7 +103,7 @@ if '.nii' in diffusion_rawdata and (bvec_file is None or bval_file is None):
 # ### Setup
 inputNode = Node(IdentityInterface(fields = ['subject_folder', 'subject_id', 'structural_rawdata',
                                              'diffusion_rawdata', 'functional_rawdata', 'bvec_file', 'bval_file']),
-                name = 'input_node')
+                                    name = 'input_node')
 
 inputNode.inputs.subject_folder = subject_folder
 inputNode.inputs.subject_id = subject_id
@@ -120,6 +120,23 @@ logging.basicConfig(filename = subject_folder + '/pipeline.log', level=logging.D
 # ### Utiliy functions
 def roiRange(number_of_rois):
     return range(1, number_of_rois + 1)
+
+
+def rawdataChecker(input_file):
+    # If the input is a single DCM-file instead of a multi-dim-NifTI, we have to fetch all the other files in the series
+    if input_file.endswith('.dcm'):
+        from nipype.interfaces.io import DataFinder
+        from os import path
+        from nipype import Node
+
+        # Setup a datafinder to find the paths to the specific DICOM files
+        t1FinderNode = Node(DataFinder(), name = 't1Finder')
+        t1FinderNode.inputs.match_regex = '.*\.dcm'
+        t1FinderNode.inputs.root_paths = path.split(input_file)[0]
+
+        return t1FinderNode.run().outputs.out_paths
+    else:
+        return input_file  # If other datatype just return the same path
 
 
 # ## Preprocessing
@@ -189,8 +206,8 @@ wf = Workflow(name = 'TVB_pipeline', base_dir = subject_folder + '/')
 # Connect the Input to the Preprocessing step
 wf.connect([(inputNode, preprocessing.wf, [('subject_folder', 'input_node.subject_folder'),
                                            ('subject_id', 'input_node.subject_id'),
-                                           ('structural_rawdata', 'input_node.structural_rawdata'),
-                                           ('diffusion_rawdata', 'input_node.diffusion_rawdata'),
+                                           (('structural_rawdata', rawdataChecker), 'input_node.structural_rawdata'),
+                                           (('diffusion_rawdata', rawdataChecker), 'input_node.diffusion_rawdata'),
                                            ('bval_file', 'input_node.b_val'),
                                            ('bvec_file', 'input_node.b_vec')])])
 
@@ -205,7 +222,7 @@ if functional_rawdata is not None:  # Connect only if fMRI input data was set
     wf.connect([(preprocessing.wf, feat.fmri_preproc.wf, [('output_node.brainmask', 'inputNode.brainmask'),
                                                 ('output_node.aparc+aseg', 'inputNode.parcellation_mask')]),
                 (inputNode, feat.fmri_preproc.wf, [('subject_folder', 'inputNode.subject_folder'),
-                                                   ('functional_rawdata', 'inputNode.raw_files'),
+                                                   (('functional_rawdata', rawdataChecker), 'inputNode.raw_files'),
                                                    ('subject_id', 'inputNode.subID')])])
 
 # MRTrix TRacking

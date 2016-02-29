@@ -92,21 +92,21 @@ def fileNameBuilder(path, fname):
     return path + '/' + fname
 
 
-def rawdataChecker(input_file):
-    # If the input is a single DCM-file instead of a multi-dim-NifTI, we have to fetch all the other files in the series
-    if input_file.endswith('.dcm'):
-        from nipype.interfaces.io import DataFinder
-        from os import path
-        from nipype import Node
-
-        # Setup a datafinder to find the paths to the specific DICOM files
-        t1FinderNode = Node(DataFinder(), name = 't1Finder')
-        t1FinderNode.inputs.match_regex = '.*\.dcm'
-        t1FinderNode.inputs.root_paths = path.split(input_file)[0]
-
-        return t1FinderNode.run().outputs.out_paths
-    else:
-        return input_file  # If other datatype just return the same path
+# def rawdataChecker(input_file):
+#     # If the input is a single DCM-file instead of a multi-dim-NifTI, we have to fetch all the other files in the series
+#     if input_file.endswith('.dcm'):
+#         from nipype.interfaces.io import DataFinder
+#         from os import path
+#         from nipype import Node
+#
+#         # Setup a datafinder to find the paths to the specific DICOM files
+#         t1FinderNode = Node(DataFinder(), name = 't1Finder')
+#         t1FinderNode.inputs.match_regex = '.*\.dcm'
+#         t1FinderNode.inputs.root_paths = path.split(input_file)[0]
+#
+#         return t1FinderNode.run().outputs.out_paths
+#     else:
+#         return input_file  # If other datatype just return the same path
 
 
 def pathBuilder(subject_folder, subject_id):
@@ -323,7 +323,8 @@ wf.connect([(inputNode, pathBuildingNode, [('subject_id', 'subject_id'),
 
 # T1 DICOM-paths into recon_all
 #wf.connect(t1FinderNode, 'out_paths', reconallNode, 'T1_files')
-wf.connect([(inputNode, reconallNode, [(('structural_rawdata', rawdataChecker), 'T1_files')])])
+#wf.connect([(inputNode, reconallNode, [(('structural_rawdata', rawdataChecker), 'T1_files')])])
+wf.connect([(inputNode, reconallNode, [('structural_rawdata', 'T1_files')])])
 
 # Subject path into recon-all
 wf.connect(pathBuildingNode, 'subPath', reconallNode, 'subjects_dir')
@@ -338,7 +339,8 @@ wf.connect([(reconallNode, brainmaskConv, [('brainmask', 'in_file')]),
 
 # dcm2nii
 # wf.connect([(pathBuildingNode, dcm2niiNode, [('dwiRawFolder', 'source_dir'),
-wf.connect([(inputNode, dcm2niiNode, [(('diffusion_rawdata', rawdataChecker), 'source_names')]),
+# wf.connect([(inputNode, dcm2niiNode, [(('diffusion_rawdata', rawdataChecker), 'source_names')]),
+wf.connect([(inputNode, dcm2niiNode, [('diffusion_rawdata', 'source_names')]),
              (pathBuildingNode, dcm2niiNode, [('dwiPreprocFolder', 'output_dir')])])
 
 # B0 extraction
