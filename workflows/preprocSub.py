@@ -64,7 +64,10 @@ def extractB0(dwMriFile):
 
 
 def selectFromList(inList, index):
-    return inList[index]
+    try:
+        return inList[index]
+    except TypeError:
+        return inList
 
 
 # ## Set parameters and build variables

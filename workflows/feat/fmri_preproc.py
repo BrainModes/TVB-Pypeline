@@ -5,7 +5,7 @@
 from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
-from nipype.interfaces.io import DataFinder
+#from nipype.interfaces.io import DataFinder
 
 from bm_functions import compute_functional_connectivity
 
@@ -82,7 +82,10 @@ def fileNameBuilder(path, fname):
 
 
 def selectFromList(inList, index):
-    return inList[index]
+    try:
+        return inList[index]
+    except TypeError:
+        return inList
 
 # ### Convert Images from various formats to NifTi
 # rawFinderNode = Node(DataFinder(match_regex = '.*\.dcm'), name = 'DICOM_Finder')
@@ -227,6 +230,11 @@ wf.connect([(segstatPost, compFCNode, [('clearedFileName' , 'summary_file_cleare
            (folderMaker, compFCNode, [('folder_path', 'path')])])
 
 wf.connect([(compFCNode, outputNode, [('matfile_name', 'mat_file')])])
+
+## Draw the Graph
+#wf.write_graph("/Users/srothmei/Desktop/charite/temp/TVB_workflow_graph.dot", graph2use = 'exec', simple_form=False)
+#from IPython.display import Image
+#Image(filename="./TVB_workflow_graph.dot.png")
 
 
 
