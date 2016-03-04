@@ -12,8 +12,8 @@ funcPath = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
 sys.path.append(funcPath)
 
 # Start of Debug-Stuff
-# from nipype import config
-# config.enable_debug_mode()
+from nipype import config
+config.enable_debug_mode()
 # End of Debug-Stuff
 
 from nipype import Node, Workflow, MapNode
