@@ -8,7 +8,6 @@ from nipype.interfaces import freesurfer, fsl
 # from nipype.interfaces.io import DataFinder
 
 from bm_functions import compute_functional_connectivity, mri_convert_bm
-from default_feat_config import gen_default_feat_config
 
 import logging
 
@@ -101,9 +100,9 @@ convertNode = Node(Function(input_names = ['in_file', 'out_file'],
 
 
 # ### Run FSLs feat
-def run_feat(bold_file, bold_folder, brainmask_file, gen_feat_config):
+def run_feat(bold_file, bold_folder, brainmask_file):
     from nipype.interfaces.fsl import ImageStats, FEAT, Info
-    # from bm_functions import gen_default_feat_config
+    import def_feat_conf as dfc
     from numpy import shape
     from textwrap import dedent
 
@@ -123,7 +122,7 @@ def run_feat(bold_file, bold_folder, brainmask_file, gen_feat_config):
 
     # Generate the file
     standard_T1_brain = Info.standard_image('MNI152_T1_2mm_brain')
-    theString = gen_feat_config(bold_folder, bold_file, brainmask_file, standard_T1_brain, numVox, numVol)
+    theString = dfc.gen_default_feat_config(bold_folder, bold_file, brainmask_file, standard_T1_brain, numVox, numVol)
     with open(fslFilename,'w') as out_file:
         out_file.write(dedent(theString))
     out_file.close()   
@@ -134,12 +133,10 @@ def run_feat(bold_file, bold_folder, brainmask_file, gen_feat_config):
     return runFeat.run().outputs.feat_dir
 
 
-featNode = Node(Function(input_names=['bold_file', 'bold_folder', 'brainmask_file', 'gen_feat_config'],
+featNode = Node(Function(input_names=['bold_file', 'bold_folder', 'brainmask_file'],
                         output_names=['feat_dir'],
                         function=run_feat),
                 name = 'FSL_feat')
-
-featNode.inputs.gen_feat_config = gen_default_feat_config
 
 
 # ## Generate parcellated ROI-Timeseries
