@@ -100,7 +100,6 @@ convertNode = Node(Function(input_names = ['in_file', 'out_file'],
                    name = 'DICOM_to_NifTi')
 
 
-
 # ### Run FSLs feat
 def run_feat(bold_file, bold_folder, brainmask_file):
     from nipype.interfaces.fsl import ImageStats, FEAT, Info

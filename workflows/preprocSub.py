@@ -72,23 +72,23 @@ def selectFromList(inList, index):
 
 
 # ## Set parameters and build variables
-reconallFolderName = 'recon_all' # Define what the output folder of recon-all should be named
+reconallFolderName = 'recon_all'  # Define what the output folder of recon-all should be named
 # Predefine some filenames
 fileNames = {'wmSurf_lh': 'lh_white.nii.gz',
-            'wmSurf_rh': 'rh_white.nii.gz',
-            'wmSurf': 'wm_outline.nii.gz',
-            'wmoutline2diff_1mm': 'wmoutline2diff_1mm.nii.gz',
-            'wmoutline2diff': 'wmoutline2diff.nii.gz',
-            'wmparc2diff_1mm': 'wmparc2diff_1mm.nii.gz',
-            'aparc+aseg': 'aparc+aseg.nii.gz',
-            'aparc+aseg2diff_1mm': 'aparc_aseg2diff_1mm.nii.gz',
-            'aparc+aseg2diff': 'aparc_aseg2diff.nii.gz',
-            'lowresWmMask': 'wmmask.nii.gz',
-            'highresWmMask': 'wmmask_1mm.nii.gz',
-            'bval_file': 'bvals.dat',
-            'bvec_file': 'bvecs.dat',
-            'dwi_file': 'dwi.nii.gz',
-            'no_diffusion_image': 'lowb.nii.gz',
+             'wmSurf_rh': 'rh_white.nii.gz',
+             'wmSurf': 'wm_outline.nii.gz',
+             'wmoutline2diff_1mm': 'wmoutline2diff_1mm.nii.gz',
+             'wmoutline2diff': 'wmoutline2diff.nii.gz',
+             'wmparc2diff_1mm': 'wmparc2diff_1mm.nii.gz',
+             'aparc+aseg': 'aparc+aseg.nii.gz',
+             'aparc+aseg2diff_1mm': 'aparc_aseg2diff_1mm.nii.gz',
+             'aparc+aseg2diff': 'aparc_aseg2diff.nii.gz',
+             'lowresWmMask': 'wmmask.nii.gz',
+             'highresWmMask': 'wmmask_1mm.nii.gz',
+             'bval_file': 'bvals.dat',
+             'bvec_file': 'bvecs.dat',
+             'dwi_file': 'dwi.nii.gz',
+             'no_diffusion_image': 'lowb.nii.gz',
              'brainmask': 'brainmask.nii.gz'}
 
 
@@ -442,7 +442,8 @@ wf.connect([(wmmask_highres, outputNode, [('output_image', 'highresWmMask')]),
            (applyReg_anat2diff, outputNode, [('transformed_file', 'wmoutline2diff')]),
            (applyReg_wmparc2diff_1mm, outputNode, [('transformed_file', 'wmparc2diff_1mm')]),
             (extrctB0Node, outputNode, [('b0', 'no_diffusion_image')]),
-            (dcm2niiNode, outputNode, [('converted_files', 'dwi_file')])
+            (dcm2niiNode, outputNode, [('converted_files', 'dwi_file')]),
+            (brainmaskConv, outputNode, [('out_file', 'brainmask')])
            ])
 
 # If the bvecs/bvals have been set by the user, dont overwrite them by the values of dcm2nii
