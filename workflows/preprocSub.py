@@ -170,12 +170,15 @@ outputNode = Node(IdentityInterface(fields = mergedOutputs), mandatory_inputs = 
 
 # Set recon-all parameters
 reconallNode = Node(freesurfer.preprocess.ReconAll(), name = 'reconall')
-#reconallNode.inputs.T1_files = firstFile
-#reconallNode.inputs.subjects_dir = subPath
+# reconallNode.inputs.T1_files = firstFile
+# reconallNode.inputs.subjects_dir = subPath
 reconallNode.inputs.subject_id = reconallFolderName
 reconallNode.inputs.directive = 'all'
 reconallNode.inputs.openmp = cpu_count()
-reconallNode.inputs.args = '-notal-check'
+# reconallNode.inputs.args = '-notal-check'
+
+# OAR Workaround
+# reconallNode.plugin_args = {'overwrite': True, 'oarsub_args': '-l nodes=1,walltime=16:00:00'}
 
 # Convert the T1 mgz image to nifti format for later usage
 # mriConverter = Node(freesurfer.preprocess.MRIConvert(), name = 'convertAparcAseg')
