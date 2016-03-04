@@ -5,9 +5,9 @@
 from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
-#from nipype.interfaces.io import DataFinder
+# from nipype.interfaces.io import DataFinder
 
-from bm_functions import compute_functional_connectivity
+from bm_functions import compute_functional_connectivity, mri_convert_bm
 
 import logging
 
@@ -90,9 +90,15 @@ def selectFromList(inList, index):
 # ### Convert Images from various formats to NifTi
 # rawFinderNode = Node(DataFinder(match_regex = '.*\.dcm'), name = 'DICOM_Finder')
 
-convertNode = Node(freesurfer.preprocess.MRIConvert(), name = 'DICOM2Nii')
-convertNode.inputs.out_type = 'niigz'
-convertNode.inputs.out_orientation = 'RAS'
+#convertNode = Node(freesurfer.preprocess.MRIConvert(), name = 'DICOM2Nii')
+#convertNode.inputs.out_type = 'niigz'
+#convertNode.inputs.out_orientation = 'RAS'
+
+convertNode = Node(Function(input_names = ['in_file', 'out_file'],
+                            output_names = ['out_file'],
+                            function = mri_convert_bm),
+                   name = 'DICOM_to_NifTi')
+
 
 
 # ### Run FSLs feat

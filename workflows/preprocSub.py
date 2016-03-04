@@ -11,6 +11,7 @@ from nipype import Node, Workflow
 from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
 from nipype.interfaces.dcm2nii import Dcm2nii
+from bm_functions import mri_convert_bm
 
 
 
@@ -177,14 +178,19 @@ reconallNode.inputs.openmp = cpu_count()
 reconallNode.inputs.args = '-notal-check'
 
 # Convert the T1 mgz image to nifti format for later usage
-mriConverter = Node(freesurfer.preprocess.MRIConvert(), name = 'convertAparcAseg')
-mriConverter.inputs.out_type = 'niigz'
-mriConverter.inputs.out_orientation = 'RAS'
+# mriConverter = Node(freesurfer.preprocess.MRIConvert(), name = 'convertAparcAseg')
+# mriConverter.inputs.out_type = 'niigz'
+# mriConverter.inputs.out_orientation = 'RAS'
+mriConverter = Node(Function(input_names = ['in_file', 'out_file'],
+                            output_names = ['out_file'],
+                            function = mri_convert_bm),
+                   name = 'convertAparcAseg')
 
 # Convert the Brainmask file
-brainmaskConv = Node(freesurfer.preprocess.MRIConvert(), name = 'convertBrainmask')
-brainmaskConv.inputs.out_type = 'niigz'
-brainmaskConv.inputs.out_orientation = 'RAS'
+# brainmaskConv = Node(freesurfer.preprocess.MRIConvert(), name = 'convertBrainmask')
+# brainmaskConv.inputs.out_type = 'niigz'
+# brainmaskConv.inputs.out_orientation = 'RAS'
+brainmaskConv = mriConverter.clone('convertBrainmask')
 
 
 # ### Diffusion Data (dwMRI) preprocessing
