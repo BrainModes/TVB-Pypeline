@@ -306,21 +306,21 @@ wmmask_highres = wmmask_lowres.clone('extract_WM_highres')
 
 
 # TODO: REMOVE ME!
-# ### Debug the crap out of this!
-#def myAmazingDebugFunction(T1_files, subjects_dir):
-#    reconAllPath = '/Users/srothmei/Desktop/charite/toronto/FR_20120903/recon_all/mri/'
-#    T1 = reconAllPath + 'T1.mgz'
-#    aparc_aseg = [reconAllPath + 'aparc+aseg.mgz']
-#    wmparc = reconAllPath + 'wmparc.mgz'
-#    subject_id = 'recon_all'
-#    brainmask = reconAllPath + 'brainmask.mgz'
-#
-#    return subject_id, T1, aparc_aseg, wmparc, brainmask
-#
-#reconallNode = Node(Function(input_names = ['T1_files', 'subjects_dir'],
-#                            output_names = ['subject_id', 'T1', 'aparc_aseg', 'wmparc', 'brainmask'],
-#                            function = myAmazingDebugFunction),
-#                   name = 'recon_debug_all')
+### Debug the crap out of this!
+def myAmazingDebugFunction(T1_files, subjects_dir):
+    reconAllPath = '/Users/srothmei/Desktop/charite/toronto/FR_20120903/recon_all/mri/'
+    T1 = reconAllPath + 'T1.mgz'
+    aparc_aseg = [reconAllPath + 'aparc+aseg.mgz']
+    wmparc = reconAllPath + 'wmparc.mgz'
+    subject_id = 'recon_all'
+    brainmask = reconAllPath + 'brainmask.mgz'
+
+    return subject_id, T1, aparc_aseg, wmparc, brainmask
+
+reconallNode = Node(Function(input_names = ['T1_files', 'subjects_dir'],
+                            output_names = ['subject_id', 'T1', 'aparc_aseg', 'wmparc', 'brainmask'],
+                            function = myAmazingDebugFunction),
+                   name = 'recon_debug_all')
 
 
 # ### Connect the Nodes
