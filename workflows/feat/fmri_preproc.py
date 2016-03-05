@@ -100,9 +100,9 @@ convertNode = Node(Function(input_names = ['in_file', 'out_file'],
 
 
 # ### Run FSLs feat
-def run_feat(bold_file, bold_folder, brainmask_file):
+def run_feat(bold_file, bold_folder, brainmask_file, feat_gen):
     from nipype.interfaces.fsl import ImageStats, FEAT, Info
-    from bm_functions import gen_default_feat_config
+    # from bm_functions import gen_default_feat_config
     from numpy import shape
     from textwrap import dedent
 
@@ -122,7 +122,7 @@ def run_feat(bold_file, bold_folder, brainmask_file):
 
     # Generate the file
     standard_T1_brain = Info.standard_image('MNI152_T1_2mm_brain')
-    theString = gen_default_feat_config(bold_folder, bold_file, brainmask_file, standard_T1_brain, numVox, numVol)
+    theString = feat_gen(bold_folder, bold_file, brainmask_file, standard_T1_brain, numVox, numVol)
     with open(fslFilename,'w') as out_file:
         out_file.write(dedent(theString))
     out_file.close()   
@@ -133,11 +133,12 @@ def run_feat(bold_file, bold_folder, brainmask_file):
     return runFeat.run().outputs.feat_dir
 
 
-featNode = Node(Function(input_names=['bold_file', 'bold_folder', 'brainmask_file'],
+featNode = Node(Function(input_names=['bold_file', 'bold_folder', 'brainmask_file', 'feat_gen'],
                         output_names=['feat_dir'],
                         function=run_feat),
                 name = 'FSL_feat')
 
+featNode.inputs.feat_gen = gen_default_feat_config
 
 # ## Generate parcellated ROI-Timeseries
 
