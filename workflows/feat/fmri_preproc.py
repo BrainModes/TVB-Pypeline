@@ -7,7 +7,7 @@ from nipype.interfaces.utility import IdentityInterface, Function
 from nipype.interfaces import freesurfer, fsl
 # from nipype.interfaces.io import DataFinder
 
-from bm_functions import compute_functional_connectivity, mri_convert_bm
+from bm_functions import compute_functional_connectivity, mri_convert_bm, gen_default_feat_config
 
 import logging
 
@@ -102,7 +102,7 @@ convertNode = Node(Function(input_names = ['in_file', 'out_file'],
 # ### Run FSLs feat
 def run_feat(bold_file, bold_folder, brainmask_file):
     from nipype.interfaces.fsl import ImageStats, FEAT, Info
-    import def_feat_conf as dfc
+    from bm_functions import gen_default_feat_config
     from numpy import shape
     from textwrap import dedent
 
@@ -122,7 +122,7 @@ def run_feat(bold_file, bold_folder, brainmask_file):
 
     # Generate the file
     standard_T1_brain = Info.standard_image('MNI152_T1_2mm_brain')
-    theString = dfc.gen_default_feat_config(bold_folder, bold_file, brainmask_file, standard_T1_brain, numVox, numVol)
+    theString = gen_default_feat_config(bold_folder, bold_file, brainmask_file, standard_T1_brain, numVox, numVol)
     with open(fslFilename,'w') as out_file:
         out_file.write(dedent(theString))
     out_file.close()   
