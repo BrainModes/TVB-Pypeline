@@ -14,6 +14,7 @@ sys.path.append(funcPath)
 # Start of Debug-Stuff
 from nipype import config
 config.enable_debug_mode()
+print sys.path
 # End of Debug-Stuff
 
 from nipype import Node, Workflow, MapNode
