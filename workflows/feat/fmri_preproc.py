@@ -131,8 +131,7 @@ def run_feat(bold_file, bold_folder, brainmask_file, feat_gen):
     # Run feat using the previously manipulated config
     runFeat = FEAT(fsf_file = fslFilename)
     # Run and pass back the foldername
-    #return runFeat.run().outputs.feat_dir
-    return runFeat.aggregate_outputs().feat_dir
+    return runFeat.run().outputs.feat_dir
 
 
 featNode = Node(Function(input_names=['bold_file', 'bold_folder', 'brainmask_file', 'feat_gen'],

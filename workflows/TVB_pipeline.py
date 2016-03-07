@@ -14,7 +14,6 @@ sys.path.append(funcPath)
 # Start of Debug-Stuff
 from nipype import config
 config.enable_debug_mode()
-print sys.path
 # End of Debug-Stuff
 
 from nipype import Node, Workflow, MapNode
@@ -115,7 +114,7 @@ inputNode.inputs.bvec_file = bvec_file
 inputNode.inputs.bval_file = bval_file
 
 # ### Logging
-logging.basicConfig(filename = subject_folder + '/pipeline.log', level=logging.DEBUG)
+#logging.basicConfig(filename = subject_folder + '/pipeline.log', level=logging.DEBUG)
 
 
 # ### Utiliy functions
