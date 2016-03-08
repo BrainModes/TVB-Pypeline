@@ -124,4 +124,6 @@ fMRI_DK68 = fMRI[:, range(start1, stop1)+range(start2, stop2)]
 + Support multiple runs of fMRI (e.g. bold1; bold2; bold3; ...)
 + Integrate the possibility to include own parcellation masks in MNI space
 + Integrate Subcortical Tracking
-+ **If a single NifTi file is fed into dcm2nii, no bvec/bval file is computed thus they have to be fed in seperately! Implement this!**
++ ~~**If a single NifTi file is fed into dcm2nii, no bvec/bval file is computed thus they have to be fed in seperately! Implement this!**~~
++ Document example workflow for Marseille OAR cluster (including setup!)
++ Convert the pipeline into a Python package and install it into site-packages (like nipype). This should make the whole installation process far more easy and circumvent some problems when using a cluster!
