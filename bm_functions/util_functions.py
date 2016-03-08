@@ -16,11 +16,9 @@ def mri_convert_bm(in_file, out_file):
 
     return out_file
 
-# coding: utf-8
-# Generate the default feat config
-
 
 def gen_default_feat_config(bold_folder, bold_file, brainmask_file, standard_T1_brain, numVox, numVol):
+    # Generate the default feat config
 
     theConfigString = '''
     # =============================================================================
