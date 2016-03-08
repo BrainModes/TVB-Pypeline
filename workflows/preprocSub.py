@@ -441,7 +441,8 @@ wf.connect([(wmmask_highres, outputNode, [('output_image', 'highresWmMask')]),
            (applyReg_wmparc2diff_1mm, outputNode, [('transformed_file', 'wmparc2diff_1mm')]),
             (extrctB0Node, outputNode, [('b0', 'no_diffusion_image')]),
             (dcm2niiNode, outputNode, [('converted_files', 'dwi_file')]),
-            (brainmaskConv, outputNode, [('out_file', 'brainmask')])
+            (brainmaskConv, outputNode, [('out_file', 'brainmask')]),
+            (mriConverter, outputNode, [('out_file', 'aparc+aseg')])
            ])
 
 # If the bvecs/bvals have been set by the user, dont overwrite them by the values of dcm2nii
