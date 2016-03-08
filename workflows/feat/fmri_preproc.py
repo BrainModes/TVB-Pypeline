@@ -81,6 +81,9 @@ def fileNameBuilder(path, fname):
     return path + '/' + fname
 
 
+def featFileNameBuilder(path, fname):
+    return path + '.feat/' + fname
+
 def selectFromList(inList, index):
     try:
         return inList[index]
@@ -144,9 +147,9 @@ featNode.inputs.feat_gen = gen_default_feat_config
 # ## Generate parcellated ROI-Timeseries
 
 # Register example-func to freesurfer brainmask
-exfunc2anat = Node(fsl.FLIRT(bins=256, searchr_x=[90,90], searchr_y=[90,90], searchr_z=[90,90],
-                       cost='corratio', interp='trilinear', dof=6),
-                  name = 'Func_2_Anat')
+exfunc2anat = Node(fsl.FLIRT(bins=256, searchr_x=[90, 90], searchr_y=[90, 90], searchr_z=[90, 90],
+                                cost='corratio', interp='trilinear', dof=6),
+                                name = 'Func_2_Anat')
 
 # invert transformation
 invt = Node(fsl.ConvertXFM(invert_xfm=True),
@@ -210,7 +213,7 @@ wf.connect([(convertNode, featNode, [('out_file', 'bold_file')]),
            (folderMaker, featNode, [('folder_path', 'bold_folder')]),
            (inputNode, featNode, [('brainmask', 'brainmask_file')])])
 
-wf.connect([(featNode, exfunc2anat, [(('feat_dir', fileNameBuilder, 'mean_func.nii.gz'), 'in_file')]),
+wf.connect([(featNode, exfunc2anat, [(('feat_dir', featFileNameBuilder, 'mean_func.nii.gz'), 'in_file')]),
            (inputNode, exfunc2anat, [('brainmask', 'reference')]),
            (folderMaker, exfunc2anat, [(('folder_path', fileNameBuilder, fileNames['func_2_anat']), 'out_file'),
                                       (('folder_path', fileNameBuilder, fileNames['func_2_anat_mat']), 'out_matrix_file')])])
@@ -220,12 +223,12 @@ wf.connect([(exfunc2anat, invt, [('out_matrix_file', 'in_file')]),
 
 wf.connect([(inputNode, roimask2func, [('parcellation_mask', 'in_file')]),
            (invt, roimask2func, [('out_file', 'in_matrix_file')]),
-           (featNode, roimask2func, [(('feat_dir', fileNameBuilder, 'mean_func.nii.gz'), 'reference')]),
+           (featNode, roimask2func, [(('feat_dir', featFileNameBuilder, 'mean_func.nii.gz'), 'reference')]),
            (folderMaker, roimask2func, [(('folder_path', fileNameBuilder, fileNames['parcellation_2_func']), 'out_file')])])
 
 wf.connect([(roimask2func, ss, [('out_file', 'segmentation_file')]),
            (folderMaker, ss, [(('folder_path', fileNameBuilder, fileNames['avgwf_file']), 'avgwf_txt_file')]),
-           (featNode, ss, [(('feat_dir', fileNameBuilder, 'filtered_func_data.nii.gz'), 'in_file')]),
+           (featNode, ss, [(('feat_dir', featFileNameBuilder, 'filtered_func_data.nii.gz'), 'in_file')]),
            (folderMaker, ss, [(('folder_path', fileNameBuilder, fileNames['segstat_sum_file']), 'summary_file')])])
 
 wf.connect([(ss, segstatPost, [('summary_file', 'aparc_stats')])])
