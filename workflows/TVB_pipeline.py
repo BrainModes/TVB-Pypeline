@@ -264,8 +264,9 @@ wf.connect([(inputNode, aggregateConnectivityNode, [('subject_id', 'sub_id')]),
 # For getting information about the job-shedulder-plugins and their parameters, please refer to:
 # https://github.com/nipy/nipype/blob/master/doc/users/plugins.rst
 
+# TODO: Get this stuff right!
 # Example: OAR Job Sheduler
-# preprocessing.wf.reconallNode.plugin_args = {'overwrite': True, 'oarsub_args': '-l nodes=1,walltime=16:00:00'}
+# preprocessing.wf.reconall.plugin_args = {'overwrite': True, 'oarsub_args': '-l nodes=1,walltime=16:00:00'}
 
 
 # ## Draw the Graph
@@ -275,7 +276,7 @@ wf.connect([(inputNode, aggregateConnectivityNode, [('subject_id', 'sub_id')]),
 
 # ## Run the Workflow
 wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
-# wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00'})
+# wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00', 'template': 'examples/oarSetup.sh'})
 # wf.run()
 
 

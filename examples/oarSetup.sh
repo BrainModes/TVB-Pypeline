@@ -1,4 +1,5 @@
 #!/bin/bash
+# oarsub -J
 
 ######## README ##########
 # Use this file to setup your local cluster environment in case your're not allowed to install the binaries system-wide
