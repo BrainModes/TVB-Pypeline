@@ -12,8 +12,8 @@ funcPath = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
 sys.path.append(funcPath)
 
 # Start of Debug-Stuff
-from nipype import config
-config.enable_debug_mode()
+# from nipype import config
+# config.enable_debug_mode()
 # End of Debug-Stuff
 
 from nipype import Node, Workflow, MapNode
@@ -21,6 +21,11 @@ from nipype.interfaces.utility import IdentityInterface, Function
 import bm_functions as brainmodes
 import logging
 from multiprocessing import cpu_count
+
+# ##### Define some setup parameters
+# Please also refer to the end of this file for setting up paramters considering the usage of your job execution
+# mechanism (i.e. Cluster-Job-Sheduler etc)
+seedsPerVoxel = 200  # Number of Seeds used in prob. tracking per Voxel. Default is 200 seeds / (1mm)seedVoxel
 
 
 # ### Inputs parameters
@@ -114,7 +119,7 @@ inputNode.inputs.bvec_file = bvec_file
 inputNode.inputs.bval_file = bval_file
 
 # ### Logging
-#logging.basicConfig(filename = subject_folder + '/pipeline.log', level=logging.DEBUG)
+# logging.basicConfig(filename = subject_folder + '/pipeline.log', level=logging.DEBUG)
 
 
 # ### Utiliy functions
@@ -159,7 +164,7 @@ maskGenNode = Node(Function(input_names = ['subPath',
                            function = brainmodes.generate_masks),
                    name = 'generate_masks')
 
-maskGenNode.inputs.seedsPerVoxel = 200
+maskGenNode.inputs.seedsPerVoxel = seedsPerVoxel
 
 
 # ## Tracking
@@ -253,15 +258,25 @@ wf.connect([(inputNode, aggregateConnectivityNode, [('subject_id', 'sub_id')]),
                                                                 ('SC_dist_row_filename', 'dist_row_files')])])
 
 
+# ######## Node-Level-Config
+# With this file, it is possible to define custom parameters for processing nodes when using the pipeline on a
+# High-Performance-Cluster (HPC) utilizing a specific job sheduler.
+# For getting information about the job-shedulder-plugins and their parameters, please refer to:
+# https://github.com/nipy/nipype/blob/master/doc/users/plugins.rst
+
+# Example: OAR Job Sheduler
+# preprocessing.wf.reconallNode.plugin_args = {'overwrite': True, 'oarsub_args': '-l nodes=1,walltime=16:00:00'}
+
+
 # ## Draw the Graph
-#wf.write_graph(subject_folder + "/TVB_workflow_graph.dot", graph2use = 'colored')
+# wf.write_graph(subject_folder + "/TVB_workflow_graph.dot", graph2use = 'colored')
 # from IPython.display import Image
 # Image(filename="./TVB_workflow_graph.dot.png")
 
 # ## Run the Workflow
 wf.run(plugin='MultiProc', plugin_args={'n_procs': cpu_count()})
-#wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00'})
-#wf.run()
+# wf.run(plugin='OAR', plugin_args={'oarsub_args': '-l walltime=04:00:00'})
+# wf.run()
 
 
 
