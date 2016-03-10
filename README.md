@@ -1,6 +1,6 @@
 # TVB-Pypeline - - Work in Progress!
 
-This project maps our current automatized MRI processing pipeline (http://github.com/BrainModes/TVB-empirical-data-pipeline) 
+This project maps our current automatized MRI processing pipeline (http://github.com/BrainModes/TVB-empirical-data-pipeline)
 to Python using Nipype, making the used toolboxes inside easily exchangeable.
 
 For a general overview about the pipeline see [Schirner, Rothmeier et al. (2015)](http://www.sciencedirect.com/science/article/pii/S1053811915002505)
@@ -32,7 +32,7 @@ Currently, we tested two toolboxes for tractography, one for each of the aforeme
 
 
 ##### Install the Pipeline
-Download the files from the GitHub Repository and unpack the files on your workstation/cluster. 
+Download the files from the GitHub Repository and unpack the files on your workstation/cluster.
 To run it on a specific cluster architecture, simply edit the plugin-type in the master control script [TVB_pipeline.py](https://github.com/srothmei/TVB-Pypeline/blob/master/workflows/TVB_pipeline.py).
 Locate the following code block at the end of the file
 ```python
@@ -45,7 +45,14 @@ As you can see, plugins are used to handle different situations considering the 
 For an overview about the available plugins see the [Doc-Page about Plugins](http://nipy.org/nipype/users/plugins.html). Since this page is sometimes a bit outdated (e.g. the OAR plugin is not yet listed), see also https://github.com/nipy/nipype/tree/master/nipype/pipeline/plugins
 
 ## Preparing your rawdata
-Looking at the TODO-List in the bottom-section of this manual, you can see that the organization of the users raw-data is still a bit inflexible considering the fact that the pipeline requires a certain folder-schema. Currently, you need to **precisely stick to the following naming conventions**:
+The organization of the users raw-data is still a bit inflexible, considering the fact that currently the user needs to provide absolute paths to
+the different imaging modalities. The pipeline currently support the following input formats for your raw-data:
++ DICOM
++ (compressed) NifTi
+
+**Note that if you supply your diffusion data in NifTi format, the gradient information will not be passed along thus you have to provide those data seperately. See below for the paramters used at startup or refer to the --help string of the pipeline scripts itself.**
+
+Your raw-data may be located anywhere on your system while the pipeline outputs can be stored in a different location specified by a parameter passed to the pipeline during startup. For example, a subject folder may look like the following:
 ```bash
 /home/myUserName/pipeline/subjects/
 |-- Sub1/
@@ -55,22 +62,36 @@ Looking at the TODO-List in the bottom-section of this manual, you can see that 
 |   |   |   |   |-- Arbitrary-Image-Names-001.dcm
 |   |   |   |   |-- Arbitrary-Image-Names-002.dcm
 |   |   |   |   |-- ...
-|   |   |-- DTI/ 
-|   |   |-- BOLD-EPI/ 
+|   |   |-- DTI/
+|   |   |-- BOLD-EPI/
 ```
-Inside the several folders for the different imaging modalities, the number of subfolder doesnt matter.
-Note that the pipeline currently only support DICOM data as input
+Inside the several folders for the different imaging modalities, the number of subfolder doesnt matter. But if you store a series of (DICOM) raw-images, it is crucial to not mix them inside the very same folder because the pipeline just scans for \*.dcm files
 
-##### Using fMRI data is optional, i.e. if you dont include that data into your RAWDATA-folder, you still get the structural and dwMRI data processed!
+##### Using fMRI data is optional, i.e. if you don't pass that data into the pipeline at start, you still get the structural and dwMRI data processed!
 
 ## Running the Pipeline
 
-To finally run the pipeline, locate the **TVB_pipeline.py** script using your systems Shell and pass the subjects ID and the absolute path to the folder holding your subjects RAWDATA-folder (see above).
+To finally run the pipeline, locate the **TVB_pipeline.py** script using your systems Shell. The parameters need are explained in the following excerpt from the scripts own help-text. The file- and folder-paths refer to the aforementioned folder-structure.
 ```bash
-python /home/myUser/pipeline/TVB_pipeline.tyb --sub-id <SUBJECT-ID> --sub-dir <SUBJECT-DIR>
+python /home/myUser/pipeline/TVB_pipeline.tyb --help
++++ TVB Automated Processing Pipeline +++
+
+    This script invokes the TVB automated processing Pipeline.
+    Usage:  -s <SUBJECT-ID> -r <SUBJECT-DIR> -a <T1-DATA-DIR> -d <DIFFUSION-DATA-DIR>
+
+    Obligatory inputs are:
+        -s --sub-id <SUBJECT-ID>            :   The Identifier of the Subject
+        -r --sub-dir <SUBJECT-DIR>          :   The absolute path to the folder where you want the results to be stored
+        -a --structural-rawdata <IMG-PATH>  :   Absolute path to your structural T1 anatomical data
+        -d --diffusion-rawdata <IMG-PATH>   :   Absolute path to your diffusion weighted MRI data
+
+    Optional inputs are:
+        -f --functional-rawdata <IMG-PATH>  :   Absolute path to your functional MRI data (BOLD)
+        --bval <FILE-PATH>                  :   Path to the bval file
+        --bvec <FILE-PATH>                  :   Path to the bvec file
 ```
 
-The log-files are stored into a subfolder of your **SUBJECT-DIR** called TVB_pipeline.
+The log-files are stored into the **SUBJECT-DIR**.
 
 ## Example: Deploying & running on a Cluster using the OAR job sheduler
 TODO!
@@ -96,7 +117,7 @@ Those files include several matrices representing different metrics:
 ##### Functional-MRI:
 By default, resulting data will be stored into ** \<SUBEJCT-DIR>/bold/**. Results feature a run of FSLs feat pipeline and also regionswise timeseries stored into the file ** \<SUBJECT-ID>_fMRI.mat **. As for the SC-file descbried above, this MATLAB/Octave file stores various things:
 
-| Variable-Name | Type of Data | 
+| Variable-Name | Type of Data |
 | ------------- |:-------------:|
 |ROI_ID_table|Various numbers from FREESURFERs **mri_segstat**. The headers have been removed. They can be found in the following file: **\<SUBEJCT-DIR>/bold/segstat_summary.txt**|
 |\<SUBJECT-ID>_ROIts|A Matrix with dimensions fmri-timepoints X parcellation-regions. This matrix hold the region-wise averaged bold time course|
