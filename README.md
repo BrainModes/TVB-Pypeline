@@ -152,3 +152,4 @@ fMRI_DK68 = fMRI[:, range(start1, stop1)+range(start2, stop2)]
 + Document example workflow for Marseille OAR cluster (including setup!)
 + Convert the pipeline into a Python package and install it into site-packages (like nipype). This should make the whole installation process far more easy and circumvent some problems when using a cluster!
 + Implement distortion correction using FSLs [EDDY](http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/EDDY) is phase reversed recording is available
++ Sometimes there seem to be empty seed-masks...check for that!?
